@@ -1,0 +1,153 @@
+/*
+  CSS definition for WebsiteBaker module: OneForAll
+  Copyright (C) 2015, Christoph Marti
+
+  This CSS file is free software. You can redistribute it and/or modify it 
+  under the terms of the GNU General Public License - version 2 or later, 
+  as published by the Free Software Foundation: http://www.gnu.org/licenses/gpl.html.
+
+  This CSS file is distributed in the hope that it will be useful, 
+  but WITHOUT ANY WARRANTY; without even the implied warranty of 
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+  GNU General Public License for more details.
+*/
+
+
+/* Frontend Stylesheet Module OneForAll */
+/* ************************************ */
+
+/*
+NOTE:
+Modify the HTML of the main page and the item page in the layout section of the OneForAll page settings.
+Modify the CSS of the main page and the item page in this stylesheet.
+*/
+
+
+/* GENERAL */
+
+#mod_oneforall_wrapper_f {
+	
+}
+
+
+/* OVERVIEW OR MAIN PAGE */
+
+.mod_oneforall_item_loop_f {
+	
+}
+.mod_oneforall_main_thumb_f {
+	border: none;
+}
+.mod_oneforall_main_img_f {
+	border: none;
+}
+.mod_oneforall_main_title_f {
+	font-weight: bold;
+}
+.mod_oneforall_none_found_f {
+	margin-top: 100px;
+	font-weight: bold;
+}
+.mod_oneforall_pagination_f {
+	
+}
+
+
+/* DETAIL OR ITEM PAGE */
+
+.mod_oneforall_item_f {
+	
+}
+.mod_oneforall_item_thumb_f {
+	border: none;
+}
+.mod_oneforall_item_img_f {
+	border: none;
+}
+.mod_oneforall_item_title_f {
+	
+}
+.mod_oneforall_prev_next_links_f {
+	
+}
+
+
+/* PLACEHOLDERS */
+
+.mod_oneforall_field_label_f {
+	
+}
+.mod_oneforall_field_content_f {
+	
+}
+
+.mod_oneforall_text_f {
+	
+}
+.mod_oneforall_textarea_f {
+	
+}
+.mod_oneforall_wysiwyg_f {
+	
+}
+.mod_oneforall_wb_link_f {
+	
+}
+.mod_oneforall_url_f {
+	
+}
+.mod_oneforall_email_f {
+	
+}
+.mod_oneforall_media_f {
+	
+}
+.mod_oneforall_datepicker_f {
+	
+}
+.mod_oneforall_datepicker_start_end_f {
+	
+}
+.mod_oneforall_datetimepicker_f {
+	
+}
+.mod_oneforall_datetimepicker_start_end_f {
+	
+}
+.mod_oneforall_droplet_f {
+	
+}
+.mod_oneforall_select_f {
+	
+}
+.mod_oneforall_group_f {
+	
+}
+
+
+/* LIGHTBOX2 (compressed) */
+
+#lightboxOverlay{position:absolute;top:0;left:0;z-index:9999;background-color:black;filter:progid:DXImageTransform.Microsoft.Alpha(Opacity=85);opacity:0.85;display:none;}
+#lightbox{position:absolute;left:0;width:100%;z-index:10000;text-align:center;line-height:0;font-family:"lucida grande",tahoma,verdana,arial,sans-serif;font-weight:normal;}
+#lightbox img{width:auto;height:auto;}
+#lightbox a img{border:none;}
+.lb-outerContainer{position:relative;background-color:white;*zoom:1;width:250px;height:250px;margin:0 auto;-webkit-border-radius:4px;-moz-border-radius:4px;-ms-border-radius:4px;-o-border-radius:4px;border-radius:4px;}
+.lb-outerContainer:after{content:"";display:table;clear:both;}
+.lb-container{padding:10px;}
+.lb-loader{position:absolute;top:40%;left:0%;height:25%;width:100%;text-align:center;line-height:0;}
+.lb-nav{position:absolute;top:0;left:0;height:100%;width:100%;z-index:10;}
+.lb-container > .nav{left:0;}
+.lb-nav a{outline:none;}
+.lb-prev,.lb-next{width:49%;height:100%;background-image:url("data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7");/* Trick IE into showing hover */display:block;}
+.lb-prev{left:0;float:left;}
+.lb-next{right:0;float:right;}
+.lb-prev:hover{background:url(js/lightbox2/images/prev.png) left 48% no-repeat;}
+.lb-next:hover{background:url(js/lightbox2/images/next.png) right 48% no-repeat;}
+.lb-dataContainer{margin:0 auto;padding-top:5px;*zoom:1;width:100%;-moz-border-radius-bottomleft:4px;-webkit-border-bottom-left-radius:4px;-ms-border-bottom-left-radius:4px;-o-border-bottom-left-radius:4px;border-bottom-left-radius:4px;-moz-border-radius-bottomright:4px;-webkit-border-bottom-right-radius:4px;-ms-border-bottom-right-radius:4px;-o-border-bottom-right-radius:4px;border-bottom-right-radius:4px;}
+.lb-dataContainer:after{content:"";display:table;clear:both;}
+.lb-data{padding:0 10px;color:#bbbbbb;}
+.lb-data .lb-details{width:85%;float:left;text-align:left;line-height:1.1em;}
+.lb-data .lb-caption{font-size:13px;font-weight:bold;line-height:1em;}
+.lb-data .lb-number{display:block;clear:left;padding-bottom:1em;font-size:11px;}
+.lb-data .lb-close{width:35px;float:right;padding-bottom:0.7em;outline:none;}
+.lb-data .lb-close:hover{cursor:pointer;}
