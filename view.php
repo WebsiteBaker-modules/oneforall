@@ -2,7 +2,7 @@
 
 /*
   Module developed for the Open Source Content Management System WebsiteBaker (http://websitebaker.org)
-  Copyright (C) 2015, Christoph Marti
+  Copyright (C) 2016, Christoph Marti
 
   LICENCE TERMS:
   This module is free software. You can redistribute it and/or modify it 
@@ -46,7 +46,7 @@ if (isset($_GET['p']) AND is_numeric($_GET['p']) AND $_GET['p'] >= 0) {
 
 // Get user's username, display name, email, and id - needed for insertion into item info
 $users = array();
-$query_users = $database->query("SELECT user_id,username,display_name,email FROM ".TABLE_PREFIX."users");
+$query_users = $database->query("SELECT user_id,username,display_name,email FROM `".TABLE_PREFIX."users`");
 if ($query_users->numRows() > 0) {
 	while ($user = $query_users->fetchRow()) {
 		// Insert user info into users array

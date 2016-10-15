@@ -1,6 +1,6 @@
 /*
   CSS definition for WebsiteBaker module: OneForAll
-  Copyright (C) 2015, Christoph Marti
+  Copyright (C) 2016, Christoph Marti
 
   This CSS file is free software. You can redistribute it and/or modify it 
   under the terms of the GNU General Public License - version 2 or later, 
@@ -33,6 +33,9 @@ Modify the CSS of the main page and the item page in this stylesheet.
 /* OVERVIEW OR MAIN PAGE */
 
 .mod_oneforall_item_loop_f {
+	
+}
+.mod_oneforall_group_wrapper_f {
 	
 }
 .mod_oneforall_main_thumb_f {

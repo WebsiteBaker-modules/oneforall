@@ -2,7 +2,7 @@
 
 /*
   Module developed for the Open Source Content Management System WebsiteBaker (http://websitebaker.org)
-  Copyright (C) 2015, Christoph Marti
+  Copyright (C) 2016, Christoph Marti
 
   LICENCE TERMS:
   This module is free software. You can redistribute it and/or modify it 
@@ -37,6 +37,42 @@ $module_name = 'OneForAll'; // default: OneForAll
  -----------------------------------------------------------------------------------------
 
 	DEVELOPMENT HISTORY:
+
+   v0.9.4  (Christoph Marti; 10/12/2016)
+	 + [frontend.css] Added class .mod_oneforall_group_wrapper_f
+	 + [backend.css] Added transition to the .classes switch-label and .switch-handel
+
+   v0.9.3  (Frank Fischer, Christoph Marti; 10/11/2016)
+	 + Bugfix: First selected item of multiselect and radio have not been displaying in frontend view
+	 + Added group wrapper div with 2 separate css classes to make styling of groups easier
+	 + Added css styling to the switches, checkboxes and radio buttons of the item table 
+	 + Bugfix: Function to enable/disable an item using ajax
+
+   v0.9.2  (Uwe Jacobsen, Frank Fischer, Christoph Marti; 10/08/2016)
+	 + Added field types code, multiselect, checkbox, switch and radio
+	 + Field type code must be allowed in config.php due to security reasons
+	 + [modify_item.php] Added setting to still duplicate items even when item mover/duplicator is disabled
+	 + [modify_item.php] Added field meta description for item detail pages
+	   Adds the title and a meta description to the html header of every item detail page
+	 + [modify.php] Enable/disable item via ajax
+	 + [modify.php] Added sorting of item table by clicking the column headers 'id', 'title' and 'enabled'
+	 + [modify_item.php] Added drag&drop sorting to the item images
+	 + [modify_fields.php] Added drag&drop sorting to the fields table
+	 + Bugfix: Fixed view of field type oneforall_link
+	 + Bugfix: Fixed item and image positions in db when reordered by drag&drop (position must be > 0)
+
+   v0.9  (Christoph Marti; 09/29/2016)
+	 + [view_item.php] Bugfix: Initialized vars properly for item pagination
+	 + Improved image resizing: png images will no longer be converted to jpg images.
+	   png images and thumbs now will be saved as png images (reported by dbs)
+	 + If "Hide image settings and upload" is checked, no media directory will be generated (reported by dbs)
+	   Only works, if the option is checked in all module sections.
+	 + Updated Lightbox2 to v2.8.2 (responsive slideshow) (reported by CodeALot)
+	 + [view_overview.php, view_item.php] Changed js method to set the Lightbox2 options
+	 + [lightbox2/css/lightbox.css] Moved css definitions of Lightbox2 to file frontend.css
+	 + [config.php, modify_item.php] Added setting to hide item mover (thanks to CodeALot and dbs)
+	 + Bugfix: Fixed problem with single quotes in image title and alt attributes (reported by dbs)
+	 + Replaced @mktime() by time() function since as of PHP 5.1 mktime() throws a notice when called without arguments
 
    v0.8  (Christoph Marti; 10/06/2015)
 	 + Added drag&drop sorting to the item table
@@ -114,7 +150,7 @@ $mod_name           = $module_directory;
 $renamed_to         = $mod_name == 'oneforall' ? '' : '(renamed to <strong>'.$module_name.'</strong>) ';
 
 $module_function    = 'page';
-$module_version     = '0.8';
+$module_version     = '0.9.4';
 $module_platform    = '2.8.x';
 $module_author      = 'Christoph Marti. OneForAll '.$renamed_to.'is based on the module Showcase v0.5';
 $module_license     = 'GNU General Public License';

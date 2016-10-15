@@ -2,7 +2,7 @@
 
 /*
   Module developed for the Open Source Content Management System WebsiteBaker (http://websitebaker.org)
-  Copyright (C) 2015, Christoph Marti
+  Copyright (C) 2016, Christoph Marti
 
   LICENCE TERMS:
   This module is free software. You can redistribute it and/or modify it 
@@ -44,7 +44,7 @@ $item_id = $database->get_one("SELECT LAST_INSERT_ID()");
 if ($database->is_error()) {
 	$admin->print_error($database->get_error(), WB_URL.'/modules/'.$mod_name.'/modify_item.php?page_id='.$page_id.'&section_id='.$section_id.'&item_id='.$item_id);
 } else {
-	$admin->print_success($TEXT['SUCCESS'], WB_URL.'/modules/'.$mod_name.'/modify_item.php?page_id='.$page_id.'&section_id='.$section_id.'&item_id='.$item_id);
+	$admin->print_success($TEXT['SUCCESS'], WB_URL.'/modules/'.$mod_name.'/modify_item.php?page_id='.$page_id.'&section_id='.$section_id.'&item_id='.$item_id.'&from=add_item');
 }
 
 // Print admin footer

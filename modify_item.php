@@ -2,7 +2,7 @@
 
 /*
   Module developed for the Open Source Content Management System WebsiteBaker (http://websitebaker.org)
-  Copyright (C) 2015, Christoph Marti
+  Copyright (C) 2016, Christoph Marti
 
   LICENCE TERMS:
   This module is free software. You can redistribute it and/or modify it 
@@ -46,12 +46,6 @@ if (!isset($_GET['item_id']) OR !is_numeric($_GET['item_id'])) {
 } else {
 	$item_id = $_GET['item_id'];
 }
-// Get from
-if (isset($_GET['from']) AND $_GET['from'] == 'add_item') {
-	$show_item_mover = false;
-} else {
-	$show_item_mover = true;
-}
 
 
 // Include WB admin wrapper script
@@ -75,7 +69,8 @@ if (isset($_SESSION[$mod_name]['item']) && is_array($_SESSION[$mod_name]['item']
 	$img_resize['maxwidth']       = htmlspecialchars($_SESSION[$mod_name]['item']['maxwidth']);
 	$fetch_item['active']         = htmlspecialchars($_SESSION[$mod_name]['item']['active']);
 	$fetch_item['new_section_id'] = $_SESSION[$mod_name]['item']['new_section_id'];
-	$fetch_item['action']         = $_SESSION[$mod_name]['item']['action'];	
+	$fetch_item['action']         = $_SESSION[$mod_name]['item']['action'];
+	$fetch_item['description']    = htmlspecialchars($_SESSION[$mod_name]['item']['description']);
 	unset($_SESSION[$mod_name]['item']);
 }
 
@@ -84,8 +79,12 @@ $setting_img_section = $database->get_one("SELECT img_section FROM `".TABLE_PREF
 
 
 ?>
+<script type="text/javascript">
+	var mod_name         = '<?php echo $mod_name; ?>',
+	txt_dragdrop_message = '<?php echo $MOD_ONEFORALL[$mod_name]['TXT_DRAGDROP_MESSAGE']; ?>';
+</script>
 
-<h2>1. <?php echo $TEXT['ADD'].'/'.$TEXT['MODIFY'].' '.$MOD_ONEFORALL[$mod_name]['TXT_ITEM']; ?></h2>
+<h2>1. <?php echo $TEXT['ADD'].' / '.$TEXT['MODIFY'].' '.$MOD_ONEFORALL[$mod_name]['TXT_ITEM']; ?></h2>
 
 <form name="modify" action="<?php echo WB_URL; ?>/modules/<?php echo $mod_name; ?>/save_item.php" method="post" enctype="multipart/form-data" style="margin: 0;">
 
@@ -96,13 +95,13 @@ $setting_img_section = $database->get_one("SELECT img_section FROM `".TABLE_PREF
 
 <table id="modify_item" cellpadding="2" cellspacing="0" border="0" align="center" width="98%">
 	<tr>
-		<td width="20%" align="right"><?php echo $MOD_ONEFORALL[$mod_name]['TXT_TITLE']; ?>:</td>
+		<td><?php echo $MOD_ONEFORALL[$mod_name]['TXT_TITLE']; ?>:</td>
 		<td>
 			<input type="text" name="title" id="title" style="width: 98%;" maxlength="150" value="<?php echo $fetch_item['title']; ?>" />
 		</td>
 	</tr>
 	<tr>
-		<td width="20%" align="right"><?php echo $TEXT['ACTIVE']; ?>:</td>
+		<td><?php echo $TEXT['ACTIVE']; ?>:</td>
 		<td>
 			<input type="radio" name="active" id="active_true" value="1" <?php if ($fetch_item['active'] == 1) { echo " checked='checked'"; } ?> />
 			<label for="active_true"><?php echo $TEXT['YES']; ?></label>
@@ -114,20 +113,33 @@ $setting_img_section = $database->get_one("SELECT img_section FROM `".TABLE_PREF
 <?php
 
 
-// Only show item mover for existing items
+
+
+// ITEM MOVER / DUPLICATOR
+// ***********************
+
+// Show/hide item mover/duplicator (see config.php)
+
+// Do not show item mover/duplicator at all if user has added a new item
+if (isset($_GET['from']) AND $_GET['from'] == 'add_item') {
+	$show_item_mover      = false;
+	$show_item_duplicator = false;
+}
+
+// Move or duplicate
 if ($show_item_mover) {
 ?>
 	<tr>
-		<td width="20%" align="right"><?php echo $MOD_ONEFORALL[$mod_name]['TXT_ITEM_TO_PAGE']; ?>... </td>
+		<td><?php echo $MOD_ONEFORALL[$mod_name]['TXT_ITEM_TO_PAGE']; ?> ... </td>
 		<td>
 	<?php
 	// OneForAll page list
-	$query_pages = "SELECT p.page_id, p.page_title, p.visibility, p.admin_groups, p.admin_users, p.viewing_groups, p.viewing_users, s.section_id FROM ".TABLE_PREFIX."pages p INNER JOIN ".TABLE_PREFIX."sections s ON p.page_id = s.page_id WHERE s.module = '".$mod_name."' AND p.visibility != 'deleted' ORDER BY p.level, p.position ASC";
+	$query_pages = "SELECT p.page_id, p.page_title, p.visibility, p.admin_groups, p.admin_users, p.viewing_groups, p.viewing_users, s.section_id FROM `".TABLE_PREFIX."pages` p INNER JOIN `".TABLE_PREFIX."sections` s ON p.page_id = s.page_id WHERE s.module = '".$mod_name."' AND p.visibility != 'deleted' ORDER BY p.level, p.position ASC";
 	$get_pages = $database->query($query_pages);
-	
+
 	if ($get_pages->numRows() > 0) {
 		// Generate sections select
-		echo "<select name='new_section_id' style='width: 240px'>\n";
+		echo '<select name="new_section_id" style="width: 240px">'."\n";
 		while($page = $get_pages->fetchRow()) {
 			$page = array_map('stripslashes', $page);
 			// Only display if visible
@@ -150,13 +162,13 @@ if ($show_item_mover) {
 			}
 			// Options
 			echo "<option value='{$page['section_id']}'";
-			echo $fetch_item['section_id'] == $page['section_id'] ? " selected='selected'" : "";
-			echo $can_modify == false ? " disabled='disabled' style='color: #aaa;'" : "";
+			echo $fetch_item['section_id'] == $page['section_id'] ? " selected='selected'" : '';
+			echo $can_modify == false ? " disabled='disabled' style='color: #aaa;'" : '';
 			echo ">{$page['page_title']}</option>\n";
 			// Prepare prechecked radio buttons
 			$action_move      = '';
 			$action_duplicate = '';
-			if (isset($fetch_item['action']) && $fetch_item['action'] == "duplicate") {
+			if (isset($fetch_item['action']) && $fetch_item['action'] == 'duplicate') {
 				$action_duplicate = " checked='checked'";
 			} else {
 				$action_move = " checked='checked'";
@@ -164,8 +176,8 @@ if ($show_item_mover) {
 		
 		} ?>
 		</select>
-		<input name="action" type="radio" id="action_move" value="move"<?php echo $action_move; ?> /><label for="action_move">...<?php echo $MOD_ONEFORALL[$mod_name]['TXT_MOVE']; ?></label>&nbsp; 
-		<input name="action" type="radio" id="action_duplicate" value="duplicate"<?php echo $action_duplicate; ?> /><label for="action_duplicate">...<?php echo $MOD_ONEFORALL[$mod_name]['TXT_DUPLICATE']; ?></label>
+		<input name="action" type="radio" id="action_move" value="move"<?php echo $action_move; ?> style="margin-left: 12px;" /><label for="action_move"> <?php echo $MOD_ONEFORALL[$mod_name]['TXT_MOVE']; ?></label> 
+		<input name="action" type="radio" id="action_duplicate" value="duplicate"<?php echo $action_duplicate; ?> style="margin-left: 18px;" /><label for="action_duplicate"> <?php echo $MOD_ONEFORALL[$mod_name]['TXT_DUPLICATE']; ?></label>
 <?php	
 	}
 	else {	
@@ -175,6 +187,44 @@ if ($show_item_mover) {
 	</tr>
 <?php
 }
+
+
+// Duplicate only
+else if ($show_item_duplicator) {
+	$action_duplicate = '';
+	if (isset($fetch_item['action']) && $fetch_item['action'] == 'duplicate') {
+		$action_duplicate = " checked='checked'";
+	}
+?>
+	<tr>
+		<td><?php echo $MOD_ONEFORALL[$mod_name]['TXT_ITEM']; ?> ... </td>
+		<td>
+			<input name="new_section_id" type="hidden" value="<?php echo $section_id; ?>" />
+			<input name="action" type="checkbox" id="action_duplicate" value="duplicate"<?php echo $action_duplicate; ?> />
+			<label for="action_duplicate"> <?php echo $MOD_ONEFORALL[$mod_name]['TXT_DUPLICATE']; ?></label>
+		</td>
+	</tr>
+<?php
+}
+
+
+
+
+// META DESCRIPTION
+// ****************
+
+// Textarea for meta description added to the head of the detail page
+if ($view_detail_pages && $field_meta_desc) {
+?>
+	<tr>
+		<td class="align_top"><?php echo $TEXT['DESCRIPTION']; ?>:<br />(Meta description)</td>		
+		<td>
+			<textarea name="description" id="description" rows="3"><?php echo $fetch_item['description']; ?></textarea>
+		</td>
+	</tr>
+<?php
+}
+
 
 
 
@@ -188,7 +238,7 @@ echo '<script src="'.WB_URL.'/include/jquery/jquery-ui-min.js" type="text/javasc
 // Load jquery ui datepicker language file
 $datepicker_lang      = defined('LANGUAGE') && strlen(LANGUAGE) == 2 ? strtolower(LANGUAGE) : 'en';
 $datepicker_lang_path = '/include/jquery/i18n/jquery.ui.datepicker-'.$datepicker_lang.'.js';
-// By default datepaicker will use english if there is no language file
+// By default datepicker will use english if there is no language file
 if (file_exists(WB_PATH.$datepicker_lang_path)) {
 	echo '<script src="'.WB_URL.$datepicker_lang_path.'" type="text/javascript"></script>';
 }
@@ -200,14 +250,21 @@ echo '<script src="'.WB_URL.'/modules/'.$mod_name.'/js/timepicker/js/jquery-ui-t
 // Load jquery ui timepicker language file
 $timepicker_lang      = defined('LANGUAGE') && strlen(LANGUAGE) == 2 ? strtolower(LANGUAGE) : '';
 $timepicker_lang_path = '/modules/'.$mod_name.'/js/timepicker/lang/jquery-ui-timepicker-'.$timepicker_lang.'.js';
-// By default datepicker will use english if there is no other language file
-if (file_exists(WB_PATH.$datepicker_lang_path)) {
+// By default timepicker will use english if there is no other language file
+if (file_exists(WB_PATH.$timepicker_lang_path)) {
 	echo '<script src="'.WB_URL.$timepicker_lang_path.'" type="text/javascript"></script>';
 }
 
 
-// Get all fields from db
-$query_fields = $database->query("SELECT * FROM `".TABLE_PREFIX."mod_".$mod_name."_fields` WHERE type != 'disabled' ORDER BY position, field_id ASC");
+
+// GET ALL FIELDS FROM DB
+
+// Exclude field type code if not allowed in config.php
+$where_clause = $field_type_code ? '' : " AND type != 'code'";
+
+// Query fields
+$query_fields = $database->query("SELECT * FROM `".TABLE_PREFIX."mod_".$mod_name."_fields` WHERE type != 'disabled'$where_clause ORDER BY position, field_id ASC");
+
 if ($query_fields->numRows() > 0) {
 	while ($field = $query_fields->fetchRow()) {
 
@@ -251,6 +308,9 @@ if ($query_fields->numRows() > 0) {
 			case 'wysiwyg':
 				field_wysiwyg($field_id, $name, $label, $value, $wysiwyg_full_width);
 				break;
+			case 'code':
+				field_code($field_id, $name, $label, $value, $wysiwyg_full_width);
+				break;
 			case 'wb_link':
 				echo field_wb_link($field_id, $name, $page_id, $label, $value);
 				break;
@@ -290,6 +350,18 @@ if ($query_fields->numRows() > 0) {
 			case 'select':
 				echo field_select($field_id, $name, $extra, $label, $value);
 				break;
+			case 'multiselect':
+				echo field_multiselect($field_id, $name, $extra, $label, $value);
+				break;
+			case 'checkbox':
+				echo field_checkbox($field_id, $name, $extra, $label, $value);
+				break;
+			case 'switch':
+				echo field_switch($field_id, $name, $extra, $label, $value);
+				break;
+			case 'radio':
+				echo field_radio($field_id, $name, $extra, $label, $value);
+				break;
 			case 'group':
 				echo field_group($field_id, $name, $extra, $label, $value);
 				break;
@@ -300,7 +372,7 @@ if ($query_fields->numRows() > 0) {
 }
 ?>
 
-	<tr height="40" class="mod_oneforall_submit_row_b">
+	<tr height="40" class="mod_oneforall_submit_b">
 		<td colspan="2">
 		<table width="100%" border="0" cellspacing="0" cellpadding="0">
 			<tr>
@@ -330,33 +402,37 @@ $display_img_section = $setting_img_section ? 'none;' : 'block;';
 ?>
 <div style="display: <?php echo $display_img_section; ?>">
 	<br /><br /><br />
-	<a name="images"><h2>2. <?php echo $MOD_ONEFORALL[$mod_name]['TXT_ITEM']." ".$MOD_ONEFORALL[$mod_name]['TXT_IMAGES']; ?></h2></a>
-	<table cellpadding="2" cellspacing="0" border="0" width="98%" align="center">
-		<tr height="38" valign="bottom" class="mod_oneforall_submit_row_b">
-		  <th width="10%" align="left"><span style="margin-left: 5px;"><?php echo $MOD_ONEFORALL[$mod_name]['TXT_PREVIEW']; ?></span></th>
-		  <th align="left"><?php echo $MOD_ONEFORALL[$mod_name]['TXT_FILE_NAME']; ?></th>
-		  <th width="15%" align="left">HTML title Attribute<br />* HTML alt Attribute</th>
-		  <th width="15%" align="left"><?php echo $MOD_ONEFORALL[$mod_name]['TXT_CAPTION']; ?></th>
-		  <th width="5%" align="left" colspan="2"><?php echo $MOD_ONEFORALL[$mod_name]['TXT_POSITION']; ?></th>
-		  <th width="3%" align="left"><?php echo $TEXT['ACTIVE']; ?></th>
-		  <th width="3%" align="left"><?php echo $TEXT['DELETE']; ?></th>
-		</tr>
+	<a name="images"></a>
+	<h2>2. <?php echo $MOD_ONEFORALL[$mod_name]['TXT_ITEM'].' '.$MOD_ONEFORALL[$mod_name]['TXT_IMAGES']; ?></h2>
+	<table id="mod_oneforall_images_b" cellpadding="2" cellspacing="0" border="0" width="98%" align="center">
+		<thead>
+			<tr>
+				<th><?php echo $MOD_ONEFORALL[$mod_name]['TXT_PREVIEW']; ?></th>
+				<th><?php echo $MOD_ONEFORALL[$mod_name]['TXT_FILE_NAME']; ?></th>
+				<th>HTML title Attribute<br />* HTML alt Attribute</th>
+				<th><?php echo $MOD_ONEFORALL[$mod_name]['TXT_CAPTION']; ?></th>
+				<th colspan="2"><?php echo $MOD_ONEFORALL[$mod_name]['TXT_POSITION']; ?></th>
+				<th><?php echo $TEXT['ACTIVE']; ?></th>
+				<th><?php echo $TEXT['DELETE']; ?></th>
+			</tr>
+		</thead>
+		<tbody>
 
 		<?php
 		// Get all images of this item
-		$row      = 'a'; // Row color
 		$no_image = true;
 		$main_img = '<b>'.$MOD_ONEFORALL[$mod_name]['TXT_MAIN_IMAGE'].'</b><br />';
 
-		// Prepare image and thumb directory pathes and urls
-		$img_url   = WB_URL.MEDIA_DIRECTORY.'/'.$mod_name.'/images/item'.$item_id.'/';
-		$thumb_url = WB_URL.MEDIA_DIRECTORY.'/'.$mod_name.'/thumbs/item'.$item_id.'/';
+		// Prepare image / thumb url and thumb path
+		$img_url    = WB_URL.MEDIA_DIRECTORY.'/'.$mod_name.'/images/item'.$item_id.'/';
+		$thumb_url  = WB_URL.MEDIA_DIRECTORY.'/'.$mod_name.'/thumbs/item'.$item_id.'/';
+		$thumb_path = WB_PATH.MEDIA_DIRECTORY.'/'.$mod_name.'/thumbs/item'.$item_id.'/';
 
 		// Get image top position for this item
-		$top_img = $database->get_one("SELECT MAX(`position`) AS `top_position` FROM `".TABLE_PREFIX."mod_".$mod_name."_images` WHERE `item_id` = '$item_id'");
+		$top_img = $database->get_one("SELECT MAX(position) AS top_position FROM `".TABLE_PREFIX."mod_".$mod_name."_images` WHERE item_id = '$item_id'");
 
 		// Get image data from db
-		$query_image = $database->query("SELECT * FROM `".TABLE_PREFIX."mod_".$mod_name."_images` WHERE `item_id` = '$item_id' ORDER BY position ASC");
+		$query_image = $database->query("SELECT * FROM `".TABLE_PREFIX."mod_".$mod_name."_images` WHERE item_id = '$item_id' ORDER BY position ASC");
 		if ($query_image->numRows() > 0) {
 			$no_image = false;
 			while ($image = $query_image->fetchRow()) {
@@ -364,6 +440,12 @@ $display_img_section = $setting_img_section ? 'none;' : 'block;';
 				$img_id     = $image['img_id'];
 				$image_file = $image['filename'];
 				$image['delete_image'] = 0;
+
+				// Check if png image has a jpg thumb (version < 0.9 used jpg thumbs only)
+				$thumb_file = $image_file;
+				if (!file_exists($thumb_path.$thumb_file)) {
+					$thumb_file = str_replace('.png', '.jpg', $thumb_file);
+				}
 
 				// Use session image data if user has been sent back to complete form		
 				if (isset($fetch_item['images'])) {
@@ -374,19 +456,16 @@ $display_img_section = $setting_img_section ? 'none;' : 'block;';
 					$image['delete_image'] = $fetch_item['images'][$img_id]['delete_image'];
 				}
 
-				// Thumbs use .jpg extension only
-				$thumb_file = str_replace(".png", ".jpg", $image_file);
-
 				// Prepare html output 
 				$image = array_map('htmlspecialchars', $image);
 				?>
 
-			<tr class="row_<?php echo $row; ?>">
-			  <td><a href="<?php echo $img_url.$image_file; ?>" target="_blank"><img src="<?php echo $thumb_url.$thumb_file; ?>" alt="<?php echo $MOD_ONEFORALL[$mod_name]['TXT_IMAGE']." ".$image_file; ?>" title="<?php echo $image_file; ?>" height="40" border="0" /></a>
+			<tr id="id_<?php echo $img_id; ?>">
+			  <td><a href="<?php echo $img_url.$image_file; ?>" target="_blank"><img src="<?php echo $thumb_url.$thumb_file; ?>" alt="<?php echo $MOD_ONEFORALL[$mod_name]['TXT_IMAGE'].' '.$image_file; ?>" title="<?php echo $image_file; ?>" height="40" border="0" /></a>
 			  </td>
 			  <td>
 			  <?php echo $main_img; ?>
-			  <a href="<?php echo $img_url.$image_file; ?>" target="_blank" style="word-break: break-all;"><?php echo $image_file; ?></a>
+			  <a href="<?php echo $img_url.$image_file; ?>" target="_blank"><?php echo $image_file; ?></a>
 			  </td>
 			  <td>
 				<input type="text" name="images[<?php echo $img_id; ?>][title]" style="width: 150px;" maxlength="255" value="<?php echo $image['title']; ?>" />
@@ -395,29 +474,28 @@ $display_img_section = $setting_img_section ? 'none;' : 'block;';
 			  <td>
 			    <textarea name="images[<?php echo $img_id; ?>][caption]" rows="3" style="width: 200px;"><?php echo $image['caption']; ?></textarea>
 			  </td>
-			  <td align="right">
+			  <td>
 			  <?php if ($image['position'] != 1) { ?>
 			    <a href="<?php echo WB_URL; ?>/modules/<?php echo $mod_name; ?>/move_img_up.php?page_id=<?php echo $page_id; ?>&amp;section_id=<?php echo $section_id; ?>&amp;item_id=<?php echo $item_id; ?>&amp;img_id=<?php echo $img_id; ?>" title="<?php echo $TEXT['MOVE_UP']; ?>">
 			      <img src="<?php echo THEME_URL; ?>/images/up_16.png" border="0" alt="/\" />
 			    </a>
 			  <?php } ?>
 			  </td>
-			  <td align="left">
+			  <td>
 			  <?php if ($image['position'] != $top_img) { ?>
 			    <a href="<?php echo WB_URL; ?>/modules/<?php echo $mod_name; ?>/move_img_down.php?page_id=<?php echo $page_id; ?>&amp;section_id=<?php echo $section_id; ?>&amp;item_id=<?php echo $item_id; ?>&amp;img_id=<?php echo $img_id; ?>" title="<?php echo $TEXT['MOVE_DOWN']; ?>">
 			      <img src="<?php echo THEME_URL; ?>/images/down_16.png" border="0" alt="\/" />
 			    </a>
 			  <?php } ?>
 			  </td>
-			  <td nowrap="nowrap" align="center">
+			  <td>
 			  	<input type="checkbox" name="images[<?php echo $img_id; ?>][active]" value="1"<?php if ($image['active'] == 1) {echo ' checked="checked"';} ?> />
 			  </td>
-			  <td nowrap="nowrap" align="center">
+			  <td>
 			  	<input type="checkbox" name="images[<?php echo $img_id; ?>][delete_image]" value="<?php echo $image_file; ?>"<?php if ($image['delete_image'] == $image_file) {echo ' checked="checked"';} ?> />
 			  </td>
 			</tr>
 			<?php
-			$row = $row == 'a' ? 'b' : 'a'; // Alternate row color
 			$main_img = '';
 			}
 		}
@@ -429,6 +507,7 @@ $display_img_section = $setting_img_section ? 'none;' : 'block;';
 			echo "</td></tr>";
 		}
 		?>
+		</tbody>
 	</table>
 	<br /><br />
 
@@ -436,7 +515,8 @@ $display_img_section = $setting_img_section ? 'none;' : 'block;';
 	<?php
 	// Image upload
 	?>
-	<a name="images"><h2>3. <?php echo $TEXT['ADD']." ".$MOD_ONEFORALL[$mod_name]['TXT_IMAGES']; ?></h2></a>
+	<a name="images"></a>
+	<h2>3. <?php echo $TEXT['ADD'].' '.$MOD_ONEFORALL[$mod_name]['TXT_IMAGES']; ?></h2>
 	<table cellpadding="2" cellspacing="0" border="0" width="100%" align="center">	
 		<tr align="left" valign="top">
 			<td>
@@ -446,8 +526,8 @@ $display_img_section = $setting_img_section ? 'none;' : 'block;';
 				<table class="mod_oneforall_img_resize_table_b" cellspacing="4">
 					<tr>
 						<th colspan="2">
-							<input type="checkbox" name="imgresize" id="imgresize" value="yes"<?php echo $img_resize['imgresize'] == 'yes' ? ' checked="checked"' : ""; ?> />
-							<label for="imgresize"><strong><?php echo $MOD_ONEFORALL[$mod_name]['TXT_IMAGE']." ".$TEXT['RESIZE']; ?></strong></label>
+							<input type="checkbox" name="imgresize" id="imgresize" value="yes"<?php echo $img_resize['imgresize'] == 'yes' ? ' checked="checked"' : ''; ?> />
+							<label for="imgresize"><strong><?php echo $MOD_ONEFORALL[$mod_name]['TXT_IMAGE'].' '.$TEXT['RESIZE']; ?></strong></label>
 						</th>
 					</tr>				
 					<tr>
@@ -485,7 +565,7 @@ $display_img_section = $setting_img_section ? 'none;' : 'block;';
 			</table>
 			</td>
 		</tr>
-		<tr height="40" class="mod_oneforall_submit_row_b">
+		<tr height="40" class="mod_oneforall_submit_b">
 			<td colspan="2">
 			<table width="100%" border="0" cellspacing="0" cellpadding="0">
 				<tr>

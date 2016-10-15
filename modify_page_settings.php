@@ -2,7 +2,7 @@
 
 /*
   Module developed for the Open Source Content Management System WebsiteBaker (http://websitebaker.org)
-  Copyright (C) 2015, Christoph Marti
+  Copyright (C) 2016, Christoph Marti
 
   LICENCE TERMS:
   This module is free software. You can redistribute it and/or modify it 
@@ -61,7 +61,7 @@ $hide_setting = $view_detail_pages ? '' : 'display: none;';
 	</tr>
 
 	<tr valign="bottom">
-	  <td width="25%" height="32" align="right"><strong><?php echo $MOD_ONEFORALL[$mod_name]['TXT_LAYOUT']." ".$MOD_ONEFORALL[$mod_name]['TXT_SETTINGS']; ?>:</strong></td>
+	  <td width="25%" height="32" align="right"><strong><?php echo $MOD_ONEFORALL[$mod_name]['TXT_LAYOUT'].' '.$MOD_ONEFORALL[$mod_name]['TXT_SETTINGS']; ?>:</strong></td>
 	  <td height="32" colspan="2"><input type="button" value="<?php echo $MENU['HELP']; ?>" onclick="javascript: window.location = '<?php echo WB_URL; ?>/modules/<?php echo $mod_name; ?>/help.php?page_id=<?php echo $page_id; ?>&section_id=<?php echo $section_id; ?>';" style="width: 100px;" /></td>
     </tr>
 	<tr>
@@ -96,7 +96,7 @@ $hide_setting = $view_detail_pages ? '' : 'display: none;';
 	</tr>
 	<?php if (extension_loaded('gd') AND function_exists('imageCreateFromJpeg')) { /* Make's sure GD library is installed */ ?>
 	<tr>
-		<td width="25%" align="right"><?php echo $MOD_ONEFORALL[$mod_name]['TXT_THUMBNAIL']." ".$TEXT['SIZE']; ?>:</td>
+		<td width="25%" align="right"><?php echo $MOD_ONEFORALL[$mod_name]['TXT_THUMBNAIL'].' '.$TEXT['SIZE']; ?>:</td>
 		<td colspan="2">
 			<select name="resize">
 			<?php
@@ -131,7 +131,7 @@ $hide_setting = $view_detail_pages ? '' : 'display: none;';
 
 <?php
 // OneForAll page list
-$query_pages = "SELECT p.page_id, p.page_title, p.visibility, p.admin_groups, p.admin_users, p.viewing_groups, p.viewing_users, s.section_id FROM ".TABLE_PREFIX."pages p INNER JOIN ".TABLE_PREFIX."sections s ON p.page_id = s.page_id WHERE s.module = '".$mod_name."' AND p.visibility != 'deleted' ORDER BY p.level, p.position ASC";
+$query_pages = "SELECT p.page_id, p.page_title, p.visibility, p.admin_groups, p.admin_users, p.viewing_groups, p.viewing_users, s.section_id FROM `".TABLE_PREFIX."pages` p INNER JOIN `".TABLE_PREFIX."sections` s ON p.page_id = s.page_id WHERE s.module = '".$mod_name."' AND p.visibility != 'deleted' ORDER BY p.level, p.position ASC";
 $get_pages = $database->query($query_pages);
 
 
@@ -166,7 +166,7 @@ if ($get_pages->numRows() > 0) {
 		elseif ($section_id == $page['section_id']) {
 			$sections_select .= " selected='selected'";
 		}
-		$sections_select .= $can_modify == false ? " disabled='disabled' style='color: #aaa;'" : "";
+		$sections_select .= $can_modify == false ? " disabled='disabled' style='color: #aaa;'" : '';
 		$sections_select .= ">{$page['page_title']}</option>\n";
 	}
 }
@@ -174,7 +174,7 @@ if ($get_pages->numRows() > 0) {
 
 
 // Save page settings   ?>
-<table width="98%" align="center" cellpadding="0" cellspacing="4" class="mod_oneforall_submit_row_b" style="padding: 10px;">
+<table width="98%" align="center" cellpadding="0" cellspacing="4" class="mod_oneforall_submit_b" style="padding: 10px;">
 	<tr>
         <td><input type="radio" name="modify" id="modify_current" value="current" checked="checked" /></td>
         <td colspan="2"><label for="modify_current"><em><?php echo $MOD_ONEFORALL[$mod_name]['TXT_MODIFY_THIS']; ?></em></label></td>

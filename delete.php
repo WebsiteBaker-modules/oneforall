@@ -2,7 +2,7 @@
 
 /*
   Module developed for the Open Source Content Management System WebsiteBaker (http://websitebaker.org)
-  Copyright (C) 2015, Christoph Marti
+  Copyright (C) 2016, Christoph Marti
 
   LICENCE TERMS:
   This module is free software. You can redistribute it and/or modify it 
@@ -32,7 +32,7 @@ require_once($inc_path.'/info.php');
 require_once(WB_PATH.'/framework/functions.php');
 
 // Delete item access file, images and thumbs associated with the section
-$query_items = $database->query("SELECT i.item_id, i.link AS item_link, p.link AS page_link FROM `".TABLE_PREFIX."mod_".$mod_name."_items` i INNER JOIN ".TABLE_PREFIX."pages p ON i.page_id = p.page_id WHERE i.section_id = '$section_id'");
+$query_items = $database->query("SELECT i.item_id, i.link AS item_link, p.link AS page_link FROM `".TABLE_PREFIX."mod_".$mod_name."_items` i INNER JOIN `".TABLE_PREFIX."pages` p ON i.page_id = p.page_id WHERE i.section_id = '$section_id'");
 
 if ($query_items->numRows() > 0) {
 	while ($item = $query_items->fetchRow()) {

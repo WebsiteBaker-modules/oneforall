@@ -2,7 +2,7 @@
 
 /*
   Module developed for the Open Source Content Management System WebsiteBaker (http://websitebaker.org)
-  Copyright (C) 2015, Christoph Marti
+  Copyright (C) 2016, Christoph Marti
 
   LICENCE TERMS:
   This module is free software. You can redistribute it and/or modify it 
@@ -96,7 +96,7 @@ echo '<ol>';
 // Check module name for not allowed characters
 if ($continue) {
 
-	echo '<li><span class="title">Check module name</span>';
+	echo '<li><span class="title">Check module name</span><br />';
 
 	if (!preg_match('/^[a-zA-Z0-9_ -]{3,20}$/', $module_name)) {
 		echo '<span class="bad">Allowed characters for the module name are a-z, A-Z, 0-9, - (hyphen), _ (underscore) and spaces.<br />Min 3, max 20 characters.<br />Please change the name of your module in the <code>info.php</code> file.</span>';
@@ -112,7 +112,7 @@ if ($continue) {
 // Check if the module is registered in the database
 if ($continue) {
 
-	echo '<li><span class="title">Check if the module is registered in the database</span>';
+	echo '<li><span class="title">Check if the module is registered in the database</span><br />';
 
 	$query_tables = $database->query("SHOW TABLES LIKE '".TABLE_PREFIX."mod_".$mod_name."%'");
 	if ($query_tables->numRows() == 5) {
@@ -135,7 +135,7 @@ $new_dir = WB_PATH.'/modules/'.$module_directory;
 // Rename module directory only when manual installation
 if ($continue && !isset($action)) {
 
-	echo '<li><span class="title">On manual installation rename module directory</span>';
+	echo '<li><span class="title">On manual installation rename module directory</span><br />';
 
 	// Check if the name of the module directory does not exist yet
 	if ($old_dir != $new_dir && is_dir($new_dir)) {
@@ -159,7 +159,7 @@ if ($continue && !isset($action)) {
 if ($continue && $mod_name != 'oneforall') {
 
 	// Adopt the frontend stylesheet to the new module name
-	echo '<li><span class="title">Adopt the frontend stylesheet to the new module name</span>';
+	echo '<li><span class="title">Adopt the frontend stylesheet to the new module name</span><br />';
 
 	$search_file   = 'frontend.css';
 	$needle        = 'mod_oneforall';
@@ -178,7 +178,7 @@ if ($continue && $mod_name != 'oneforall') {
 
 
 	// Adopt the search file to the new module name
-	echo '<li><span class="title">Adopt the search file to the new module name</span>';
+	echo '<li><span class="title">Adopt the search file to the new module name</span><br />';
 
 	$search_file   = 'search.php';
 	$needle        = 'oneforall';
@@ -205,15 +205,15 @@ if ($continue && $mod_name != 'oneforall') {
 
 // Modify media field path
 if ($continue) {
-	echo '<li><span class="title">Modify media field path</span>';
-	$query_fields = $database->query("SELECT `field_id` FROM `".TABLE_PREFIX."mod_".$mod_name."_fields` WHERE `type` = 'media'");
+	echo '<li><span class="title">Modify media field path</span><br />';
+	$query_fields = $database->query("SELECT field_id FROM `".TABLE_PREFIX."mod_".$mod_name."_fields` WHERE type = 'media'");
 	if ($query_fields->numRows() > 0) {
 		while ($field = $query_fields->fetchRow()) {
 			$field_id = $field['field_id'];
-			$sql = "UPDATE `".TABLE_PREFIX."mod_".$mod_name."_item_fields`
-					SET `value` = REPLACE(`value`, '".MEDIA_DIRECTORY."', '')
-					WHERE `value` LIKE '%media%'
-					AND `field_id` = '".$field_id."'";
+			$sql = "UPDATE `".TABLE_PREFIX."mod_".$mod_name."_item_fields
+					SET value = REPLACE(value, '".MEDIA_DIRECTORY."', '')
+					WHERE value LIKE '%media%'
+					AND field_id = '".$field_id."'";
 			if ($database->query($sql)) {
 				echo '<span class="good">Changed media field id='.$field_id.' paths successfully to paths not containing the media directory &quot;'.MEDIA_DIRECTORY.'&quot;.</span>';
 			} else {
@@ -228,6 +228,34 @@ if ($continue) {
 }
 
 
+// Add field 'description' to table 'items', if not exists
+if ($continue) {
+
+	$table_name = TABLE_PREFIX.'mod_'.$mod_name.'_items';
+	$field_name = 'description';
+	$parameter  = "TEXT NOT NULL DEFAULT '' AFTER `link`";
+	
+	echo '<li><span class="title">Add field &quot;'.$field_name.'&quot; to table &quot;'.$table_name.'&quot;</span><br />';
+
+	// Check if field exists
+	if (!$database->field_exists($table_name, $field_name)) {
+
+		// Add it to the database
+		$database->field_add($table_name, $field_name, $parameter);
+
+		// Print error else success message
+		if ($database->is_error()) {
+			echo '<span class="bad">'.$database->get_error().'</span>';
+			$continue = false;
+		} else {
+			echo '<span class="good">Added field &quot;'.$field_name.'&quot; successfully to table &quot;'.$table_name.'&quot;.</span>';
+		}
+	} else {
+		// Field already exists
+		echo '<span class="ok">Field "'.$field_name.'" already exists.</span>';
+	}
+	echo '</li>';
+}
 
 
 
@@ -241,7 +269,7 @@ if ($continue) {
 
 if ($continue) {
 	$class = ' success';
-	$title = 'Module '.$module_name.' upgraded successfull';
+	$title = 'Module '.$module_name.' upgraded successfully';
 	$text  = 'Please check the upgrade log carefully.';
 } else {
 	$class = ' error';

@@ -1,6 +1,6 @@
 /*
   Module developed for the Open Source Content Management System WebsiteBaker (http://websitebaker.org)
-  Copyright (C) 2015, Christoph Marti
+  Copyright (C) 2016, Christoph Marti
 
   LICENCE TERMS:
   This module is free software. You can redistribute it and/or modify it 
@@ -35,21 +35,12 @@ Modify the CSS of the main page and the item page in the frontend stylesheet.
 
 /* GENERAL */
 
-.row_a {
-	
-}
-.row_b {
-	background-color: #EBF3FF;
-}
-.row_a:hover, .row_b:hover {
-	background-color: #E8E8E8;
-}
 #mod_oneforall_modify_b {
 	border: 1px solid #BCBCBC;
 	margin-top: 15px;
 	padding: 8px;
 }
-.mod_oneforall_submit_row_b {
+.mod_oneforall_submit_b {
 	background-color:  #C1D2EE;
 }
 .mod_oneforall_section_header_b {
@@ -76,30 +67,194 @@ input[class$="_edit_css"] {
 }
 
 
-/* SORTABLE ITEM TABLE */
+/* JQUERY AND AJAX RELATED */
 
-#mod_oneforall_sortable_b {
-	
-}
-#mod_oneforall_sortable_b tr:nth-child(even) {
-	background-color: transparent;
-}
-#mod_oneforall_sortable_b tr:nth-child(odd) {
-	background-color: #EBF3FF;
-}
-.mod_oneforall_mouseover_b {
+.mod_oneforall_move_ns_b {
 	background-color: #E8E8E8 !important;
 	cursor: ns-resize;
 }
-.mod_oneforall_placeholder_b {
-	height: 30px;
+.ui-sortable-helper {
+	border: 1px dotted grey;
+	box-shadow: 2px 2px 20px 0px rgba(0,0,0,0.5);
 }
-#mod_oneforall_ajax_loader_b {
+#mod_oneforall_success_b {
+	position: fixed;
+	right: 4%;
+	top: 5%;
+	padding: 15px;
+	color: #009900;
+	font-size: 14px;
+	font-weight: bold;
+	background-color: #ECECEC;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+	box-shadow: 4px 4px 20px 0px rgba(0,0,0,0.5);
+}
+/* Animate.css - Copyright (c) 2016 Daniel Eden */
+/* http://daneden.me/animate */
+.animated {
+	-webkit-animation-duration: 1s;
+	animation-duration: 1s;
+	-webkit-animation-fill-mode: both;
+	animation-fill-mode: both;
+}
+@-webkit-keyframes bounceInDown {
+	from, 60%, 75%, 90%, to {
+		-webkit-animation-timing-function: cubic-bezier(0.215, 0.610, 0.355, 1.000);
+		animation-timing-function: cubic-bezier(0.215, 0.610, 0.355, 1.000);
+	}
+	0% {
+		opacity: 0;
+		-webkit-transform: translate3d(0, -3000px, 0);
+		transform: translate3d(0, -3000px, 0);
+	}
+	60% {
+		opacity: 1;
+		-webkit-transform: translate3d(0, 25px, 0);
+		transform: translate3d(0, 25px, 0);
+	}
+	75% {
+		-webkit-transform: translate3d(0, -10px, 0);
+		transform: translate3d(0, -10px, 0);
+	}
+	90% {
+		-webkit-transform: translate3d(0, 5px, 0);
+		transform: translate3d(0, 5px, 0);
+	}
+	to {
+		-webkit-transform: none;
+		transform: none;
+	}
+}
+@keyframes bounceInDown {
+	from, 60%, 75%, 90%, to {
+		-webkit-animation-timing-function: cubic-bezier(0.215, 0.610, 0.355, 1.000);
+		animation-timing-function: cubic-bezier(0.215, 0.610, 0.355, 1.000);
+	}
+	
+	0% {
+		opacity: 0;
+		-webkit-transform: translate3d(0, -3000px, 0);
+		transform: translate3d(0, -3000px, 0);
+	}
+	
+	60% {
+		opacity: 1;
+		-webkit-transform: translate3d(0, 25px, 0);
+		transform: translate3d(0, 25px, 0);
+	}
+	
+	75% {
+		-webkit-transform: translate3d(0, -10px, 0);
+		transform: translate3d(0, -10px, 0);
+	}
+	
+	90% {
+		-webkit-transform: translate3d(0, 5px, 0);
+		transform: translate3d(0, 5px, 0);
+	}
+	
+	to {
+		-webkit-transform: none;
+		transform: none;
+	}
+}
+.bounceInDown {
+	-webkit-animation-name: bounceInDown;
+	animation-name: bounceInDown;
+}
+
+
+/* SORTABLE ITEM TABLE */
+
+#mod_oneforall_items_b {
+	
+}
+
+#mod_oneforall_items_b thead > tr {
+	height: 30px;
+	background-color: #C1D2EE;
+}
+#mod_oneforall_items_b thead th:nth-child(1) {
+	width: 30px;
+	padding-left: 10px;
+	text-align: right;
+}
+#mod_oneforall_items_b thead th:nth-child(2) {
+	width: 30px;
+}
+#mod_oneforall_items_b thead th:nth-child(3) {
+	
+}
+#mod_oneforall_items_b thead th:nth-child(4) {
+	width: 12%;
+}
+#mod_oneforall_items_b thead th:nth-child(5) {
+	width: 40px;
+	text-align: center;
+}
+#mod_oneforall_items_b thead th:nth-child(6) {
+	width: 20px;
+}
+#mod_oneforall_items_b thead th:nth-child(7) {
+	width: 20px;
+}
+#mod_oneforall_items_b thead th:nth-child(8) {
+	width: 20px;
+}
+
+#mod_oneforall_items_b tbody tr {
+	height: 26px;
+}
+#mod_oneforall_items_b tbody tr:nth-child(even) {
+	background-color: transparent;
+}
+#mod_oneforall_items_b tbody tr:nth-child(odd) {
+	background-color: #EBF3FF;
+}
+#mod_oneforall_items_b tbody td:nth-child(1) {
+	text-align: right;
+	font-weight: bold;
+}
+#mod_oneforall_items_b tbody td:nth-child(2) {
+	text-align: center;
+}
+#mod_oneforall_items_b tbody td:nth-child(3) {
+	text-align: left;
+}
+#mod_oneforall_items_b tbody td:nth-child(4) {
+	white-space: nowrap;
+}
+#mod_oneforall_items_b tbody td:nth-child(5) {
+	text-align: center;
+}
+
+span[class^="mod_oneforall_active"] {
+	display: inline-block;
+	width: 8px;
+	height: 8px;
+	-webkit-border-radius: 50%;
+	-moz-border-radius: 50%;
+	border-radius: 50%
+	-webkit-transition: all 0.2s ease-in-out;
+	-moz-transition: all 0.2s ease-in-out;
+	-o-transition: all 0.2s ease-in-out;
+	transition: all 0.2s ease-in-out;
+}
+span[class^="mod_oneforall_active"] span {
 	display: none;
-	width: 16px;
-	height: 16px;
-	border: none;
-	margin-left: 24px;
+}
+span[class^="mod_oneforall_active"]:hover {
+	width: 14px;
+	height: 14px;
+	cursor: pointer;
+}
+.mod_oneforall_active0_b {
+	background-color: #B52B22;
+}
+.mod_oneforall_active1_b {
+	background-color: #159F2F;
 }
 
 
@@ -110,14 +265,14 @@ input[class$="_edit_css"] {
 #default_templates code {
 	display: none !important;
 }
+#custom_fields > thead > tr {
+	height: 60px;
+}
 #custom_fields label[for="sync_type_template"] {
 	font-weight: bold;
 }
-#custom_fields .row_a:hover {
-	background-color: transparent;
-}
-#custom_fields .row_b:hover {
-	background-color: #EBF3FF;
+#custom_fields th:first-child {
+	width: 19%;
 }
 #custom_fields th {
 	font-weight: bold;
@@ -125,11 +280,7 @@ input[class$="_edit_css"] {
 #custom_fields td {
 	padding: 3px 0;
 }
-#custom_fields .add_gap {
-	height: 20px;
-}
 #custom_fields .field_number {
-	padding-left: 3px;
 	font-weight: bold;
 }
 #custom_fields .field_placeholder + td code {
@@ -153,6 +304,17 @@ input[class$="_edit_css"] {
 	height: 80px;
 	margin-bottom: 10px;
 }
+
+#custom_fields table {
+	padding: 25px 0 20px 10px;
+}
+#custom_fields tr:nth-child(even) table {
+	background-color: transparent;
+}
+#custom_fields tr:nth-child(odd) table {
+	background-color: #EBF3FF;
+}
+
 @-webkit-keyframes highlight {
 	0% {
 		background: #C1D2EE;
@@ -184,10 +346,20 @@ input[class$="_edit_css"] {
 #modify_item {
 	border-spacing: 0px 6px;
 }
-#modify_item tr td:first-child {
+#modify_item td:first-child {
+	width: 20%;
+	text-align: right;
 	font-weight: bold;
 }
-#modify_item input[type=text],
+#modify_item td.align_top {
+	vertical-align: top;
+}
+#modify_item table td:first-child {
+	width: 75%;
+	text-align: left;
+	font-weight: normal;
+}
+#modify_item input[type="text"],
 #modify_item select,
 #modify_item textarea {
 	width: 98%;
@@ -236,30 +408,250 @@ input[class$="_edit_css"] {
 }
 
 
+/* SORTABLE IMAGE TABLE */
+
+#mod_oneforall_images_b {
+	
+}
+
+#mod_oneforall_images_b thead > tr {
+	height: 38px;
+	vertical-align: bottom;
+	background-color: #C1D2EE;
+}
+#mod_oneforall_images_b thead th:nth-child(1) {
+	width: 10%;
+	padding-left: 5px;
+	text-align: left;
+}
+#mod_oneforall_images_b thead th:nth-child(2) {
+	text-align: left;
+}
+#mod_oneforall_images_b thead th:nth-child(3) {
+	width: 15%;
+	text-align: left;
+}
+#mod_oneforall_images_b thead th:nth-child(4) {
+	width: 15%;
+	text-align: left;
+}
+#mod_oneforall_images_b thead th:nth-child(5) {
+	width: 5%;
+	text-align: left;
+}
+#mod_oneforall_images_b thead th:nth-child(6) {
+	width: 3%;
+	text-align: left;
+}
+#mod_oneforall_images_b thead th:nth-child(7) {
+	width: 3%;
+	text-align: left;
+}
+
+#mod_oneforall_images_b tbody tr {
+	height: 60px;
+}
+#mod_oneforall_images_b tbody tr:nth-child(even) {
+	background-color: transparent;
+}
+#mod_oneforall_images_b tbody tr:nth-child(odd) {
+	background-color: #EBF3FF;
+}
+#mod_oneforall_images_b tbody td:nth-child(2) a {
+	word-break: break-all;
+}
+#mod_oneforall_images_b tbody td:nth-child(5) {
+	text-align: right;
+}
+#mod_oneforall_images_b tbody td:nth-child(6) {
+	text-align: left;
+}
+#mod_oneforall_images_b tbody td:nth-child(7) {
+	text-align: center;
+	white-space: nowrap;
+}
+#mod_oneforall_images_b tbody td:nth-child(8) {
+	text-align: center;
+	white-space: nowrap;
+}
+
+
+/* SWITCH */
+/* http://www.htmllion.com/css3-toggle-switch-button.html */
+
+#modify_item .switch {
+	position: relative;
+	display: block;
+	vertical-align: top;
+	width: 100px;
+	height: 27px; /* 30px */
+	padding: 3px;
+	margin: 0;
+	background: linear-gradient(to bottom, #EEEEEE, #FFFFFF 25px);
+	background-image: -webkit-linear-gradient(top, #EEEEEE, #FFFFFF 25px);
+	border-radius: 18px;
+	box-shadow: inset 0 -1px white, inset 0 1px 1px rgba(0, 0, 0, 0.05);
+	cursor: pointer;
+}
+#modify_item .switch-input {
+	position: absolute;
+	top: 0;
+	left: 0;
+	opacity: 0;
+}
+#modify_item .switch-label {
+	position: relative;
+	display: block;
+	height: inherit;
+	font-size: 10px;
+	text-transform: uppercase;
+	background: #ECEEEF;
+	border-radius: inherit;
+	box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.12), inset 0 0 2px rgba(0, 0, 0, 0.15);
+}
+#modify_item .switch-label:before,
+#modify_item .switch-label:after {
+	position: absolute;
+	top: 50%;
+	margin-top: -.5em;
+	line-height: 1;
+	-webkit-transition: inherit;
+	-moz-transition: inherit;
+	-o-transition: inherit;
+	transition: inherit;
+}
+#modify_item .switch-label:before {
+	content: attr(data-off);
+	right: 15px; /* 11px */
+	color: #AAAAAA;
+	text-shadow: 0 1px rgba(255, 255, 255, 0.5);
+}
+#modify_item .switch-label:after {
+	content: attr(data-on);
+	left: 15px; /* 11px */
+	color: #FFFFFF;
+	text-shadow: 0 1px rgba(0, 0, 0, 0.2);
+	opacity: 0;
+}
+#modify_item .switch-input:checked ~ .switch-label {
+	background: #8EADE9; /* Change color of switch when on */
+	box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.15), inset 0 0 3px rgba(0, 0, 0, 0.2);
+}
+#modify_item .switch-input:checked ~ .switch-label:before {
+	opacity: 0;
+}
+#modify_item .switch-input:checked ~ .switch-label:after {
+	opacity: 1;
+}
+#modify_item .switch-handle {
+	position: absolute;
+	top: 4px;
+	left: 4px;
+	width: 25px; /* 28px */
+	height: 25px; /* 28px */
+	background: linear-gradient(to bottom, #FFFFFF 40%, #f0f0f0);
+	background-image: -webkit-linear-gradient(top, #FFFFFF 40%, #f0f0f0);
+	border-radius: 100%;
+	box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.2);
+}
+#modify_item .switch-handle:before {
+	content: "";
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	margin: -6px 0 0 -6px;
+	width: 12px;
+	height: 12px;
+	background: linear-gradient(to bottom, #EEEEEE, #FFFFFF);
+	background-image: -webkit-linear-gradient(top, #EEEEEE, #FFFFFF);
+	border-radius: 6px;
+	box-shadow: inset 0 1px rgba(0, 0, 0, 0.02);
+}
+#modify_item .switch-input:checked ~ .switch-handle {
+	left: 77px; /* 74px */
+	box-shadow: -1px 1px 5px rgba(0, 0, 0, 0.2);
+}
+#modify_item .switch-label,
+#modify_item .switch-handle {
+	-webkit-transition: all 0.3s ease;
+	-moz-transition: all 0.3s ease;
+	-o-transition: all 0.3s ease;
+	transition: all 0.3s ease;
+}
+
+
+/* CHECKBOXES AND RADIO BUTTONS */
+/* http://www.hongkiat.com/blog/css3-checkbox-radio/ */
+
+#modify_item input[type="radio"],
+#modify_item input[type="checkbox"] {
+	display: none !important;
+}
+#modify_item input[type="checkbox"] + label:before {
+	content: "";  
+	display: inline-block;  
+	width: 15px;  
+	height: 15px;  
+	vertical-align: middle;
+	margin-right: 8px;  
+	background-color: #CACACA;;  
+	box-shadow: inset 0px 2px 2px rgba(0, 0, 0, .3);
+	border-radius: 4px;  
+}
+#modify_item input[type="checkbox"]:checked + label:before {
+	content: "\2714"; /* Tick */
+	color: white;
+	background-color: #8EADE9; /* Change color of checkbox when checked */
+	text-align: center;
+	line-height: 15px;
+	text-shadow: 0px 0px 3px #EEEEEE;
+}
+#modify_item input[type="radio"] + label:before {
+	content: "";  
+	display: inline-block;  
+	width: 15px;  
+	height: 15px;  
+	vertical-align: middle;
+	margin-right: 8px;  
+	background-color: #CACACA;
+	box-shadow: inset 0px 2px 2px rgba(0, 0, 0, .3);
+	border-radius: 8px;  
+}
+#modify_item input[type="radio"]:checked + label:before {
+	content: "\2022"; /* Bullet */
+	color: white;
+	background-color: #8EADE9; /* Change color of radio button when checked */
+	font-size: 1.2em;
+	text-align: center;
+	line-height: 14px;
+	text-shadow: 0px 0px 3px #EEEEEE;
+}
+
+
 /* SUBMIT TABLE */
 
-.submit_table {
+.mod_oneforall_submit_table_b {
 	background-color:  #C1D2EE;
 }
-.submit_table td {
+.mod_oneforall_submit_table_b td {
 	width: 33.3%;
 	padding: 5px 0;
 }
-.submit_table td:first-child {
+.mod_oneforall_submit_table_b td:first-child {
 	padding-left: 20px;
 }
-.submit_table td:first-child + td {
+.mod_oneforall_submit_table_b td:first-child + td {
 	text-align: center;
 }
-.submit_table td:first-child + td + td {
+.mod_oneforall_submit_table_b td:first-child + td + td {
 	text-align: right;
 	padding-right: 20px;
 }
-.submit_table input[type="submit"],
-.submit_table input[type="button"] {
+.mod_oneforall_submit_table_b input[type="submit"],
+.mod_oneforall_submit_table_b input[type="button"] {
 	min-width: 120px;
 }
-.submit_table input[type="text"] {
+.mod_oneforall_submit_table_b input[type="text"] {
 	width: 20px;
 	text-align: center;
 }

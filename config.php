@@ -2,7 +2,7 @@
 
 /*
   Module developed for the Open Source Content Management System WebsiteBaker (http://websitebaker.org)
-  Copyright (C) 2015, Christoph Marti
+  Copyright (C) 2016, Christoph Marti
 
   LICENCE TERMS:
   This module is free software. You can redistribute it and/or modify it 
@@ -49,6 +49,11 @@ $order_by_group_asc = true;
 // Changing this setting after adding items may cause problems!
 $view_detail_pages = true;
 
+// Show additional field meta description on the modify item page
+// Will set title and meta description to the html header
+// of every item detail page using jquery
+$field_meta_desc = true;
+
 // Set extensions accepted by the media field as csv
 // Default: image extensions like jpg, png, gif and svg
 $media_extensions = 'jpg,png,gif,svg';
@@ -57,9 +62,22 @@ $media_extensions = 'jpg,png,gif,svg';
 // Default: text doc extensions like txt, rtf, doc, docx, odt and pdf
 $upload_extensions = 'txt,rtf,doc,docx,odt,pdf';
 
-// Backend item wysiwyg editor width
+// Allow moving and/or duplicating an item from one section to another
+// Set to false if there is for example just one module section
+$show_item_mover = true;
+
+// If moving/duplicating is disabled you can still allow duplicating an item
+// This setting is overwritten by the setting above
+$show_item_duplicator = true;
+
+// Backend item wysiwyg and code editor width
 // Both columns = 100% (true) or right column = 80% (false)
 $wysiwyg_full_width = false;
+
+// Allow the field type code which makes use of the language construct eval()
+// CAUTION: eval() is dangerous because it allows execution of arbitrary PHP code
+// Any user provided php code is not validated by the module OneForAll!
+$field_type_code = false;
 
 
 

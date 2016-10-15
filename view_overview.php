@@ -2,7 +2,7 @@
 
 /*
   Module developed for the Open Source Content Management System WebsiteBaker (http://websitebaker.org)
-  Copyright (C) 2015, Christoph Marti
+  Copyright (C) 2016, Christoph Marti
 
   LICENCE TERMS:
   This module is free software. You can redistribute it and/or modify it 
@@ -54,17 +54,9 @@ if ($setting_lightbox2 == "overview" || $setting_lightbox2 == "all") {
 	<script type="text/javascript" src="<?php echo WB_URL; ?>/modules/<?php echo $mod_name; ?>/js/lightbox2/js/lightbox.js"></script>
 	<script type="text/javascript">
 	//  Lightbox2 options
-	$(function () {
-	    var lightbox, options;
-	    options = new LightboxOptions;
-
-	    options.fileLoadingImage = '<?php echo WB_URL; ?>/modules/<?php echo $mod_name; ?>/js/lightbox2/images/loading.gif';
-	    options.fileCloseImage   = '<?php echo WB_URL; ?>/modules/<?php echo $mod_name; ?>/js/lightbox2/images/close.png';
-	    options.labelImage       = '<?php echo $MOD_ONEFORALL[$mod_name]['TXT_IMAGE']; ?>';
-	    options.labelOf          = '<?php echo $TEXT['OF']; ?>';
-
-	    return lightbox          = new Lightbox(options);
-	});
+	lightbox.option({
+		'albumLabel': '<?php echo $MOD_ONEFORALL[$mod_name]['TXT_IMAGE']; ?> %1 <?php echo $TEXT['OF']; ?> %2'
+	})
 	</script>
 	<?php
 }
@@ -174,10 +166,10 @@ if ($query_fields->numRows() > 0) {
 		$field_placeholders_num[]  = '[FIELD_'.$field_id.']';
 
 		// Array with field types, label and templates
-		$types[$field_id]     = $field['type'];
-		$extra[$field_id]     = $field['extra'];
-		$labels[$field_id]    = $field['label'];
-		$templates[$field_id] = $field['template'];
+		$types[$field_id]     = stripslashes($field['type']);
+		$extra[$field_id]     = stripslashes($field['extra']);
+		$labels[$field_id]    = stripslashes($field['label']);
+		$templates[$field_id] = stripslashes($field['template']);
 	}
 }
 else {
@@ -189,7 +181,9 @@ else {
 
 
 // LOOP TROUGH ITEMS AND SHOW THEM
-$printed_group = -1;
+$printed_group       = -1;
+$count_groups        = 0;
+$close_group_wrapper = '</div>'."\n";
 
 if ($num_items > 0) {
 	while ($item = $query_items->fetchRow()) {
@@ -223,18 +217,28 @@ if ($num_items > 0) {
 				// If needed print group title
 				$current_group = $values[$field_id] - 1;
 				if ($types[$field_id] == 'group' && $printed_group !== $current_group && $show_group_headers) {
+					// Count groups to set the wrappers properly
+					$count_groups++;
+					// Set the printed group to the current item group
 					$printed_group = $current_group;
-					$search        = array('[CUSTOM_LABEL]', '[GROUP_NAME]');
-					$replace       = array($group_label, $group_names[$current_group]);
+					// Opening group wrapper with 2 separate css classes
+					$open_group_wrapper = '<div class="mod_'.$mod_name.'_group_wrapper_f mod_'.$mod_name.'_group_'.$values[$field_id].'_f">';
+					// Print the wrapped group template
+					$group_template = $open_group_wrapper.$group['template'];
+					$search         = array('[CUSTOM_LABEL]', '[GROUP_NAME]');
+					$replace        = array($group_label, $group_names[$current_group]);
+					if ($count_groups > 1) {
+				    	echo $close_group_wrapper;
+					}
 					echo str_replace($search, $replace, $group_template);
 				}
 
 				// Display warning if field is disabled
 				if ($types[$field_id] == 'disabled') {
-					$values[$field_id] = '<span style="color: red;"><strong>'.$MOD_ONEFORALL[$mod_name]['ERR_FIELD_DISABLED'].'</strong><br>'.$MOD_ONEFORALL[$mod_name]['ERR_FIELD_RE_ENABLE'].'</span>';
+					$values[$field_id] = '<span style="color: red;"><strong>'.$MOD_ONEFORALL[$mod_name]['ERR_FIELD_DISABLED'].'</strong><br />'.$MOD_ONEFORALL[$mod_name]['ERR_FIELD_RE_ENABLE'].'</span>';
 				}
 
-				// For textareas convert newline to <br>
+				// For textareas convert newline to <br />
 				if ($types[$field_id] == 'textarea') {
 					$values[$field_id] = nl2br($values[$field_id]);
 				}
@@ -246,24 +250,36 @@ if ($num_items > 0) {
 					foreach ($ids[1] as $page_id) {
 						$pattern = '/\[wblink'.$page_id.'\]/s';
 						// Get page link
-						$link              = $database->get_one("SELECT link FROM ".TABLE_PREFIX."pages WHERE page_id = '$page_id' LIMIT 1");
+						$link              = $database->get_one("SELECT link FROM `".TABLE_PREFIX."pages` WHERE page_id = '$page_id' LIMIT 1");
 						$page_link         = page_link($link);
 						$values[$field_id] = preg_replace($pattern, $page_link, $values[$field_id]);
 					}
 				}
 
+				// For code evaluate the php code
+				if ($types[$field_id] == 'code' && $field_type_code) {
+					$retval = eval($values[$field_id]);
+					// If return is used in the evaluated code
+					if (is_string($retval)) {
+						$values[$field_id] = $retval;
+					// Parse error in the evaluated code
+					} else if (false === $retval) {
+						$values[$field_id] = '<span style="color: red;">ERROR: Parse error in the evaluated code. Please check your code.</span>';
+					}
+				}
+
 				// For wb_link convert page_id to page link
 				if ($types[$field_id] == 'wb_link' && is_numeric($values[$field_id])) {
-					$link = $database->get_one("SELECT link FROM ".TABLE_PREFIX."pages WHERE page_id = '".$values[$field_id]."' LIMIT 1");
+					$link = $database->get_one("SELECT link FROM `".TABLE_PREFIX."pages` WHERE page_id = '".$values[$field_id]."' LIMIT 1");
 					$values[$field_id] = page_link($link);
 				}
 
 				// For foldergallery_link convert gallery category to gallery link
 				if ($types[$field_id] == 'foldergallery_link') {
 					if (is_numeric($values[$field_id])) {
-						$query = "SELECT p.link, c.categorie FROM ".TABLE_PREFIX."pages p
-								INNER JOIN ".TABLE_PREFIX."sections s ON p.page_id = s.page_id 
-								INNER JOIN ".TABLE_PREFIX."mod_foldergallery_categories c ON s.section_id = c.section_id 
+						$query = "SELECT p.link, c.categorie FROM `".TABLE_PREFIX."pages` p
+								INNER JOIN `".TABLE_PREFIX."sections` s ON p.page_id = s.page_id 
+								INNER JOIN `".TABLE_PREFIX."mod_foldergallery_categories` c ON s.section_id = c.section_id 
 								WHERE c.id = ".$values[$field_id]." LIMIT 1";
 						$get_categories    = $database->query($query);
 						$cat               = $get_categories->fetchRow();				
@@ -275,24 +291,72 @@ if ($num_items > 0) {
 					}
 				}
 
+				// For oneforall_link convert item_id to detail page link
+				if ($types[$field_id] == 'oneforall_link') {
+					if (is_numeric($values[$field_id])) {
+						$query = "SELECT p.link as page_link, i.link as item_link FROM `".TABLE_PREFIX."pages` p
+								INNER JOIN `".TABLE_PREFIX."mod_".strtolower($extra[$field_id])."_items` i
+								ON p.page_id = i.page_id 
+								WHERE i.item_id = ".$values[$field_id]." AND active = '1'
+								ORDER BY i.item_id
+								LIMIT 1";
+						$get_links = $database->query($query);
+						if ($get_links->numRows() > 0) {
+							$links             = $get_links->fetchRow();				
+							$values[$field_id] = WB_URL.PAGES_DIRECTORY.$links['page_link'].$links['item_link'].PAGE_EXTENSION;
+						} else {
+							$values[$field_id] = '';
+						}
+					}
+				}
+
 				// For media and upload add WB_URL and MEDIA_DIRECTORY to the link
 				if ($types[$field_id] == 'media' || $types[$field_id] == 'upload' && !empty($values[$field_id])) {
 					$values[$field_id] = WB_URL.MEDIA_DIRECTORY.$values[$field_id];
 				}
 
-				// If value is serialized, unserialize it and convert it to string
+				// Serialized values
 				$unserialized = @unserialize($values[$field_id]);
 				if ($unserialized !== false || $values[$field_id] == 'b:0;') {
-					// Filter empty values
-					$array_size = count(array_filter($unserialized));
-					if ($array_size > 0) {
-						// For datepickers with start and end use "until" to separate the two dates
-						if ($types[$field_id] == 'datepicker_start_end' || $types[$field_id] == 'datetimepicker_start_end') {
-							$glue = ' '.$MOD_ONEFORALL[$mod_name]['TXT_DATEDATE_SEPARATOR'].' ';
-						} else {
-							$glue = ' ';
+					if (!empty($unserialized)) {
+	
+						// Some defaults
+						$glue         = ', ';
+						$pieces       = null;
+						$unserialized = array_filter($unserialized, 'strlen'); // Filter empty values except 0
+						$a_options    = empty($extra[$field_id]) ? null : explode(',', $extra[$field_id]);
+	
+						// Deal with different field types
+						switch ($types[$field_id]) {
+							case 'datepicker_start_end':
+								$glue   = ' '.$MOD_ONEFORALL[$mod_name]['TXT_DATEDATE_SEPARATOR'].' ';
+								$pieces = $unserialized;
+								break;
+							case 'datetimepicker_start_end':
+								$glue   = ' '.$MOD_ONEFORALL[$mod_name]['TXT_DATEDATE_SEPARATOR'].' ';
+								$pieces = $unserialized;
+								break;
+							case 'multiselect':
+								foreach ($unserialized as $index) {
+									$pieces[] = trim($a_options[$index]);
+								}
+								break;
+							case 'checkbox':
+								$pieces = array_intersect_key($a_options, $unserialized);
+								break;
+							case 'switch':
+								$pieces = array_key_exists(1, $unserialized) ? $a_options[0] : $a_options[1];
+								break;
+							case 'radio':
+								$pieces = array_key_exists(1, $unserialized) ? $a_options[$unserialized[1]] : '';
+								break;
+							default:
+								$glue   = ' ';
+								$pieces = $unserialized;
 						}
-						$values[$field_id] = implode($glue, $unserialized);
+	
+						// If needed make array to string conversion
+						$values[$field_id] = is_array($pieces) ? implode($glue, $pieces) : $pieces;
 					} else {
 						$values[$field_id] = '';
 					}
@@ -301,7 +365,7 @@ if ($num_items > 0) {
 				// For droplet
 				if ($types[$field_id] == 'droplet' && !empty($values[$field_id])) {
 					// Get the droplet
-					$droplet = $database->get_one("SELECT name FROM ".TABLE_PREFIX."mod_droplets WHERE active = 1 AND id = '".$values[$field_id]."' LIMIT 1");
+					$droplet = $database->get_one("SELECT name FROM `".TABLE_PREFIX."mod_droplets` WHERE active = 1 AND id = '".$values[$field_id]."' LIMIT 1");
 					$values[$field_id] = '[['.$droplet.']]';
 				}
 
@@ -309,7 +373,7 @@ if ($num_items > 0) {
 				if ($types[$field_id] == 'select' && !empty($values[$field_id])) {
 					$index     = $values[$field_id] - 1;
 					$a_options = explode(',', $extra[$field_id]);
-					$values[$field_id] = $a_options[$index];
+					$values[$field_id] = trim($a_options[$index]);
 				}
 			}
 		}
@@ -321,11 +385,17 @@ if ($num_items > 0) {
 		// Initialize or reset thumb(s) and image(s) befor laoding next item
 		$thumb_arr = array();
 		$image_arr = array();
-		$thumb     = "";
-		$image     = "";
+		$thumb     = '';
+		$image     = '';
+
+		// Prepare thumb and image directory pathes and urls
+		$thumb_dir = WB_PATH.MEDIA_DIRECTORY.'/'.$mod_name.'/thumbs/item'.$item_id.'/';
+		$img_dir   = WB_PATH.MEDIA_DIRECTORY.'/'.$mod_name.'/images/item'.$item_id.'/';
+		$thumb_url = WB_URL.MEDIA_DIRECTORY.'/'.$mod_name.'/thumbs/item'.$item_id.'/';
+		$img_url   = WB_URL.MEDIA_DIRECTORY.'/'.$mod_name.'/images/item'.$item_id.'/';
 
 		// Get image data from db
-		$query_image = $database->query("SELECT * FROM `".TABLE_PREFIX."mod_".$mod_name."_images` WHERE `item_id` = '$item_id' AND `active` = '1' ORDER BY position ASC");
+		$query_image = $database->query("SELECT * FROM `".TABLE_PREFIX."mod_".$mod_name."_images` WHERE item_id = '$item_id' AND active = '1' ORDER BY position ASC");
 		if ($query_image->numRows() > 0) {
 			while ($image = $query_image->fetchRow()) {
 				$image       = array_map('stripslashes', $image);
@@ -336,29 +406,26 @@ if ($num_items > 0) {
 				$img_title   = $image['title'];
 				$img_caption = $image['caption'];
 
-				// Thumbs use .jpg extension only
-				$thumb_file = str_replace(".png", ".jpg", $image_file);
-
-				// Prepare thumb and image directory pathes and urls
-				$thumb_dir = WB_PATH.MEDIA_DIRECTORY.'/'.$mod_name.'/thumbs/item'.$item_id.'/';
-				$img_dir   = WB_PATH.MEDIA_DIRECTORY.'/'.$mod_name.'/images/item'.$item_id.'/';
-				$thumb_url = WB_URL.MEDIA_DIRECTORY.'/'.$mod_name.'/thumbs/item'.$item_id.'/';
-				$img_url   = WB_URL.MEDIA_DIRECTORY.'/'.$mod_name.'/images/item'.$item_id.'/';
+				// Check if png image has a jpg thumb (version < 0.9 used jpg thumbs only)
+				$thumb_file = $image_file;
+				if (!file_exists($thumb_dir.$thumb_file)) {
+					$thumb_file = str_replace('.png', '.jpg', $thumb_file);
+				}
 
 				// Make array of all item thumbs and images
 				if (file_exists($thumb_dir.$thumb_file) && file_exists($img_dir.$image_file)) {
 					// If needed add lightbox2 link to the thumb/image...
-					if ($setting_lightbox2 == "overview" || $setting_lightbox2 == "all") {
-						$thumb_prepend = "<a href='".$img_url.$image_file."' rel='lightbox[image_".$item_id."]' title='".$img_title."'><img src='";
-						$img_prepend   = "<a href='".$img_url.$image_file."' rel='lightbox[image_".$item_id."]' title='".$img_title."'><img src='";
-						$thumb_append  = "' alt='".$img_alt."' title='".$img_title."' class='mod_".$mod_name."_main_thumb_f' /></a>";
-						$img_append    = "' alt='".$img_alt."' title='".$img_title."' class='mod_".$mod_name."_main_img_f' /></a>";
+					if ($setting_lightbox2 == 'overview' || $setting_lightbox2 == 'all') {
+						$thumb_prepend = '<a href="'.$img_url.$image_file.'" rel="lightbox[image_'.$item_id.']" title="'.$img_title.'"><img src="';
+						$img_prepend   = '<a href="'.$img_url.$image_file.'" rel="lightbox[image_'.$item_id.']" title="'.$img_title.'"><img src="';
+						$thumb_append  = '" alt="'.$img_alt.'" title="'.$img_title.'" class="mod_'.$mod_name.'_main_thumb_f" /></a>';
+						$img_append    = '" alt="'.$img_alt.'" title="'.$img_title.'" class="mod_'.$mod_name.'_main_img_f" /></a>';
 					// ...else add thumb/image only
 					} else {
-						$thumb_prepend = "<a href='".$item_link."'><img src='";
-						$img_prepend   = "<img src='";
-						$thumb_append  = "' alt='".$img_alt."' title='".$img_title."' class='mod_".$mod_name."_main_thumb_f' /></a>";
-						$img_append    = "' alt='".$img_alt."' title='".$img_title."' class='mod_".$mod_name."_main_img_f' />";
+						$thumb_prepend = '<a href="'.$item_link.'"><img src="';
+						$img_prepend   = '<img src="';
+						$thumb_append  = '" alt="'.$img_alt.'" title="'.$img_title.'" class="mod_'.$mod_name.'_main_thumb_f" /></a>';
+						$img_append    = '" alt="'.$img_alt.'" title="'.$img_title.'" class="mod_'.$mod_name.'_main_img_f" />';
 					}
 					// Make array
 					$thumb_arr[] = $thumb_prepend.$thumb_url.$thumb_file.$thumb_append;
@@ -395,8 +462,8 @@ if ($num_items > 0) {
 		$ready_templates = array();
 		foreach ($templates as $field_id => $template) {
 
-			// If value is empty return a blank template
-			if (!isset($values[$field_id]) || empty($values[$field_id])) {
+			// If value is empty or a group title return a blank template
+			if (!isset($values[$field_id]) || empty($values[$field_id]) || $types[$field_id] == 'group') {
 				$template = '';
 			} else {
 				$search   = array('[CUSTOM_LABEL]', '[CUSTOM_CONTENT]');
@@ -416,6 +483,11 @@ if ($num_items > 0) {
 		// Clear arrays for next item
 		unset($values);
 		unset($ready_templates);
+	}
+
+	// Print closing group wrapper for last group
+	if ($count_groups > 0) {
+		echo $close_group_wrapper;
 	}
 }
 else {

@@ -2,7 +2,7 @@
 
 /*
   Module developed for the Open Source Content Management System WebsiteBaker (http://websitebaker.org)
-  Copyright (C) 2015, Christoph Marti
+  Copyright (C) 2016, Christoph Marti
   
   This code is based on wb_searchext_mod_bakery v2.2 by thorn.
   It is adopted to Bakery v0.9 by thorn (thanks to thorn!).
@@ -42,8 +42,8 @@ function oneforall_search($func_vars) {
 	// Fetch all active items in this section
 	$query = $func_database->query("
 		SELECT tp.link AS page_link, ti.item_id, ti.title, ti.link AS item_link, ti.modified_when, ti.modified_by
-		FROM `$table_pages` tp
-		INNER JOIN `$table_items` ti
+		FROM $table_pages tp
+		INNER JOIN $table_items ti
 		ON tp.page_id = ti.page_id
 		WHERE section_id = '$func_section_id' AND active = '1'
 		ORDER BY title ASC
@@ -60,7 +60,7 @@ function oneforall_search($func_vars) {
 			$pic_link = '';
 			if ($show_thumb) {
 				$thumb_dir  = '/'.$mod_name.'/thumbs/item'.$res['item_id'].'/';
-				$main_thumb = $func_database->get_one("SELECT `filename` FROM `".TABLE_PREFIX."mod_".$mod_name."_images` WHERE `item_id` = '{$res['item_id']}' AND `active` = '1' ORDER BY `position` ASC LIMIT 1");
+				$main_thumb = $func_database->get_one("SELECT filename FROM `".TABLE_PREFIX."mod_".$mod_name."_images` WHERE item_id = '{$res['item_id']}' AND active = '1' ORDER BY position ASC LIMIT 1");
 				$main_thumb = str_replace('.png', '.jpg', $main_thumb);
 				if (is_file(WB_PATH.MEDIA_DIRECTORY.$thumb_dir.$main_thumb)) {
 					$pic_link = $thumb_dir.$main_thumb;
@@ -70,10 +70,10 @@ function oneforall_search($func_vars) {
 			// Values of text, textarea and wysiwyg fields
 			$values = '.';
 			$query_fields = $func_database->query("
-				SELECT `value`
-				FROM `$table_item_fields` INNER JOIN `$table_fields` USING(`field_id`)
-				WHERE `item_id` = '{$res['item_id']}' AND type IN ('text', 'textarea', 'wysiwyg')
-				ORDER BY `$table_item_fields`.`value` ASC
+				SELECT value
+				FROM $table_item_fields INNER JOIN $table_fields USING(field_id)
+				WHERE item_id = '{$res['item_id']}' AND type IN ('text', 'textarea', 'wysiwyg')
+				ORDER BY $table_item_fields.value ASC
 			");
 
 			if ($query_fields->numRows() > 0) {

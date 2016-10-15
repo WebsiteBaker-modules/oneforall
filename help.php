@@ -2,7 +2,7 @@
 
 /*
   Module developed for the Open Source Content Management System WebsiteBaker (http://websitebaker.org)
-  Copyright (C) 2015, Christoph Marti
+  Copyright (C) 2016, Christoph Marti
 
   LICENCE TERMS:
   This module is free software. You can redistribute it and/or modify it 
@@ -58,7 +58,7 @@ if ($query_item->numRows() > 0) {
 }
 
 // Get page info
-$query_page = $database->query("SELECT * FROM ".TABLE_PREFIX."pages WHERE page_id = '$page_id'");
+$query_page = $database->query("SELECT * FROM `".TABLE_PREFIX."pages` WHERE page_id = '$page_id'");
 if ($query_page->numRows() > 0) {
 	$page = $query_page->fetchRow();
 }

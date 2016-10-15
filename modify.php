@@ -2,7 +2,7 @@
 
 /*
   Module developed for the Open Source Content Management System WebsiteBaker (http://websitebaker.org)
-  Copyright (C) 2015, Christoph Marti
+  Copyright (C) 2016, Christoph Marti
 
   LICENCE TERMS:
   This module is free software. You can redistribute it and/or modify it 
@@ -65,6 +65,16 @@ if ($settings_admin_only && $_SESSION['USER_ID'] != 1) {
 <script type="text/javascript">
 jQuery().sortable || document.write('<script src="<?php echo WB_URL; ?>/include/jquery/jquery-ui-min.js"><\/script>');
 </script>
+<script type="text/javascript" src="<?php echo WB_URL; ?>/modules/<?php echo $mod_name; ?>/js/table_sort.js"></script>
+<script type="text/javascript">
+	var mod_name         = '<?php echo $mod_name; ?>',
+	txt_sort_table       = '<?php echo $MOD_ONEFORALL[$mod_name]['TXT_SORT_TABLE']; ?>',
+	txt_sort_by1         = '<?php echo $MOD_ONEFORALL[$mod_name]['TXT_SORT_BY1']; ?>',
+	txt_sort_by2         = '<?php echo $MOD_ONEFORALL[$mod_name]['TXT_SORT_BY2']; ?>',
+	txt_toggle_message   = '<?php echo $MOD_ONEFORALL[$mod_name]['TXT_TOGGLE_MESSAGE']; ?>',
+	txt_dragdrop_message = '<?php echo $MOD_ONEFORALL[$mod_name]['TXT_DRAGDROP_MESSAGE']; ?>';
+	if (txt_sort_by2.length > 0) txt_sort_by2 = ' ' + txt_sort_by2;
+</script>
 
 <div id="mod_oneforall_modify_b">
 <table cellpadding="0" cellspacing="0" border="0" width="100%">
@@ -97,10 +107,7 @@ jQuery().sortable || document.write('<script src="<?php echo WB_URL; ?>/include/
 </table>
 
 <br />
-<h2><?php echo $TEXT['MODIFY'].'/'.$TEXT['DELETE'].' '.$MOD_ONEFORALL[$mod_name]['TXT_ITEM']; ?>
-<img src="<?php echo WB_URL; ?>/modules/<?php echo $mod_name; ?>/images/ajax_loader.gif" id="mod_oneforall_ajax_loader_b" alt="Ajax loader" ></h2>
-<table id="mod_oneforall_sortable_b" class="<?php echo $mod_name; ?>" cellpadding="2" cellspacing="0" border="0" width="100%">
-
+<h2><?php echo $TEXT['MODIFY'].' / '.$TEXT['DELETE'].' '.$MOD_ONEFORALL[$mod_name]['TXT_ITEM']; ?></h2>
 
 <?php
 // Get group names
@@ -114,8 +121,24 @@ if ($query_fields->numRows() > 0) {
 } else {
 	$field_id = false;
 }
+?>
 
+<table id="mod_oneforall_items_b" class="sortierbar" cellpadding="2" cellspacing="0" border="0" width="100%">
+<thead>
+	<tr>
+		<th class="sortierbar">ID</th>
+		<th></th>
+		<th class="sortierbar"><?php echo $MOD_ONEFORALL[$mod_name]['TXT_TITLE']; ?></th>
+		<th><?php if ($field_id) echo $MOD_ONEFORALL[$mod_name]['TXT_GROUP']; ?></th>
+		<th class="sortierbar"><?php echo $MOD_ONEFORALL[$mod_name]['TXT_ENABLED']; ?></th>
+		<th></th>
+		<th></th>
+		<th></th>
+	</tr>
+</thead>
+<tbody>
 
+<?php
 // Define the up and down arrows depending on ordering
 $position_order = $order_by_position_asc ? 'ASC' : 'DESC';
 $arrow1       = 'up';
@@ -149,39 +172,40 @@ if ($query_items->numRows() > 0) {
 		}
 
 		?>
-		<tr height="20" id="id_<?php echo $post['item_id']; ?>">
-			<td width="20" style="padding-left: 5px;">
+		<tr id="id_<?php echo $post['item_id']; ?>">
+			<td class="sortierbar"><?php echo $post['item_id']; ?></td>
+			<td>
 				<a href="<?php echo WB_URL; ?>/modules/<?php echo $mod_name; ?>/modify_item.php?page_id=<?php echo $page_id; ?>&section_id=<?php echo $section_id; ?>&item_id=<?php echo $post['item_id']; ?>" title="<?php echo $TEXT['MODIFY']; ?>">
 					<img src="<?php echo THEME_URL; ?>/images/modify_16.png" border="0" alt="<?php echo $TEXT['MODIFY']; ?>" />
 				</a>
 			</td>
-			<td>
+			<td class="sortierbar">
 				<a href="<?php echo WB_URL; ?>/modules/<?php echo $mod_name; ?>/modify_item.php?page_id=<?php echo $page_id; ?>&section_id=<?php echo $section_id; ?>&item_id=<?php echo $post['item_id']; ?>">
 					<?php echo stripslashes($post['title']); ?>
 				</a>
 			</td>
-			<td width="12%" nowrap="nowrap">
+			<td>
 				<?php echo $group_name; ?>
 			</td>
-			<td width="60" align="center">
-				<?php $active_title = $post['active'] == 1 ? $TEXT['YES'] : $TEXT['NO']; ?>
-				<img src="<?php echo WB_URL; ?>/modules/<?php echo $mod_name; ?>/images/active_<?php echo $post['active']; ?>.gif" border="0" alt="" title="<?php echo $TEXT['ACTIVE'].': '.$active_title; ?>" />
+			<td class="sortierbar">
+				<?php $active_title = $post['active'] == 1 ? $MOD_ONEFORALL[$mod_name]['TXT_DISABLE'] : $MOD_ONEFORALL[$mod_name]['TXT_ENABLE']; ?>
+				<span class="mod_oneforall_active<?php echo $post['active']; ?>_b" title="<?php echo $active_title; ?>"><span><?php echo $post['active']; ?></span></span>
 			</td>
-			<td width="20">
+			<td>
 			<?php if ($post['position'] != 1) { ?>
 				<a href="<?php echo WB_URL; ?>/modules/<?php echo $mod_name; ?>/move_up.php?page_id=<?php echo $page_id; ?>&section_id=<?php echo $section_id; ?>&item_id=<?php echo $post['item_id']; ?>" title="<?php echo $arrow1_title; ?>">
 					<img src="<?php echo THEME_URL; ?>/images/<?php echo $arrow1; ?>_16.png" border="0" alt="^" />
 				</a>
 			<?php } ?>
 			</td>
-			<td width="20">
+			<td>
 			<?php if ($post['position'] != $num_items) { ?>
 				<a href="<?php echo WB_URL; ?>/modules/<?php echo $mod_name; ?>/move_down.php?page_id=<?php echo $page_id; ?>&section_id=<?php echo $section_id; ?>&item_id=<?php echo $post['item_id']; ?>" title="<?php echo $arrow2_title; ?>">
 					<img src="<?php echo THEME_URL; ?>/images/<?php echo $arrow2; ?>_16.png" border="0" alt="v" />
 				</a>
 			<?php } ?>
 			</td>
-			<td width="20">
+			<td>
 				<a href="javascript: confirm_link('<?php echo $TEXT['ARE_YOU_SURE']; ?>', '<?php echo WB_URL; ?>/modules/<?php echo $mod_name; ?>/delete_item.php?page_id=<?php echo $page_id; ?>&section_id=<?php echo $section_id; ?>&item_id=<?php echo $post['item_id']; ?>');" title="<?php echo $TEXT['DELETE']; ?>">
 					<img src="<?php echo THEME_URL; ?>/images/delete_16.png" border="0" alt="X" />
 				</a>
@@ -190,6 +214,7 @@ if ($query_items->numRows() > 0) {
 	<?php
 	}
 	?>
+	</tbody>
 	</table>
 	<?php
 } else {

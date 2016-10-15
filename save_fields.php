@@ -2,7 +2,7 @@
 
 /*
   Module developed for the Open Source Content Management System WebsiteBaker (http://websitebaker.org)
-  Copyright (C) 2015, Christoph Marti
+  Copyright (C) 2016, Christoph Marti
 
   LICENCE TERMS:
   This module is free software. You can redistribute it and/or modify it 
@@ -42,9 +42,9 @@ require_once($inc_path.'/add_field.php');
 // Save $sync_type_template in the session
 $_SESSION[$mod_name]['sync_type_template'] = isset($_POST['sync_type_template']) ? ' checked="checked"' : '';
 // Sanitize post var
-$new_fields = (is_numeric($_POST['new_fields']) ? $_POST['new_fields'] : 0);
-$save       = isset($_POST['save'])             ? 1 : 0;
-$add_fields = isset($_POST['add_fields'])       ? 1 : 0;
+$new_fields = is_numeric($_POST['new_fields']) ? $_POST['new_fields'] : 0;
+$save       = isset($_POST['save'])            ? 1 : 0;
+$add_fields = isset($_POST['add_fields'])      ? 1 : 0;
 
 
 // Update fields
@@ -128,8 +128,17 @@ if ($add_fields && $new_fields > 0) {
 	for ($i = 0; $i < $new_fields; $i++) {
 		$name     = $MOD_ONEFORALL[$mod_name]['TXT_NEW_FIELD_NAME'].'_';
 		$template = $field_template['text'];
-		$database->query("INSERT INTO `".TABLE_PREFIX."mod_".$mod_name."_fields` (type, template) VALUES ('text', '".$template."')");
-		$database->query("UPDATE `".TABLE_PREFIX."mod_".$mod_name."_fields` SET name = CONCAT('".$name."', LAST_INSERT_ID()) WHERE field_id = LAST_INSERT_ID()");
+
+		// Insert new fields into fields table
+		$database->query("INSERT INTO `".TABLE_PREFIX."mod_".$mod_name."_fields` (type, template) VALUES ('text', '$template')");
+		$field_id = $database->getLastInsertId();
+		$database->query("UPDATE `".TABLE_PREFIX."mod_".$mod_name."_fields` SET name = CONCAT('$name', '$field_id') WHERE field_id = '$field_id'");
+		if ($database->is_error()) {
+			$errors[] = $database->get_error();
+		}
+
+		// Insert the new fields into the item_fields table as well
+		$database->query("INSERT INTO `".TABLE_PREFIX."mod_".$mod_name."_item_fields` (item_id, field_id) SELECT item_id, '$field_id' FROM `".TABLE_PREFIX."mod_".$mod_name."_items`");
 		if ($database->is_error()) {
 			$errors[] = $database->get_error();
 		}

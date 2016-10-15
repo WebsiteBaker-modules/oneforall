@@ -2,7 +2,7 @@
 
 /*
   Module developed for the Open Source Content Management System WebsiteBaker (http://websitebaker.org)
-  Copyright (C) 2015, Christoph Marti
+  Copyright (C) 2016, Christoph Marti
 
   LICENCE TERMS:
   This module is free software. You can redistribute it and/or modify it 
@@ -39,18 +39,23 @@ function resizePNG($source, $destination, $new_max_w, $new_max_h) {
 			echo "<div align='center'><p style='color: red;'>Image to small to be downsized!</p></div>";
 			return false;
 		}
+
 		// Now make the image
-		$source = imagecreatefrompng($source);
+		$source  = imagecreatefrompng($source);
 		$dst_img = imagecreatetruecolor($new_w, $new_h);
+		// Allow png transparency (full alpha channel information)
+		imagealphablending($dst_img, false);
+		imagesavealpha($dst_img, true);
+		// Resizing
 		imagecopyresampled($dst_img, $source, 0,0,0,0, $new_w, $new_h, $orig_w, $orig_h);
-		imagejpeg($dst_img, $destination);
+		imagepng($dst_img, $destination);
 		// Clear memory
 		imagedestroy($dst_img);
 		imagedestroy($source);
 		// Return true
 		return true;
 	} else {
-   	return false;
+   		return false;
 	}
 }
 

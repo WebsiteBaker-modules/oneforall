@@ -2,7 +2,7 @@
 
 /*
   Module developed for the Open Source Content Management System WebsiteBaker (http://websitebaker.org)
-  Copyright (C) 2015, Christoph Marti
+  Copyright (C) 2016, Christoph Marti
 
   LICENCE TERMS:
   This module is free software. You can redistribute it and/or modify it 
@@ -48,6 +48,8 @@ $MOD_ONEFORALL[$mod_name]['TXT_OR'] = 'oder';
 $MOD_ONEFORALL[$mod_name]['TXT_FIELD_TEMPLATE'] = 'Feld-Template';
 $MOD_ONEFORALL[$mod_name]['TXT_NEW_FIELD_NAME'] = 'feld';
 $MOD_ONEFORALL[$mod_name]['TXT_ADD_NEW_FIELDS'] = 'neue Felder hinzuf&uuml;gen';
+$MOD_ONEFORALL[$mod_name]['TXT_TOGGLE_MESSAGE'] = 'Der neue Zustand wurde gespeichert.';
+$MOD_ONEFORALL[$mod_name]['TXT_DRAGDROP_MESSAGE'] = 'Das Element wurde erfolgreich verschoben.';
 
 $MOD_ONEFORALL[$mod_name]['TXT_PAGE_SETTINGS'] = 'Seiten Einstellungen';
 $MOD_ONEFORALL[$mod_name]['TXT_LAYOUT'] = 'Layout';
@@ -58,6 +60,7 @@ $MOD_ONEFORALL[$mod_name]['TXT_DISABLED'] = 'Deaktiviert';
 $MOD_ONEFORALL[$mod_name]['TXT_TEXT'] = 'Kurzer Text';
 $MOD_ONEFORALL[$mod_name]['TXT_TEXTAREA'] = 'Langer Text';
 $MOD_ONEFORALL[$mod_name]['TXT_WYSIWYG'] = 'WYSIWYG-Editor';
+$MOD_ONEFORALL[$mod_name]['TXT_CODE'] = 'PHP-Code';
 $MOD_ONEFORALL[$mod_name]['TXT_WB_LINK'] = 'WebsiteBaker Link';
 $MOD_ONEFORALL[$mod_name]['TXT_ONEFORALL_LINK'] = 'Modul OneForAll Link';
 $MOD_ONEFORALL[$mod_name]['TXT_MODULE_NAME'] = 'Modulname';
@@ -77,6 +80,14 @@ $MOD_ONEFORALL[$mod_name]['TXT_DATETIME_SEPARATOR'] = 'um';
 $MOD_ONEFORALL[$mod_name]['TXT_DATEDATE_SEPARATOR'] = 'bis';
 $MOD_ONEFORALL[$mod_name]['TXT_DROPLET'] = 'WebsiteBaker Droplet';
 $MOD_ONEFORALL[$mod_name]['TXT_SELECT'] = 'Auswahlliste';
+$MOD_ONEFORALL[$mod_name]['TXT_MULTISELECT'] = 'Multi-Auswahlliste';
+$MOD_ONEFORALL[$mod_name]['TXT_MULTIOPTIONS'] = 'Optionen (csv)';
+$MOD_ONEFORALL[$mod_name]['TXT_CHECKBOX'] = 'Checkboxen';
+$MOD_ONEFORALL[$mod_name]['TXT_CHECKBOXES'] = 'Checkboxen (csv)';
+$MOD_ONEFORALL[$mod_name]['TXT_SWITCH'] = 'Schalter ein / aus';
+$MOD_ONEFORALL[$mod_name]['TXT_SWITCHES'] = 'ein,aus';
+$MOD_ONEFORALL[$mod_name]['TXT_RADIO'] = 'Radio Buttons';
+$MOD_ONEFORALL[$mod_name]['TXT_RADIO_BUTTONS'] = 'Radio Buttons (csv)';
 $MOD_ONEFORALL[$mod_name]['TXT_SUBDIRECTORY_OF_MEDIA'] = 'Media Unterverz.';
 $MOD_ONEFORALL[$mod_name]['TXT_OPTIONS'] = 'Optionen (csv)';
 $MOD_ONEFORALL[$mod_name]['TXT_GROUP'] = 'Gruppe';
@@ -94,6 +105,13 @@ $MOD_ONEFORALL[$mod_name]['TXT_MODIFY_ALL'] = 'Die Seiteneinstellungen f&uuml;r 
 $MOD_ONEFORALL[$mod_name]['TXT_MODIFY_MULTIPLE'] = 'Die Seiteneinstellungen nur f&uuml;r die <b>ausgew&auml;hlte(n)</b> &quot;'.$module_name.'&quot; Seite(n) &uuml;bernehmen (Mehrfachauswahl):';
 
 $MOD_ONEFORALL[$mod_name]['TXT_ADD_ITEM'] = 'Eintrag hinzuf&uuml;gen';
+$MOD_ONEFORALL[$mod_name]['TXT_DISABLE'] = 'Deaktivieren';
+$MOD_ONEFORALL[$mod_name]['TXT_ENABLE'] = 'Aktivieren';
+$MOD_ONEFORALL[$mod_name]['TXT_ENABLED'] = 'Aktiv';
+$MOD_ONEFORALL[$mod_name]['TXT_SORT_TABLE'] = 'Ein Klick auf die Spaltenüberschrift sortiert die Tabelle.';
+$MOD_ONEFORALL[$mod_name]['TXT_SORT_BY1'] = 'Die Tabelle nach';
+$MOD_ONEFORALL[$mod_name]['TXT_SORT_BY2'] = 'sortieren';
+
 $MOD_ONEFORALL[$mod_name]['TXT_TITLE'] = 'Name';
 $MOD_ONEFORALL[$mod_name]['TXT_DESCRIPTION'] = 'Beschreibung';
 $MOD_ONEFORALL[$mod_name]['TXT_PREVIEW'] = 'Vorschau';
@@ -127,7 +145,7 @@ $MOD_ONEFORALL[$mod_name]['ERR_FIELD_DISABLED'] = 'Dieses Feld ist deaktiviert.'
 $MOD_ONEFORALL[$mod_name]['ERR_FIELD_RE_ENABLE'] = 'Sie k&ouml;nnen es wieder aktivieren oder den Platzhalter im Template entfernen.';
 $MOD_ONEFORALL[$mod_name]['ERR_FIELD_TYPE_NOT_EXIST'] = 'Dieser Feld-Typ existiert nicht!';
 $MOD_ONEFORALL[$mod_name]['ERR_SET_A_LABEL'] = 'Feldbezeichnung erg&auml;nzen';
-$MOD_ONEFORALL[$mod_name]['ERR_INSTALL_MODULE'] = 'Bitte das Modul &quot;%s&quot; installieren, um dieses Feld benutzen zu k&ouml;nnen.';
+$MOD_ONEFORALL[$mod_name]['ERR_INSTALL_MODULE'] = 'Bitte das Modul &quot;%s&quot; installieren und mindestens einen &quot;%s&quot;-Abschnitt anlegen, um dieses Feld benutzen zu k&ouml;nnen.';
 
 
 $GLOBALS['TEXT']['CAP_EDIT_CSS'] = 'CSS bearbeiten';

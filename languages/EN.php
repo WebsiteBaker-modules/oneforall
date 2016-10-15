@@ -2,7 +2,7 @@
 
 /*
   Module developed for the Open Source Content Management System WebsiteBaker (http://websitebaker.org)
-  Copyright (C) 2015, Christoph Marti
+  Copyright (C) 2016, Christoph Marti
 
   LICENCE TERMS:
   This module is free software. You can redistribute it and/or modify it 
@@ -48,6 +48,9 @@ $MOD_ONEFORALL[$mod_name]['TXT_OR'] = 'or';
 $MOD_ONEFORALL[$mod_name]['TXT_FIELD_TEMPLATE'] = 'Field template';
 $MOD_ONEFORALL[$mod_name]['TXT_NEW_FIELD_NAME'] = 'field';
 $MOD_ONEFORALL[$mod_name]['TXT_ADD_NEW_FIELDS'] = 'Add new fields';
+$MOD_ONEFORALL[$mod_name]['TXT_SUCCESS_MESSAGE'] = 'Moved item successfully';
+$MOD_ONEFORALL[$mod_name]['TXT_TOGGLE_MESSAGE'] = 'Saved new status successfully.';
+$MOD_ONEFORALL[$mod_name]['TXT_DRAGDROP_MESSAGE'] = 'Moved item successfully.';
 
 $MOD_ONEFORALL[$mod_name]['TXT_PAGE_SETTINGS'] = 'Page Settings';
 $MOD_ONEFORALL[$mod_name]['TXT_LAYOUT'] = 'Layout';
@@ -58,6 +61,7 @@ $MOD_ONEFORALL[$mod_name]['TXT_DISABLED'] = 'Disabled';
 $MOD_ONEFORALL[$mod_name]['TXT_TEXT'] = 'Short text';
 $MOD_ONEFORALL[$mod_name]['TXT_TEXTAREA'] = 'Textarea';
 $MOD_ONEFORALL[$mod_name]['TXT_WYSIWYG'] = 'WYSIWYG-Editor';
+$MOD_ONEFORALL[$mod_name]['TXT_CODE'] = 'PHP-Code';
 $MOD_ONEFORALL[$mod_name]['TXT_WB_LINK'] = 'WebsiteBaker Link';
 $MOD_ONEFORALL[$mod_name]['TXT_ONEFORALL_LINK'] = 'Module OneForAll Link';
 $MOD_ONEFORALL[$mod_name]['TXT_MODULE_NAME'] = 'Module Name';
@@ -77,6 +81,14 @@ $MOD_ONEFORALL[$mod_name]['TXT_DATETIME_SEPARATOR'] = 'at';
 $MOD_ONEFORALL[$mod_name]['TXT_DATEDATE_SEPARATOR'] = 'until';
 $MOD_ONEFORALL[$mod_name]['TXT_DROPLET'] = 'WebsiteBaker droplet';
 $MOD_ONEFORALL[$mod_name]['TXT_SELECT'] = 'Select';
+$MOD_ONEFORALL[$mod_name]['TXT_MULTISELECT'] = 'Multiselect';
+$MOD_ONEFORALL[$mod_name]['TXT_MULTIOPTIONS'] = 'Options (csv)';
+$MOD_ONEFORALL[$mod_name]['TXT_CHECKBOX'] = 'Checkbox';
+$MOD_ONEFORALL[$mod_name]['TXT_CHECKBOXES'] = 'Checkboxes (csv)';
+$MOD_ONEFORALL[$mod_name]['TXT_SWITCH'] = 'Switch on / off';
+$MOD_ONEFORALL[$mod_name]['TXT_SWITCHES'] = 'on,off';
+$MOD_ONEFORALL[$mod_name]['TXT_RADIO'] = 'Radio buttons';
+$MOD_ONEFORALL[$mod_name]['TXT_RADIO_BUTTONS'] = 'Radio buttons (csv)';
 $MOD_ONEFORALL[$mod_name]['TXT_SUBDIRECTORY_OF_MEDIA'] = 'Subdir of media';
 $MOD_ONEFORALL[$mod_name]['TXT_OPTIONS'] = 'Options (csv)';
 $MOD_ONEFORALL[$mod_name]['TXT_GROUP'] = 'Group'; 
@@ -94,6 +106,13 @@ $MOD_ONEFORALL[$mod_name]['TXT_MODIFY_ALL'] = 'Update page settings of <b>all</b
 $MOD_ONEFORALL[$mod_name]['TXT_MODIFY_MULTIPLE'] = 'Update page settings of <b>selected</b> &quot;'.$module_name.'&quot; page(s) (Multiple choice):';
 
 $MOD_ONEFORALL[$mod_name]['TXT_ADD_ITEM'] = 'Add item';
+$MOD_ONEFORALL[$mod_name]['TXT_DISABLE'] = 'Disable';
+$MOD_ONEFORALL[$mod_name]['TXT_ENABLE'] = 'Enable';
+$MOD_ONEFORALL[$mod_name]['TXT_ENABLED'] = 'Enabled';
+$MOD_ONEFORALL[$mod_name]['TXT_SORT_TABLE'] = 'Click a table heading to sort the table.';
+$MOD_ONEFORALL[$mod_name]['TXT_SORT_BY1'] = 'Sort the table by';
+$MOD_ONEFORALL[$mod_name]['TXT_SORT_BY2'] = '';
+
 $MOD_ONEFORALL[$mod_name]['TXT_TITLE'] = 'Item title';
 $MOD_ONEFORALL[$mod_name]['TXT_DESCRIPTION'] = 'Description';
 $MOD_ONEFORALL[$mod_name]['TXT_PREVIEW'] = 'Preview';
@@ -127,7 +146,7 @@ $MOD_ONEFORALL[$mod_name]['ERR_FIELD_DISABLED'] = 'This field is disabled.';
 $MOD_ONEFORALL[$mod_name]['ERR_FIELD_RE_ENABLE'] = 'You can either re-enable it or remove the placeholder from the template.';
 $MOD_ONEFORALL[$mod_name]['ERR_FIELD_TYPE_NOT_EXIST'] = 'Sorry, this field type does not exist!';
 $MOD_ONEFORALL[$mod_name]['ERR_SET_A_LABEL'] = 'Set a label';
-$MOD_ONEFORALL[$mod_name]['ERR_INSTALL_MODULE'] = 'In order to use this field you have to install the module &quot;%s&quot;.';
+$MOD_ONEFORALL[$mod_name]['ERR_INSTALL_MODULE'] = 'In order to use this field you have to install the module &quot;%s&quot; and add at least one &quot;%s&quot; section.';
 
 $GLOBALS['TEXT']['CAP_EDIT_CSS'] = 'Edit CSS';
 ?>

@@ -2,7 +2,7 @@
 
 /*
   Module developed for the Open Source Content Management System WebsiteBaker (http://websitebaker.org)
-  Copyright (C) 2015, Christoph Marti
+  Copyright (C) 2016, Christoph Marti
 
   LICENCE TERMS:
   This module is free software. You can redistribute it and/or modify it 
@@ -31,6 +31,7 @@ $inc_path = dirname(__FILE__);
 // Includes
 require('../../config.php');
 require($inc_path.'/resize_img.php');
+require($inc_path.'/pngthumb.php');
 require(WB_PATH.'/framework/functions.php');
 
 // Get module name and config
@@ -62,6 +63,7 @@ $old_section_id = strip_tags($admin->get_post('section_id'));
 $new_section_id = strip_tags($admin->get_post('new_section_id'));
 $action         = strip_tags($admin->get_post('action'));
 $title          = $admin->add_slashes(strip_tags($admin->get_post('title')));
+$description    = $admin->add_slashes(strip_tags($admin->get_post('description')));
 
 // Images
 $images = array();
@@ -235,7 +237,7 @@ if (!empty($errors)) {
 $moved = false;
 if ($old_section_id != $new_section_id AND $action == 'move') {
 	// Get new page id, page link and section id
-	$query_move = $database->query("SELECT p.page_id, p.link FROM ".TABLE_PREFIX."pages p INNER JOIN ".TABLE_PREFIX."sections s ON p.page_id = s.page_id WHERE s.section_id = '$new_section_id'");
+	$query_move = $database->query("SELECT p.page_id, p.link FROM `".TABLE_PREFIX."pages` p INNER JOIN `".TABLE_PREFIX."sections` s ON p.page_id = s.page_id WHERE s.section_id = '$new_section_id'");
 	$moved      = $query_move->fetchRow();
 	$page_id    = $moved['page_id'];
 	$item_dir   = $moved['link'];
@@ -321,22 +323,25 @@ $directories = array(
 );
 
 // Try and make the directories
-foreach ($directories as $directory) {
-	$directory_path = WB_PATH.MEDIA_DIRECTORY.'/'.$mod_name.$directory;
-	make_dir($directory_path);
-
-	// Add index.php files if not yet existing
-	if (!is_file($directory_path.'/index.php')) {
-		$content = ''.
-"<?php
-
-header('Location: ../');
-
-?>";
-		$handle = fopen($directory_path.'/index.php', 'w');
-		fwrite($handle, $content);
-		fclose($handle);
-		change_mode($directory_path.'/index.php', 'file');
+$img_section = $database->get_one("SELECT img_section FROM `".TABLE_PREFIX."mod_".$mod_name."_page_settings` WHERE section_id = '$section_id'");
+if ($img_section == 0) {
+	foreach ($directories as $directory) {
+		$directory_path = WB_PATH.MEDIA_DIRECTORY.'/'.$mod_name.$directory;
+		make_dir($directory_path);
+	
+		// Add index.php files if not yet existing
+		if (!is_file($directory_path.'/index.php')) {
+			$content = ''.
+	"<?php
+	
+	header('Location: ../');
+	
+	?>";
+			$handle = fopen($directory_path.'/index.php', 'w');
+			fwrite($handle, $content);
+			fclose($handle);
+			change_mode($directory_path.'/index.php', 'file');
+		}
 	}
 }
 
@@ -344,17 +349,25 @@ header('Location: ../');
 foreach ($images as $img_id  => $image) {
 	if ($image['delete_image'] !== FALSE) {
 		$img_file = $image['delete_image'];
-		// Thumbs use .jpg extension only
-		$thumb_file = str_replace (".png", ".jpg", $img_file);
-		// Try unlinking image and thumb
+
+		// Try unlinking image
 		if (file_exists(WB_PATH.MEDIA_DIRECTORY.'/'.$mod_name.'/images/item'.$item_id.'/'.$img_file)) {
 			unlink(WB_PATH.MEDIA_DIRECTORY.'/'.$mod_name.'/images/item'.$item_id.'/'.$img_file);
 		}
-		if (file_exists(WB_PATH.MEDIA_DIRECTORY.'/'.$mod_name.'/thumbs/item'.$item_id.'/'.$thumb_file)) {
-			unlink(WB_PATH.MEDIA_DIRECTORY.'/'.$mod_name.'/thumbs/item'.$item_id.'/'.$thumb_file);
+
+		// Try unlinking thumb
+		if (file_exists(WB_PATH.MEDIA_DIRECTORY.'/'.$mod_name.'/thumbs/item'.$item_id.'/'.$img_file)) {
+			unlink(WB_PATH.MEDIA_DIRECTORY.'/'.$mod_name.'/thumbs/item'.$item_id.'/'.$img_file);
+		} else {
+			// Check if png image has a jpg thumb (version < 0.9 used jpg thumbs only)
+			$img_file = str_replace('.png', '.jpg', $img_file);
+			if (file_exists(WB_PATH.MEDIA_DIRECTORY.'/'.$mod_name.'/thumbs/item'.$item_id.'/'.$img_file)) {
+				unlink(WB_PATH.MEDIA_DIRECTORY.'/'.$mod_name.'/thumbs/item'.$item_id.'/'.$img_file);
+			}
 		}
+
 		// Delete image in database
-		$database->query("DELETE FROM `".TABLE_PREFIX."mod_".$mod_name."_images` WHERE `img_id` = '$img_id'");
+		$database->query("DELETE FROM `".TABLE_PREFIX."mod_".$mod_name."_images` WHERE img_id = '$img_id'");
 		// Check if there was a db error
 		if ($database->is_error()) {
 			$errors[] = $database->get_error();
@@ -379,26 +392,26 @@ for ($i = 0; $i < $num_images; $i++) {
 		$path_parts = pathinfo($file);
 		$filename   = $path_parts['basename'];
 		$fileext    = $path_parts['extension'];
-		$filename   = str_replace(".".$fileext, "", $filename);  // Filename without extension
-		$filename   = str_replace(" ", "_", $filename);          // Replace spaces by underscores
+		$filename   = str_replace('.'.$fileext, '', $filename);  // Filename without extension
+		$filename   = str_replace(' ', '_', $filename);          // Replace spaces by underscores
 		$fileext    = strtolower($fileext);
 
 		// Path to the new file
 		$new_file = WB_PATH.MEDIA_DIRECTORY.'/'.$mod_name.'/images/item'.$item_id.'/'.$filename.'.'.$fileext;
 
 		// Make sure the image is a jpg or png file
-		if (!($fileext == "jpg" || $fileext == "jpeg" || $fileext == "png")) {
+		if (!($fileext == 'jpg' || $fileext == 'jpeg' || $fileext == 'png')) {
 			$file_type_error = true;
 			continue;
 		}
 		// Check for invalid chars in filename
 		if (!preg_match('#^[a-zA-Z0-9._-]*$#', $filename)) {
-			$errors[] = $MOD_ONEFORALL[$mod_name]['ERR_INVALID_FILE_NAME'].": ".htmlspecialchars($filename.'.'.$fileext);
+			$errors[] = $MOD_ONEFORALL[$mod_name]['ERR_INVALID_FILE_NAME'].': '.htmlspecialchars($filename.'.'.$fileext);
 			continue;
 		}
 		// Check if filename already exists
 		if (file_exists($new_file)) {
-			$errors[] = $MESSAGE['MEDIA']['FILE_EXISTS'].": ".htmlspecialchars($filename.'.'.$fileext);
+			$errors[] = $MESSAGE['MEDIA']['FILE_EXISTS'].': '.htmlspecialchars($filename.'.'.$fileext);
 			continue;
 		}
 
@@ -409,36 +422,28 @@ for ($i = 0; $i < $num_images; $i++) {
 
 		// Check if we need to create a thumb
 		if ($resize != 0) {
-		
+
 			// Thumbnail destination
-			$thumb_destination = WB_PATH.MEDIA_DIRECTORY.'/'.$mod_name.'/thumbs/item'.$item_id.'/'.$filename.'.jpg';
-			
+			$thumb_destination = WB_PATH.MEDIA_DIRECTORY.'/'.$mod_name.'/thumbs/item'.$item_id.'/'.$filename.'.'.$fileext;
+
 			// Check thumbnail type
 			if ($fileext == 'png') {
-				resizePNG($new_file, $thumb_destination, $resize, $resize);
+				make_thumb_png($new_file, $thumb_destination, $resize);
 			} else {
 				make_thumb($new_file, $thumb_destination, $resize);
 			}
 			change_mode($thumb_destination);
 		}
 
-
 		// Check if we need to resize the image
 		if ($imgresize == 'yes' && file_exists($new_file)) {
 
 			// Image destination
-			$img_destination = WB_PATH.MEDIA_DIRECTORY.'/'.$mod_name.'/images/item'.$item_id.'/'.$filename.'.jpg';
+			$img_destination = WB_PATH.MEDIA_DIRECTORY.'/'.$mod_name.'/images/item'.$item_id.'/'.$filename.'.'.$fileext;
 
 			// Check image type
 			if ($fileext == 'png') {
-				if (resizePNG($new_file, $img_destination, $maxwidth, $maxheight)) {
-					// After resizing change file extension from png to jpg
-					$fileext = 'jpg';
-					// Try unlinking png image not used any more
-					if (file_exists(WB_PATH.MEDIA_DIRECTORY.'/'.$mod_name.'/images/item'.$item_id.'/'.$filename.'.png')) {
-						unlink(WB_PATH.MEDIA_DIRECTORY.'/'.$mod_name.'/images/item'.$item_id.'/'.$filename.'.png');
-					}
-				}
+				resizePNG($new_file, $img_destination, $maxwidth, $maxheight);
 			} else {
 				resizeJPEG($new_file, $maxwidth, $maxheight, $quality);
 			}
@@ -449,13 +454,13 @@ for ($i = 0; $i < $num_images; $i++) {
 		// Insert new image data into the db
 
 		// Get image top position for this item
-		$top_position = $database->get_one("SELECT MAX(`position`) AS `top_position` FROM `".TABLE_PREFIX."mod_".$mod_name."_images` WHERE `item_id` = '$item_id'");
+		$top_position = $database->get_one("SELECT MAX(position) AS top_position FROM `".TABLE_PREFIX."mod_".$mod_name."_images` WHERE item_id = '$item_id'");
 		// Increment position (db function returns NULL if this item has no image yet)
 		$top_position = intval($top_position) + 1;
 
 		// Insert file into database
 		$filename = $filename.'.'.$fileext;
-		$database->query("INSERT INTO `".TABLE_PREFIX."mod_".$mod_name."_images` (`item_id`, `filename`, `position`) VALUES ('$item_id', '$filename', '$top_position')");
+		$database->query("INSERT INTO `".TABLE_PREFIX."mod_".$mod_name."_images` (item_id, filename, position) VALUES ('$item_id', '$filename', '$top_position')");
 		// Check if there was a db error
 		if ($database->is_error()) {
 			$errors[] = $database->get_error();
@@ -468,7 +473,7 @@ for ($i = 0; $i < $num_images; $i++) {
 // UPDATE DATABASE
 
 // Only update if position is set and has been changed
-$query_position = isset($position) ? " `position` = '$position'," : "";
+$query_position = isset($position) ? " position = '$position'," : '';
 
 // Item images
 foreach ($images as $img_id => $image) {
@@ -480,20 +485,20 @@ foreach ($images as $img_id => $image) {
 	}
 
 	// Update image data
-	$database->query("UPDATE `".TABLE_PREFIX."mod_".$mod_name."_images` SET `active` = '{$image['active']}', `alt` = '{$image['alt']}', `title` = '{$image['title']}', `caption` = '{$image['caption']}' WHERE img_id = '$img_id'");
+	$database->query("UPDATE `".TABLE_PREFIX."mod_".$mod_name."_images` SET active = '{$image['active']}', alt = '{$image['alt']}', title = '{$image['title']}', caption = '{$image['caption']}' WHERE img_id = '$img_id'");
 }
 
 // Update or insert item fields
 if ($admin->get_post('fields')) {
 	foreach ($admin->get_post('fields') as $field_id => $value) {
-	
+
 		// Serialize the array if there is more than one value in this field
 		if (is_array($value)) {
 			$value = serialize($value);
 		}
-	
+
 		$value = $admin->add_slashes($value);
-	
+
 		if (is_numeric($field_id)) {
 			// Update if field is in db otherwise insert
 			$db_action = $database->get_one("SELECT EXISTS (SELECT 1 FROM `".TABLE_PREFIX."mod_".$mod_name."_item_fields` WHERE item_id = '$item_id' AND field_id = '$field_id')");
@@ -511,7 +516,7 @@ if ($admin->get_post('fields')) {
 }
 
 // Item itself
-$database->query("UPDATE `".TABLE_PREFIX."mod_".$mod_name."_items` SET section_id = '$section_id', page_id = '$page_id', title = '$title', link = '$new_link', active = '$active',$query_position modified_when = '".@mktime()."', modified_by = '".$admin->get_user_id()."' WHERE item_id = '$item_id'");
+$database->query("UPDATE `".TABLE_PREFIX."mod_".$mod_name."_items` SET section_id = '$section_id', page_id = '$page_id', title = '$title', link = '$new_link', `description` = '$description', active = '$active',$query_position modified_when = '".time()."', modified_by = '".$admin->get_user_id()."' WHERE item_id = '$item_id'");
 
 // Check if there was a db error
 if ($database->is_error()) {
@@ -536,7 +541,7 @@ if ($action == 'duplicate') {
 
 	// Get new page id, page link and section id
 	if ($old_section_id != $new_section_id) {
-		$query_duplicate = $database->query("SELECT p.page_id, p.link FROM ".TABLE_PREFIX."pages p INNER JOIN ".TABLE_PREFIX."sections s ON p.page_id = s.page_id WHERE s.section_id = '$new_section_id'");
+		$query_duplicate = $database->query("SELECT p.page_id, p.link FROM `".TABLE_PREFIX."pages` p INNER JOIN `".TABLE_PREFIX."sections` s ON p.page_id = s.page_id WHERE s.section_id = '$new_section_id'");
 		$duplicate  = $query_duplicate->fetchRow();
 		$page_id    = $duplicate['page_id'];
 		$item_dir   = $duplicate['link'];
@@ -604,7 +609,7 @@ require(WB_PATH."/index.php");
 
 	// IMAGE AND THUMBNAIL
 
-	// Dublicate image data in the db
+	// Duplicate image data in the db
 	$query_images = $database->query("SELECT * FROM `".TABLE_PREFIX."mod_".$mod_name."_images` WHERE item_id = '$orig_item_id'");
 	if ($query_images->numRows() > 0) {
 		while ($image = $query_images->fetchRow()) {
@@ -620,24 +625,31 @@ require(WB_PATH."/index.php");
 	// Make sure the target directories exist
 	make_dir(WB_PATH.MEDIA_DIRECTORY.'/'.$mod_name.'/images/item'.$item_id);
 	make_dir(WB_PATH.MEDIA_DIRECTORY.'/'.$mod_name.'/thumbs/item'.$item_id);
-		
+
 	// Check if the image and thumb source directories exist
 	if (is_dir($img_source_dir) && is_dir($thumb_source_dir)) {
+
 		// Open the image directory then loop through its contents
 		$dir = dir($img_source_dir);
 		while (false !== $image_file = $dir->read()) {
+
 			// Skip index file and pointers
-			if (strpos($image_file, '.php') !== false || substr($image_file, 0, 1) == ".") {
+			if (strpos($image_file, '.php') !== false || substr($image_file, 0, 1) == '.') {
 				continue;
 			}
-			// Thumbs use .jpg extension only
-			$thumb_file = str_replace (".png", ".jpg", $image_file);
 
-			// Pathes to the image/thumb source and destination respectively
-			$img_source = $img_source_dir.'/'.$image_file;
+			// Path to the image source and destination
+			$img_source      = $img_source_dir.'/'.$image_file;
 			$img_destination = WB_PATH.MEDIA_DIRECTORY.'/'.$mod_name.'/images/item'.$item_id.'/'.$image_file;
-			$thumb_source = $thumb_source_dir.'/'.$thumb_file;
-			$thumb_destination = WB_PATH.MEDIA_DIRECTORY.'/'.$mod_name.'/thumbs/item'.$item_id.'/'.$thumb_file;
+
+			// Check if png image has a jpg thumb (version < 0.9 used jpg thumbs only)
+			if (!file_exists($thumb_source_dir.'/'.$image_file)) {
+				$image_file = str_replace('.png', '.jpg', $image_file);
+			}
+
+			// Path to the thumb source and destination
+			$thumb_source      = $thumb_source_dir.'/'.$image_file;
+			$thumb_destination = WB_PATH.MEDIA_DIRECTORY.'/'.$mod_name.'/thumbs/item'.$item_id.'/'.$image_file;
 
 			// Try duplicating image and thumb
 			if (file_exists($img_source)) {
@@ -679,7 +691,7 @@ require(WB_PATH."/index.php");
 	}
 
 	// Update duplicated item data
-	$database->query("UPDATE `".TABLE_PREFIX."mod_".$mod_name."_items` SET section_id = '$section_id', page_id = '$page_id', title = '$title', link = '$new_link', active = '0', modified_when = '".@mktime()."', modified_by = '".$admin->get_user_id()."' WHERE item_id = '$item_id'");
+	$database->query("UPDATE `".TABLE_PREFIX."mod_".$mod_name."_items` SET section_id = '$section_id', page_id = '$page_id', title = '$title', link = '$new_link', `description` = '$description', active = '0', modified_when = '".time()."', modified_by = '".$admin->get_user_id()."' WHERE item_id = '$item_id'");
 
 	// Check if there was a db error
 	if ($database->is_error()) {

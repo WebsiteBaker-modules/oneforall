@@ -2,7 +2,7 @@
 
 /*
   Module developed for the Open Source Content Management System WebsiteBaker (http://websitebaker.org)
-  Copyright (C) 2015, Christoph Marti
+  Copyright (C) 2016, Christoph Marti
 
   LICENCE TERMS:
   This module is free software. You can redistribute it and/or modify it 
@@ -31,7 +31,7 @@ if (defined('WB_PATH') == false) {
 function field_text($field_id, $name, $label = 'Text', $value = '') {
 	global $nl, $t1, $t2, $t3, $t4, $t5;
 	$html  = $t1.'<tr>'.$nl;
-	$html .= $t2.'<td width="20%" align="right">'.$label.':</td>'.$nl;
+	$html .= $t2.'<td>'.$label.':</td>'.$nl;
 	$html .= $t2.'<td>'.$nl;
 	$html .= $t3.'<input type="text" name="fields['.$field_id.']" id="'.$name.'" maxlength="150" value="'.$value.'" />'.$nl;
 	$html .= $t2.'</td>'.$nl;
@@ -45,7 +45,7 @@ function field_text($field_id, $name, $label = 'Text', $value = '') {
 function field_textarea($field_id, $name, $label = 'Textarea', $content = '') {
 	global $nl, $t1, $t2, $t3, $t4, $t5;
 	$html  = $t1.'<tr>'.$nl;
-	$html .= $t2.'<td width="20%" align="right" valign="top">'.$label.':</td>'.$nl;
+	$html .= $t2.'<td class="align_top">'.$label.':</td>'.$nl;
 	$html .= $t2.'<td>'.$nl;
 	$html .= $t3.'<textarea name="fields['.$field_id.']" id="'.$name.'" rows="10">'.$content.'</textarea>'.$nl;
 	$html .= $t2.'</td>'.$nl;
@@ -56,15 +56,18 @@ function field_textarea($field_id, $name, $label = 'Textarea', $content = '') {
 
 
 // Generate wysiwyg editor
-function field_wysiwyg($field_id, $name, $label = 'WYSIWYG-Editor', $content = '', $wysiwyg_full_width = false) {
+function field_wysiwyg($field_id, $name, $label = 'WYSIWYG Editor', $content = '', $wysiwyg_full_width = false) {
 	global $nl, $t1, $t2, $t3, $t4, $t5;
 	$width  = '99%';
 	$height = '300px';
 	echo $t1.'<tr>'.$nl;
+	echo $t2.'<td class="align_top">'.$label.':</td>'.$nl;
 	if ($wysiwyg_full_width) {
-		echo $t2.'<td colspan="2" valign="top">'.$label.':'.$nl;
+		echo $t2.'<td></td>'.$nl;
+		echo $t1.'</tr>'.$nl;
+		echo $t1.'<tr>'.$nl;
+		echo $t2.'<td colspan="2">'.$nl;
 	} else {
-		echo $t2.'<td width="20%" align="right" valign="top">'.$label.':</td>'.$nl;
 		echo $t2.'<td>'.$nl;
 	}
 	if (!defined('WYSIWYG_EDITOR') OR WYSIWYG_EDITOR == 'none' OR !file_exists(WB_PATH.'/modules/'.WYSIWYG_EDITOR.'/include.php')) {
@@ -81,11 +84,41 @@ function field_wysiwyg($field_id, $name, $label = 'WYSIWYG-Editor', $content = '
 
 
 
+// Generate code editor
+function field_code($field_id, $name, $label = 'Code Editor', $content = '', $code_full_width = false) {
+	global $nl, $t1, $t2, $t3, $t4, $t5;
+	$width  = '99%';
+	$height = '300px';
+	echo $t1.'<tr>'.$nl;
+	echo $t2.'<td class="align_top">'.$label.':</td>'.$nl;
+	if ($code_full_width) {
+		echo $t2.'<td></td>'.$nl;
+		echo $t1.'</tr>'.$nl;
+		echo $t1.'<tr>'.$nl;
+		echo $t2.'<td colspan="2">'.$nl;
+	} else {
+		echo $t2.'<td>'.$nl;
+	}
+	$hint  = '// Call the return statement to pass your value back'.$nl;
+	$hint .= '// For example:'.$nl;
+	$hint .= "return 'Hello World';";
+	$content = empty($content) ? $hint : $content;
+	echo '<textarea name="fields['.$field_id.']" id="'.$name.'" style="width: '.$width.'; height: '.$height.';">'.$content.'</textarea>'.$nl;
+	if (file_exists(WB_PATH . '/include/editarea/wb_wrapper_edit_area.php')) {
+		require_once(WB_PATH . '/include/editarea/wb_wrapper_edit_area.php');
+		echo registerEditArea($name, 'php', true, 'both', true, true, 600, 450, 'search, fullscreen, |, undo, redo, |, select_font, |, highlight, reset_highlight, |, help');
+	}
+	echo $t2.'</td>'.$nl;
+	echo $t1.'</tr>'.$nl;
+}
+
+
+
 // Generate wb_link select
 function field_wb_link($field_id, $name, $current, $label = 'WebsiteBaker Link', $selected_id = '') {
 	global $TEXT, $nl, $t1, $t2, $t3, $t4, $t5;
 	$start  = $t1.'<tr>'.$nl;
-	$start .= $t2.'<td width="20%" align="right">'.$label.':</td>'.$nl;
+	$start .= $t2.'<td>'.$label.':</td>'.$nl;
 	$start .= $t2.'<td>'.$nl;
 	$start .= $t3.'<select name="fields['.$field_id.']" id="'.$name.'" size="1">'.$nl;
 	$start .= $t4.'<option value="">'.$TEXT['PLEASE_SELECT'].'&#8230;</option>'.$nl;
@@ -99,7 +132,7 @@ function field_wb_link($field_id, $name, $current, $label = 'WebsiteBaker Link',
 // Get all wb pages as select options
 function get_parent_list($parent, $selected_id) {
 	global $admin, $database, $options, $nl, $t1, $t2, $t3, $t4, $t5;
-	$query = "SELECT * FROM ".TABLE_PREFIX."pages WHERE parent = '$parent' AND visibility != 'deleted' ORDER BY position ASC";
+	$query = "SELECT * FROM `".TABLE_PREFIX."pages` WHERE parent = '$parent' AND visibility != 'deleted' ORDER BY position ASC";
 	$get_pages = $database->query($query);
 	while ($page = $get_pages->fetchRow()) {
 		// Jump hidden pages
@@ -148,17 +181,17 @@ function get_parent_list($parent, $selected_id) {
 function field_oneforall_link($field_id, $name, $module_name, $label = 'OneForAll Link', $selected_id = '') {
 	global $TEXT, $MOD_ONEFORALL, $mod_name, $database, $nl, $t1, $t2, $t3, $t4, $t5;
 	$start  = $t1.'<tr>'.$nl;
-	$start .= $t2.'<td width="20%" align="right">'.$label.':</td>'.$nl;
+	$start .= $t2.'<td>'.$label.':</td>'.$nl;
 	$start .= $t2.'<td>'.$nl;
 	$end    = $t2.'</td>'.$nl;
 	$end   .= $t1.'</tr>'.$nl;
 	// Check if the module oneforall or renamed version is installed
 	$module_name = trim($module_name);
 	$module_name = empty($module_name) || !preg_match('/^[a-zA-Z0-9_ -]{3,20}$/', $module_name) ? 'oneforall' : $module_name;
-	$oneforall   = $database->get_one("SELECT EXISTS (SELECT 1 FROM ".TABLE_PREFIX."sections WHERE module = '".strtolower($module_name)."')");
+	$oneforall   = $database->get_one("SELECT EXISTS (SELECT 1 FROM `".TABLE_PREFIX."sections` WHERE module = '".strtolower($module_name)."')");
 	if (!$oneforall) {
 		$error_msg = $MOD_ONEFORALL[$mod_name]['ERR_INSTALL_MODULE'];
-		$error     = $t3.'<span style="color: red;">'.sprintf($error_msg, $module_name).'</span>';
+		$error     = $t3.'<span style="color: red;">'.sprintf($error_msg, $module_name, $module_name).'</span>';
 		return $start.$error.$end;
 	}
 	// The items select
@@ -194,12 +227,12 @@ function get_oneforall_list($module_name, $selected_id) {
 function field_foldergallery_link($field_id, $name, $sections, $label = 'Folder Gallery', $selected_id = '') {
 	global $TEXT, $MOD_ONEFORALL, $mod_name, $database, $nl, $t1, $t2, $t3, $t4, $t5;
 	$start  = $t1.'<tr>'.$nl;
-	$start .= $t2.'<td width="20%" align="right">'.$label.':</td>'.$nl;
+	$start .= $t2.'<td>'.$label.':</td>'.$nl;
 	$start .= $t2.'<td>'.$nl;
 	$end    = $t2.'</td>'.$nl;
 	$end   .= $t1.'</tr>'.$nl;
 	// Check if the module foldergallery is installed
-	$foldergallery = $database->get_one("SELECT EXISTS (SELECT 1 FROM ".TABLE_PREFIX."sections WHERE module = 'foldergallery')");
+	$foldergallery = $database->get_one("SELECT EXISTS (SELECT 1 FROM `".TABLE_PREFIX."sections` WHERE module = 'foldergallery')");
 	if (!$foldergallery) {
 		$error_msg = $MOD_ONEFORALL[$mod_name]['ERR_INSTALL_MODULE'];
 		$error     = $t3.'<span style="color: red;">'.sprintf($error_msg, 'Foldergallery').'</span>';
@@ -234,7 +267,7 @@ function get_foldergallery_categories($sections, $selected_id) {
 		$section_where_clause = " section_id IN (".$sections.") AND";
 	}
 	// Query options
-	$query = "SELECT id, cat_name FROM ".TABLE_PREFIX."mod_foldergallery_categories WHERE".$section_where_clause." active = '1' AND parent > -1 ORDER BY position DESC";
+	$query = "SELECT id, cat_name FROM `".TABLE_PREFIX."mod_foldergallery_categories` WHERE".$section_where_clause." active = '1' AND parent > -1 ORDER BY position DESC";
 	$get_categories = $database->query($query);
 	if ($get_categories->numRows() > 0) {
 		while ($cat = $get_categories->fetchRow()) {
@@ -257,7 +290,7 @@ function get_foldergallery_categories($sections, $selected_id) {
 function field_url($field_id, $name, $label = 'URL', $value = '') {
 	global $nl, $t1, $t2, $t3, $t4, $t5;
 	$html  = $t1.'<tr>'.$nl;
-	$html .= $t2.'<td width="20%" align="right">'.$label.':</td>'.$nl;
+	$html .= $t2.'<td>'.$label.':</td>'.$nl;
 	$html .= $t2.'<td>'.$nl;
 	$html .= $t3.'<input type="text" class="url" name="fields['.$field_id.']" id="'.$name.'" maxlength="150" value="'.$value.'" />'.$nl;
 	$html .= $t2.'</td>'.$nl;
@@ -271,7 +304,7 @@ function field_url($field_id, $name, $label = 'URL', $value = '') {
 function field_email($field_id, $name, $label = 'Email', $value = '') {
 	global $nl, $t1, $t2, $t3, $t4, $t5;
 	$html  = $t1.'<tr>'.$nl;
-	$html .= $t2.'<td width="20%" align="right">'.$label.':</td>'.$nl;
+	$html .= $t2.'<td>'.$label.':</td>'.$nl;
 	$html .= $t2.'<td>'.$nl;
 	$html .= $t3.'<input type="text" class="email" name="fields['.$field_id.']" id="'.$name.'" maxlength="50" value="'.$value.'" />'.$nl;
 	$html .= $t2.'</td>'.$nl;
@@ -293,7 +326,7 @@ function field_media($field_id, $name, $dir, $label = 'Media', $selected_file, $
 	$root_path = WB_PATH.MEDIA_DIRECTORY.$dir_path;
 	// Wrapping html
 	$start  = $t1.'<tr>'.$nl;
-	$start .= $t2.'<td width="20%" align="right" valign="top">'.$label.':</td>'.$nl;
+	$start .= $t2.'<td class="align_top">'.$label.':</td>'.$nl;
 	$start .= $t2.'<td>'.$nl;
 	$end    = $t2.'</td>'.$nl;
 	$end   .= $t1.'</tr>'.$nl;
@@ -362,7 +395,7 @@ function field_media($field_id, $name, $dir, $label = 'Media', $selected_file, $
 function field_upload($field_id, $name, $path, $label = 'Upload', $value = '', $upload_extensions) {
 	global $TEXT, $MESSAGE, $MOD_ONEFORALL, $mod_name, $nl, $t1, $t2, $t3, $t4, $t5;
 	$html  = $t1.'<tr>'.$nl;
-	$html .= $t2.'<td width="20%" align="right">'.$label.':</td>'.$nl;
+	$html .= $t2.'<td>'.$label.':</td>'.$nl;
 	$html .= $t2.'<td>'.$nl;
 	if (empty($value)) {
 		$html .= $t3.'<input type="file" class="upload" name="fields['.$field_id.']" id="'.$name.'" />'.$nl;
@@ -396,7 +429,7 @@ function field_datepicker($field_id, $name, $label = 'Datepicker', $value = '') 
 	$html .= $t2.'});'.$nl;
 	$html .= $t1.'</script>'.$nl;
 	$html .= $t1.'<tr>'.$nl;
-	$html .= $t2.'<td width="20%" align="right">'.$label.':</td>'.$nl;
+	$html .= $t2.'<td>'.$label.':</td>'.$nl;
 	$html .= $t2.'<td>'.$nl;
 	$html .= $t3.'<input type="text" class="datepicker" name="fields['.$field_id.']" id="datepicker_'.$field_id.'" maxlength="20" value="'.$value.'" />'.$nl;
 	$html .= $t2.'</td>'.$nl;
@@ -421,7 +454,7 @@ function field_datepicker_start_end($field_id, $name, $label = 'Datepicker from 
 	$html .= $t2.'});'.$nl;
 	$html .= $t1.'</script>'.$nl;
 	$html .= $t1.'<tr>'.$nl;
-	$html .= $t2.'<td width="20%" align="right">'.$label.':</td>'.$nl;
+	$html .= $t2.'<td>'.$label.':</td>'.$nl;
 	$html .= $t2.'<td>'.$nl;
 	$html .= $t3.'<input type="text" class="datepicker" name="fields['.$field_id.'][start]" id="datepicker_start_'.$field_id.'" maxlength="20" value="'.$value['start'].'" />'.$nl;
 	$html .= $t3.'<input type="text" class="datepicker" name="fields['.$field_id.'][end]" id="datepicker_end_'.$field_id.'" maxlength="20" value="'.$value['end'].'" />'.$nl;
@@ -447,7 +480,7 @@ function field_datetimepicker($field_id, $name, $label = 'Datetimepicker', $valu
 	$html .= $t2.'});'.$nl;
 	$html .= $t1.'</script>'.$nl;
 	$html .= $t1.'<tr>'.$nl;
-	$html .= $t2.'<td width="20%" align="right">'.$label.':</td>'.$nl;
+	$html .= $t2.'<td>'.$label.':</td>'.$nl;
 	$html .= $t2.'<td>'.$nl;
 	$html .= $t3.'<input type="text" class="datetimepicker" name="fields['.$field_id.']" id="datetimepicker'.$field_id.'" maxlength="20" value="'.$value.'" />'.$nl;
 	$html .= $t2.'</td>'.$nl;
@@ -473,7 +506,7 @@ function field_datetimepicker_start_end($field_id, $name, $label = 'Datepicker f
 	$html .= $t2.'});'.$nl;
 	$html .= $t1.'</script>'.$nl;
 	$html .= $t1.'<tr>'.$nl;
-	$html .= $t2.'<td width="20%" align="right">'.$label.':</td>'.$nl;
+	$html .= $t2.'<td>'.$label.':</td>'.$nl;
 	$html .= $t2.'<td>'.$nl;
 	$html .= $t3.'<input type="text" class="datetimepicker" name="fields['.$field_id.'][start]" id="datetimepicker_start_'.$field_id.'" maxlength="30" value="'.$value['start'].'" />'.$nl;
 	$html .= $t3.'<input type="text" class="datetimepicker" name="fields['.$field_id.'][end]" id="datetimepicker_end_'.$field_id.'" maxlength="30" value="'.$value['end'].'" />'.$nl;
@@ -490,12 +523,12 @@ function field_droplet($field_id, $name, $label = 'Droplet', $selected_id = '') 
 	$options = '';
 	// Wrapping html
 	$start   = $t1.'<tr>'.$nl;
-	$start  .= $t2.'<td width="20%" align="right">'.$label.':</td>'.$nl;
+	$start  .= $t2.'<td>'.$label.':</td>'.$nl;
 	$start  .= $t2.'<td>'.$nl;
 	$end     = $t2.'</td>'.$nl;
 	$end    .= $t1.'</tr>'.$nl;
 	// Get droplets
-	$get_droplets = $database->query("SELECT * FROM ".TABLE_PREFIX."mod_droplets where active = 1 ORDER BY name");
+	$get_droplets = $database->query("SELECT * FROM `".TABLE_PREFIX."mod_droplets` where active = 1 ORDER BY name");
 	if ($get_droplets->numRows() > 0) {
 		$sel  = $t3.'<select name="fields['.$field_id.']" id="'.$name.'" size="1">'.$nl;
 		$sel .= $t4.'<option value="">'.$TEXT['PLEASE_SELECT'].'&#8230;</option>'.$nl;
@@ -532,11 +565,103 @@ function field_select($field_id, $name, $s_options, $label = 'Select', $selected
 		$options .= $t4.'<option value="'.$index.'"'.$selected.'>'.trim($option).'</option>'.$nl;
 	}
 	$start  = $t1.'<tr>'.$nl;
-	$start .= $t2.'<td width="20%" align="right">'.$label.':</td>'.$nl;
+	$start .= $t2.'<td>'.$label.':</td>'.$nl;
 	$start .= $t2.'<td>'.$nl;
 	$start .= $t3.'<select name="fields['.$field_id.']" id="'.$name.'" size="1">'.$nl;
 	$end    = $t3.'</select>'.$nl;
 	$end   .= $t2.'</td>'.$nl;
+	$end   .= $t1.'</tr>'.$nl;
+	$html   = $start.$options.$end;
+	return $html;
+}
+
+
+
+// Generate multiselect
+// Options as comma separated values, eg: Apple,Microsoft,Adobe
+function field_multiselect($field_id, $name, $s_options, $label = 'Multi-Select', $selected_option = array()) {
+	global $TEXT, $nl, $t1, $t2, $t3, $t4, $t5;
+	$options   = '';
+	$a_options = explode(',', $s_options);
+	foreach ($a_options as $index => $option) {
+		$selected = is_array($selected_option) && in_array($index, $selected_option) ? ' selected="selected"' : '';
+		$options .= $t4.'<option value="'.$index.'"'.$selected.'>'.trim($option).'</option>'.$nl;
+	}
+	$start  = $t1.'<tr>'.$nl;
+	$start .= $t2.'<td class="align_top">'.$label.':</td>'.$nl;
+	$start .= $t2.'<td>'.$nl;
+	$start .= $t3.'<select multiple="multiple" name="fields['.$field_id.'][]" id="'.$name.'" size="5">'.$nl;
+	$end    = $t3.'</select>'.$nl;
+	$end   .= $t2.'</td>'.$nl;
+	$end   .= $t1.'</tr>'.$nl;
+	$html   = $start.$options.$end;
+	return $html;
+}
+
+
+
+// Generate checkboxes
+// Options as comma separated values, eg: Apple,Microsoft,Adobe
+function field_checkbox($field_id, $name, $s_options, $label = 'Checkbox', $selected_option = 0) {
+	global $TEXT, $nl, $t1, $t2, $t3, $t4, $t5;
+	$options   = '';
+	$a_options = explode(',', $s_options);
+	foreach ($a_options as $index => $option) {
+		$checked = empty($selected_option[$index]) ? '' : ' checked="checked"';
+		$options .= $t4.'<input type="checkbox" id="checkbox_'.$field_id.'_'.$index.'" name="fields['.$field_id.']['.$index.']" value="1" '.$checked.'><label for="checkbox_'.$field_id.'_'.$index.'">'.trim($option).'</label>'.$nl;
+	}
+	$start  = $t1.'<tr>'.$nl;
+	$start .= $t2.'<td>'.$label.':</td>'.$nl;
+	$start .= $t2.'<td><div class="checkbox">'.$nl;
+	$end    = $t2.'</div></td>'.$nl;
+	$end   .= $t1.'</tr>'.$nl;
+	$html   = $start.$options.$end;
+	return $html;
+}
+
+
+
+// Generate switch
+// Options as 2 comma separated values, eg: ein,aus
+function field_switch($field_id, $name, $s_options, $label = 'Switch', $selected_option = 0) {
+	global $TEXT, $nl, $t1, $t2, $t3, $t4, $t5;
+	$options   = '';
+	$options  .= $t4.'<input type="hidden" name="fields['.$field_id.'][]" value="">'.$nl;
+	$a_options = explode(',', $s_options);
+	$checked = empty($selected_option[1]) ? '' : ' checked="checked"';
+	$options .= $t4.'<label class="switch switch-flat">'.$nl;
+	$options .= $t5.'<input type="checkbox" name="fields['.$field_id.'][]" value="1" '.$checked.' class="switch-input">'.$nl;
+	$options .= $t5.'<span class="switch-label" data-on="'.$a_options[0].'" data-off="'.$a_options[1].'"></span>'.$nl;
+	$options .= $t5.'<span class="switch-handle"></span>'.$nl;
+	$options .= $t4.'</label>'.$nl;
+
+	$start  = $t1.'<tr>'.$nl;
+	$start .= $t2.'<td>'.$label.':</td>'.$nl;
+	$start .= $t2.'<td>'.$nl;
+	$end    = $t2.'</td>'.$nl;
+	$end   .= $t1.'</tr>'.$nl;
+	$html   = $start.$options.$end;
+	return $html;
+}
+
+
+
+// Generate radio buttons
+// Options as comma separated values, eg: Apple,Microsoft,Adobe
+function field_radio($field_id, $name, $s_options, $label = 'Radio Buttons', $selected_option = array()) {
+	global $TEXT, $nl, $t1, $t2, $t3, $t4, $t5;
+	$options   = '';
+	$selected_option[1] = empty($selected_option[1]) ? 0 : $selected_option[1];
+	$options  .= $t4.'<input type="hidden" name="fields['.$field_id.'][]" value="">'.$nl;
+	$a_options = explode(',', $s_options);
+	foreach ($a_options as $index => $option) {
+		$checked  = $selected_option[1] == $index ? ' checked="checked"' : '';
+		$options .= $t4.'<input type="radio" id="checkbox_'.$field_id.'_'.$index.'" name="fields['.$field_id.'][]" value="'.$index.'" '.$checked.'><label for="checkbox_'.$field_id.'_'.$index.'">'.trim($option).'</label>'.$nl;
+	}
+	$start  = $t1.'<tr>'.$nl;
+	$start .= $t2.'<td>'.$label.':</td>'.$nl;
+	$start .= $t2.'<td><div class="radio">'.$nl;
+	$end    = $t2.'</div></td>'.$nl;
 	$end   .= $t1.'</tr>'.$nl;
 	$html   = $start.$options.$end;
 	return $html;
@@ -556,7 +681,7 @@ function field_group($field_id, $name, $s_groups, $label = 'Group', $selected_gr
 		$groups  .= $t4.'<option value="'.$index.'"'.$selected.'>'.trim($group).'</option>'.$nl;
 	}
 	$start  = $t1.'<tr>'.$nl;
-	$start .= $t2.'<td width="20%" align="right">'.$label.':</td>'.$nl;
+	$start .= $t2.'<td>'.$label.':</td>'.$nl;
 	$start .= $t2.'<td>'.$nl;
 	$start .= $t3.'<select name="fields['.$field_id.']" id="'.$name.'" size="1">'.$nl;
 	$end    = $t3.'</select>'.$nl;
@@ -572,7 +697,7 @@ function field_group($field_id, $name, $s_groups, $label = 'Group', $selected_gr
 function field_default() {
 	global $MOD_ONEFORALL, $mod_name, $nl, $t1, $t2;
 	$html  = $t1.'<tr>'.$nl;
-	$html .= $t2.'<td width="20%" align="right" valign="top"></td>'.$nl;
+	$html .= $t2.'<td class="align_top"></td>'.$nl;
 	$html .= $t2.'<td style="color: red;">'.$MOD_ONEFORALL[$mod_name]['ERR_FIELD_TYPE_NOT_EXIST'].'</td>'.$nl;
 	$html .= $t1.'</tr>'.$nl;
 	return $html;
