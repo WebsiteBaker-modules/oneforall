@@ -28,9 +28,11 @@ Modify the CSS of the main page and the item page in the frontend stylesheet.
 
 /* IMPORT */
 
-/* jQuery UI and timepicker addon */
-@import '../../include/jquery/jquery-ui.css';
+/* jQuery UI, timepicker addon and plupload */
+@import 'js/jquery/ui/jquery-ui.css';
+@import 'js/jquery/ui/jquery-ui.theme.css';
 @import 'js/timepicker/css/jquery-ui-timepicker-addon.css';
+@import 'js/plupload/js/jquery.ui.plupload/css/jquery.ui.plupload.css';
 
 
 /* GENERAL */
@@ -41,7 +43,7 @@ Modify the CSS of the main page and the item page in the frontend stylesheet.
 	padding: 8px;
 }
 .mod_oneforall_submit_b {
-	background-color:  #C1D2EE;
+	background-color: #C1D2EE;
 }
 .mod_oneforall_section_header_b {
 	text-align: left;
@@ -69,9 +71,11 @@ input[class$="_edit_css"] {
 
 /* JQUERY AND AJAX RELATED */
 
-.mod_oneforall_move_ns_b {
+#mod_oneforall_items_b tbody tr:hover,
+#mod_oneforall_images_b tbody tr[id^='id_']:hover,
+#custom_fields table:hover {
 	background-color: #E8E8E8 !important;
-	cursor: ns-resize;
+	cursor: ns-resize !important;
 }
 .ui-sortable-helper {
 	border: 1px dotted grey;
@@ -411,7 +415,7 @@ span[class^="mod_oneforall_active"]:hover {
 /* SORTABLE IMAGE TABLE */
 
 #mod_oneforall_images_b {
-	
+	border-collapse: collapse;
 }
 
 #mod_oneforall_images_b thead > tr {
@@ -457,6 +461,9 @@ span[class^="mod_oneforall_active"]:hover {
 #mod_oneforall_images_b tbody tr:nth-child(odd) {
 	background-color: #EBF3FF;
 }
+#mod_oneforall_images_b tbody td:nth-child(1) {
+	text-align: center;
+}
 #mod_oneforall_images_b tbody td:nth-child(2) a {
 	word-break: break-all;
 }
@@ -473,6 +480,102 @@ span[class^="mod_oneforall_active"]:hover {
 #mod_oneforall_images_b tbody td:nth-child(8) {
 	text-align: center;
 	white-space: nowrap;
+}
+
+#mod_oneforall_images_b .tooltip {
+	position: relative;
+}
+#mod_oneforall_images_b .tooltip > a > img {
+	height: 40px;
+	width: auto;
+}
+#mod_oneforall_images_b .arrow_box {
+	visibility: hidden;
+	position: absolute;
+	left: 85px;
+	bottom: -50px;
+	z-index: 100;
+	background: #C1D2EE;
+	border: 6px solid #FFFFFF;
+	border-radius: 5px;
+	-webkit-box-shadow: 2px 2px 20px 0px rgba(0,0,0,0.5);
+	-moz-box-shadow: 2px 2px 20px 0px rgba(0,0,0,0.5);
+	box-shadow: 2px 2px 20px 0px rgba(0,0,0,0.5);
+}
+#mod_oneforall_images_b .arrow_box > img {
+	max-width: 150px;
+	max-height: 150px;
+}
+#mod_oneforall_images_b .arrow_box:after,
+#mod_oneforall_images_b .arrow_box:before {
+	right: 100%;
+	top: 50%;
+	border: solid transparent;
+	content: " ";
+	height: 0;
+	width: 0;
+	position: absolute;
+	pointer-events: none;
+}
+#mod_oneforall_images_b .arrow_box:after {
+	border-color: rgba(193, 210, 238, 0);
+	border-right-color: black;
+	border-width: 20px;
+	margin-top: -20px;
+}
+#mod_oneforall_images_b .arrow_box:before {
+	border-color: rgba(255, 255, 255, 0);
+	border-right-color: #FFFFFF;
+	border-width: 28px;
+	margin-top: -28px;
+}
+#mod_oneforall_images_b .tooltip:hover .arrow_box {
+	visibility: visible;
+}
+
+
+/* IMAGE UPLOAD (PLUPLOAD) */
+
+#resize_settings {
+	height: 40px;
+	line-height: 40px;
+}
+#resize_settings label[for='imgresize'] {
+	font-weight: bold;
+	margin-right: 16px;
+}
+#resize_settings input[type='text'] {
+	text-align: center;
+}
+#resize_settings span {
+	margin: 0 10px;
+}
+
+.plupload_error_msg {
+	height: 36px !important;
+	padding: 10px 0;
+}
+.plupload_error_msg td {
+	border: 1px solid #cd0a0a;
+	background: #fef1ec;
+	color: #cd0a0a;
+}
+.plupload_error_msg td:nth-child(1) {
+	border-right: none;
+}
+.plupload_error_msg td:nth-child(1) span {
+	margin-left: 36px;
+}
+.plupload_error_msg td:nth-child(2) {
+	border-right: none;
+	border-left: none;
+}
+.plupload_error_msg td:nth-child(3) {
+	border-left: none;
+}
+.plupload_error_msg td:nth-child(3) span {
+	margin-left: 21px;
+	cursor: pointer;
 }
 
 
@@ -587,16 +690,19 @@ span[class^="mod_oneforall_active"]:hover {
 #modify_item input[type="checkbox"] {
 	display: none !important;
 }
+#modify_item input[type="checkbox"] + label {
+	margin-right: 12px;
+}
 #modify_item input[type="checkbox"] + label:before {
-	content: "";  
-	display: inline-block;  
-	width: 15px;  
-	height: 15px;  
-	vertical-align: middle;
-	margin-right: 8px;  
-	background-color: #CACACA;;  
+	content: "";
+	display: inline-block;
+	width: 15px;
+	height: 15px;
+	vertical-align: bottom;
+	margin-right: 6px;
+	background-color: #CACACA;
 	box-shadow: inset 0px 2px 2px rgba(0, 0, 0, .3);
-	border-radius: 4px;  
+	border-radius: 4px;
 }
 #modify_item input[type="checkbox"]:checked + label:before {
 	content: "\2714"; /* Tick */
@@ -606,16 +712,19 @@ span[class^="mod_oneforall_active"]:hover {
 	line-height: 15px;
 	text-shadow: 0px 0px 3px #EEEEEE;
 }
+#modify_item input[type="radio"] + label {
+	margin-right: 12px;
+}
 #modify_item input[type="radio"] + label:before {
-	content: "";  
-	display: inline-block;  
-	width: 15px;  
-	height: 15px;  
-	vertical-align: middle;
-	margin-right: 8px;  
+	content: "";
+	display: inline-block;
+	width: 15px;
+	height: 15px;
+	vertical-align: top;
+	margin-right: 6px;
 	background-color: #CACACA;
 	box-shadow: inset 0px 2px 2px rgba(0, 0, 0, .3);
-	border-radius: 8px;  
+	border-radius: 8px;
 }
 #modify_item input[type="radio"]:checked + label:before {
 	content: "\2022"; /* Bullet */
@@ -625,6 +734,17 @@ span[class^="mod_oneforall_active"]:hover {
 	text-align: center;
 	line-height: 14px;
 	text-shadow: 0px 0px 3px #EEEEEE;
+}
+#modify_item input[type="radio"]:checked + label[for="active_true"]:before {
+	background-color: #159F2F;
+}
+#modify_item input[type="radio"]:checked + label[for="active_false"]:before {
+	background-color: #B52B22;
+}
+#modify_item input[type="radio"] + label[for="action_move"]:before,
+#modify_item input[type="radio"] + label[for="action_duplicate"]:before {
+	vertical-align: middle;
+	margin-left: 12px;
 }
 
 

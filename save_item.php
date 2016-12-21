@@ -378,7 +378,7 @@ foreach ($images as $img_id  => $image) {
 
 // Add uploaded images
 $file_type_error = false;
-$num_images      = count($_FILES['image']['name']);
+$num_images      = isset($_FILES['image']) ? count($_FILES['image']['name']) : 0;
 
 // Get thumb size for this page
 $resize = $database->get_one("SELECT resize FROM `".TABLE_PREFIX."mod_".$mod_name."_page_settings` WHERE section_id = '$section_id'");

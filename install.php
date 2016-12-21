@@ -121,7 +121,7 @@ if (defined('WB_URL')) {
 			. "`position` INT(11) NOT NULL DEFAULT '0',"
 			. "`title` VARCHAR(255) NOT NULL DEFAULT '',"
 			. "`link` TEXT NOT NULL ,"
-			. "`description` TEXT NOT NULL DEFAULT '',"
+			. "`description` TEXT NOT NULL,"
 			. "`main_image` VARCHAR(50) NOT NULL DEFAULT '',"
 			. "`modified_when` INT(11) NOT NULL DEFAULT '0',"
 			. "`modified_by` INT(11) NOT NULL DEFAULT '0',"

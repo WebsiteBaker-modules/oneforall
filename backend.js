@@ -90,14 +90,6 @@ $(document).ready(function() {
 //   Function to sort items by drag&drop
 // **********************************************************************************
 
-	// Add hover effect to item rows
-	var row = $('#mod_oneforall_items_b tbody tr');
-	row.mouseover(function() {
-		$(this).addClass('mod_oneforall_move_ns_b');
-	}).mouseout(function() {
-		$(this).removeClass('mod_oneforall_move_ns_b');
-	});
-
 	// Check if sortable is available
 	if (jQuery().sortable) {
 
@@ -132,14 +124,6 @@ $(document).ready(function() {
 //   Function to sort images by drag&drop
 // **********************************************************************************
 
-	// Add hover effect to item rows
-	var row = $('#mod_oneforall_images_b tbody tr');
-	row.mouseover(function() {
-		$(this).addClass('mod_oneforall_move_ns_b');
-	}).mouseout(function() {
-		$(this).removeClass('mod_oneforall_move_ns_b');
-	});
-
 	// Check if sortable is available
 	if (jQuery().sortable) {
 
@@ -156,6 +140,7 @@ $(document).ready(function() {
 		// Make table sortable
 		$('#mod_oneforall_images_b tbody').sortable({
 			opacity: 0.8,
+			items: "[id^='id_']",
 			update: function() {
 				var order = $(this).sortable('serialize') + '&action=update_pos&mod_name=' + mod_name;
 				// Post ordering to the server
@@ -202,14 +187,6 @@ $(document).ready(function() {
 //   OneForAll MODIFY FIELDS
 //   Function to sort fields by drag&drop
 // **********************************************************************************
-
-	// Add hover effect to item rows
-	var row = $('#custom_fields table');
-	row.mouseover(function() {
-		$(this).addClass('mod_oneforall_move_ns_b');
-	}).mouseout(function() {
-		$(this).removeClass('mod_oneforall_move_ns_b');
-	});
 
 	// Check if sortable is available
 	if (jQuery().sortable) {
@@ -303,40 +280,3 @@ function confirm_delete(message, txt_field) {
 
 
 
-
-// **********************************************************************************
-//   OneForAll MODIFY ITEM
-//   Function to add and remove file type inputs
-//   (http://codingforums.com/showthread.php?t=65390)
-// **********************************************************************************
-
-function addFile(delTxt) {
-	var root = document.getElementById('upload').getElementsByTagName('tr')[0].parentNode;
-	var oR   = cE('tr');
-	var oC   = cE('td');
-	var oI   = cE('input');
-	var oS   = cE('span');
-	cA(oI,'type','file');
-	cA(oI,'name','image[]');
-	oS.style.cursor = 'pointer';
-
-	oS.onclick = function() {
-		this.parentNode.parentNode.parentNode.removeChild(this.parentNode.parentNode);
-	}
-
-	oS.appendChild(document.createTextNode(delTxt));
-	oC.appendChild(oI);
-	oC.appendChild(oS);
-	oR.appendChild(oC);
-	root.appendChild(oR);
-}
-
-function cE(el){
-	this.obj = document.createElement(el);
-	return this.obj;
-}
-
-function cA(obj,att,val) {
-	obj.setAttribute(att,val);
-	return;
-}

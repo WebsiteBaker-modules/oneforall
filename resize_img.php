@@ -36,7 +36,6 @@ function resizePNG($source, $destination, $new_max_w, $new_max_h) {
 			$new_w = intval($orig_w * ($new_h / $orig_h));
 		} else {
 			// Image to small to be downsized
-			echo "<div align='center'><p style='color: red;'>Image to small to be downsized!</p></div>";
 			return false;
 		}
 
@@ -81,8 +80,7 @@ function resizeJPEG($source, $new_max_w, $new_max_h, $quality = 75) {
 			$new_w = intval($orig_w * ($new_h / $orig_h));
 			$resize = TRUE;
 		} else {
-			// Image cant be downsized
-			echo "<div align='center'><p style='color: red;'>Image to small to be downsized!</p></div>";
+			// Image to small to be downsized
 			return false;
 		}
 

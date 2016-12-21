@@ -50,8 +50,8 @@ $order_by_group_asc = true;
 $view_detail_pages = true;
 
 // Show additional field meta description on the modify item page
-// Will set title and meta description to the html header
-// of every item detail page using jquery
+// For SEO optimization use module SimplePageHead to insert item title
+// and a meta description into the html head of every item detail page
 $field_meta_desc = true;
 
 // Set extensions accepted by the media field as csv

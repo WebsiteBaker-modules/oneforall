@@ -210,7 +210,7 @@ if ($continue) {
 	if ($query_fields->numRows() > 0) {
 		while ($field = $query_fields->fetchRow()) {
 			$field_id = $field['field_id'];
-			$sql = "UPDATE `".TABLE_PREFIX."mod_".$mod_name."_item_fields
+			$sql = "UPDATE `".TABLE_PREFIX."mod_".$mod_name."_item_fields`
 					SET value = REPLACE(value, '".MEDIA_DIRECTORY."', '')
 					WHERE value LIKE '%media%'
 					AND field_id = '".$field_id."'";
@@ -233,7 +233,7 @@ if ($continue) {
 
 	$table_name = TABLE_PREFIX.'mod_'.$mod_name.'_items';
 	$field_name = 'description';
-	$parameter  = "TEXT NOT NULL DEFAULT '' AFTER `link`";
+	$parameter  = "TEXT NOT NULL AFTER `link`";
 	
 	echo '<li><span class="title">Add field &quot;'.$field_name.'&quot; to table &quot;'.$table_name.'&quot;</span><br />';
 

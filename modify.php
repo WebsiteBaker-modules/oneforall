@@ -63,7 +63,7 @@ if ($settings_admin_only && $_SESSION['USER_ID'] != 1) {
 // Load jQuery ui if not loaded yet
 ?>
 <script type="text/javascript">
-jQuery().sortable || document.write('<script src="<?php echo WB_URL; ?>/include/jquery/jquery-ui-min.js"><\/script>');
+jQuery().sortable || document.write('<script src="<?php echo WB_URL; ?>/modules/<?php echo $mod_name; ?>/js/jquery/ui/jquery-ui.min.js"><\/script>');
 </script>
 <script type="text/javascript" src="<?php echo WB_URL; ?>/modules/<?php echo $mod_name; ?>/js/table_sort.js"></script>
 <script type="text/javascript">

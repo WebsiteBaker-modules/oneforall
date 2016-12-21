@@ -42,7 +42,7 @@ if ($query_page_settings->numRows() > 0) {
 if ($setting_lightbox2 == "detail" || $setting_lightbox2 == "all") {
 	// Load jQuery if not loaded yet
 	?>
-	<script>window.jQuery || document.write('<script src="<?php echo WB_URL; ?>/include/jquery/jquery-min.js"><\/script>')</script>
+	<script>window.jQuery || document.write('<script src="<?php echo WB_URL; ?>/modules/<?php echo $mod_name; ?>/js/jquery/jquery.min.js"><\/script>')</script>
 	<script type="text/javascript" src="<?php echo WB_URL; ?>/modules/<?php echo $mod_name; ?>/js/lightbox2/js/lightbox.js"></script>
 	<script type="text/javascript">
 	//  Lightbox2 options
@@ -170,7 +170,10 @@ if ($query_item->numRows() > 0) {
 	$item_date = gmdate(DATE_FORMAT, $item['modified_when']+TIMEZONE);
 	$item_time = gmdate(TIME_FORMAT, $item['modified_when']+TIMEZONE);
 
-	// Set title and meta description to the item html header
+/*
+	// Set title and meta description to the item html head
+	// Commented in v0.9.6 since Google does not recognize it
+	// Use module SimplePageHead instead
 	if ($field_meta_desc) {
 		?>
 		<script type="text/javascript">
@@ -182,6 +185,7 @@ if ($query_item->numRows() > 0) {
 		</script>
 		<?php
 	}
+*/
 
 	// Get item fields data
 	$query_item_fields = $database->query("SELECT field_id, value FROM `".TABLE_PREFIX."mod_".$mod_name."_item_fields` WHERE item_id = ".ITEM_ID);
@@ -434,7 +438,7 @@ if ($query_item->numRows() > 0) {
 	foreach ($templates as $field_id => $template) {
 
 		// If value is empty return a blank template
-		if (!isset($values[$field_id]) || empty($values[$field_id]) || $types[$field_id] == 'group') {
+		if (!isset($values[$field_id]) || empty($values[$field_id])) {
 			$template = '';
 		} else {
 			// Common placeholder

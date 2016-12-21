@@ -38,9 +38,37 @@ $module_name = 'OneForAll'; // default: OneForAll
 
 	DEVELOPMENT HISTORY:
 
-   v0.9.4  (Christoph Marti; 10/12/2016)
-	 + [frontend.css] Added class .mod_oneforall_group_wrapper_f
-	 + [backend.css] Added transition to the .classes switch-label and .switch-handel
+   v0.9.9  (Christoph Marti; 12/03/2016)
+	 + Added an image tooltip to the thumbs at the sortable image table
+	   To change tooltip image size use css selector '.arrow_box > img' at backend.css
+	 + If image was to small for resizing it has not been added to the image table (reported by dbs)
+
+   v0.9.8  (Christoph Marti; 12/01/2016)
+	 + Added hover effect to the newly uploaded images of the sortable image table to indicate drag&drop
+	   (reported by dbs)
+
+   v0.9.7  (Christoph Marti; 11/29/2016)
+	 + [upgrade.php] Bugfix: Added trailing backtick to table name on line 213 (reported by dbs)
+	 + [view_item.php] Bugfix: Groups were not displayed at item detail view (reported by dbs)
+	 + [functions.php] Bugfix: When function field_multiselect() is called for the first time
+	   it tries to unset a array key which has not been defined
+	 + [view_item.php] Changed: Removed experimental jquery function to insert item title and a meta description
+	   into the html head of every item detail page since Google does not recognize it.
+	   Use module SimplePageHead instead.
+	 + Bugfix: Changed mysql fields type TEXT NOT NULL DEFAULT '' to TEXT NOT NULL
+	   since default values for TEXT and BLOG fields are not allowed (thanks to Ruud)
+	 + [modify_item.php] Changed select options of item mover/duplicater from page_title to menu_title
+	   (reported by dbs)
+	 + Added Plupload, a multi runtime file uploader (http://www.plupload.com)
+	 + Added jQuery v1.11.1 and jQuery UI v1.10.2 for better support of Plupload
+
+   v0.9.5  (Christoph Marti; 10/27/2016)
+	 + Bugfix: After unchecking all options of multiselect or checkboxes, one still remained checked after saving
+	   (reported by Roych)
+
+   v0.9.4  (Frank Fischer, Christoph Marti; 10/12/2016)
+	 + [frontend.css] Added css class .mod_oneforall_group_wrapper_f
+	 + [backend.css] Added transition to the css classes .switch-label and .switch-handel
 
    v0.9.3  (Frank Fischer, Christoph Marti; 10/11/2016)
 	 + Bugfix: First selected item of multiselect and radio have not been displaying in frontend view
@@ -53,7 +81,7 @@ $module_name = 'OneForAll'; // default: OneForAll
 	 + Field type code must be allowed in config.php due to security reasons
 	 + [modify_item.php] Added setting to still duplicate items even when item mover/duplicator is disabled
 	 + [modify_item.php] Added field meta description for item detail pages
-	   Adds the title and a meta description to the html header of every item detail page
+	   Adds the title and a meta description to the html head of every item detail page
 	 + [modify.php] Enable/disable item via ajax
 	 + [modify.php] Added sorting of item table by clicking the column headers 'id', 'title' and 'enabled'
 	 + [modify_item.php] Added drag&drop sorting to the item images
@@ -150,7 +178,7 @@ $mod_name           = $module_directory;
 $renamed_to         = $mod_name == 'oneforall' ? '' : '(renamed to <strong>'.$module_name.'</strong>) ';
 
 $module_function    = 'page';
-$module_version     = '0.9.4';
+$module_version     = '0.9.9';
 $module_platform    = '2.8.x';
 $module_author      = 'Christoph Marti. OneForAll '.$renamed_to.'is based on the module Showcase v0.5';
 $module_license     = 'GNU General Public License';

@@ -50,7 +50,7 @@ if ($query_page_settings->numRows() > 0) {
 if ($setting_lightbox2 == "overview" || $setting_lightbox2 == "all") {
 	// Load jQuery if not loaded yet
 	?>
-	<script>window.jQuery || document.write('<script src="<?php echo WB_URL; ?>/include/jquery/jquery-min.js"><\/script>')</script>
+	<script>window.jQuery || document.write('<script src="<?php echo WB_URL; ?>/modules/<?php echo $mod_name; ?>/js/jquery/jquery.min.js"><\/script>')</script>
 	<script type="text/javascript" src="<?php echo WB_URL; ?>/modules/<?php echo $mod_name; ?>/js/lightbox2/js/lightbox.js"></script>
 	<script type="text/javascript">
 	//  Lightbox2 options

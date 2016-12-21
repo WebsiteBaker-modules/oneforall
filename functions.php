@@ -581,6 +581,7 @@ function field_select($field_id, $name, $s_options, $label = 'Select', $selected
 // Options as comma separated values, eg: Apple,Microsoft,Adobe
 function field_multiselect($field_id, $name, $s_options, $label = 'Multi-Select', $selected_option = array()) {
 	global $TEXT, $nl, $t1, $t2, $t3, $t4, $t5;
+	if (isset($selected_option[0])) unset($selected_option[0]);
 	$options   = '';
 	$a_options = explode(',', $s_options);
 	foreach ($a_options as $index => $option) {
@@ -590,6 +591,7 @@ function field_multiselect($field_id, $name, $s_options, $label = 'Multi-Select'
 	$start  = $t1.'<tr>'.$nl;
 	$start .= $t2.'<td class="align_top">'.$label.':</td>'.$nl;
 	$start .= $t2.'<td>'.$nl;
+	$start .= $t3.'<input type="hidden" name="fields['.$field_id.'][]" value="">'.$nl;
 	$start .= $t3.'<select multiple="multiple" name="fields['.$field_id.'][]" id="'.$name.'" size="5">'.$nl;
 	$end    = $t3.'</select>'.$nl;
 	$end   .= $t2.'</td>'.$nl;
@@ -605,6 +607,7 @@ function field_multiselect($field_id, $name, $s_options, $label = 'Multi-Select'
 function field_checkbox($field_id, $name, $s_options, $label = 'Checkbox', $selected_option = 0) {
 	global $TEXT, $nl, $t1, $t2, $t3, $t4, $t5;
 	$options   = '';
+	$options  .= $t4.'<input type="hidden" name="fields['.$field_id.'][]" value="">'.$nl;
 	$a_options = explode(',', $s_options);
 	foreach ($a_options as $index => $option) {
 		$checked = empty($selected_option[$index]) ? '' : ' checked="checked"';

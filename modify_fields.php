@@ -53,7 +53,7 @@ $sync_type_template = isset($_SESSION[$mod_name]['sync_type_template']) ? $_SESS
 // and start with fields table
 ?>
 <script type="text/javascript">
-jQuery().sortable || document.write('<script src="<?php echo WB_URL; ?>/include/jquery/jquery-ui-min.js"><\/script>');
+jQuery().sortable || document.write('<script src="<?php echo WB_URL; ?>/modules/<?php echo $mod_name; ?>/js/jquery/ui/jquery-ui.min.js"><\/script>');
 </script>
 <script type="text/javascript">
 	var mod_name         = '<?php echo $mod_name; ?>',
