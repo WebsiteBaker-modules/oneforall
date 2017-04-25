@@ -2,7 +2,7 @@
 
 /*
   Module developed for the Open Source Content Management System WebsiteBaker (http://websitebaker.org)
-  Copyright (C) 2016, Christoph Marti
+  Copyright (C) 2017, Christoph Marti
 
   LICENCE TERMS:
   This module is free software. You can redistribute it and/or modify it 
@@ -263,6 +263,11 @@ if (!$chunks || $chunk == $chunks - 1) {
 	rename("{$img_path}.part", $img_path);
 }
 
+// If we have to load other chunks, stop here and return success response
+if ($chunks && $chunk < $chunks - 1) {
+	die('{"jsonrpc" : "2.0", "result" : null, "id" : "id"}');
+}
+
 
 
 // CREATE A THUMB
@@ -314,6 +319,7 @@ $filename = $filename.'.'.$fileext;
 $database->query("INSERT INTO `".TABLE_PREFIX."mod_".$mod_name."_images` (item_id, filename, active, position) VALUES ('$item_id', '$filename', 1, '$top_position')");
 
 // Get new image id
+$img_id = 'undefined';
 $img_id = $database->getLastInsertId();
 
 // Check if there was a db error

@@ -1,6 +1,6 @@
 /*
   Javascript routines for WebsiteBaker module OneForAll
-  Copyright (C) 2016, Christoph Marti
+  Copyright (C) 2017, Christoph Marti
 
   This Javascript routines are free software. You can redistribute it and/or modify it 
   under the terms of the GNU General Public License - version 2 or later, 
@@ -25,9 +25,11 @@ $(document).ready(function() {
 //   Function to show a message if an ajax request has been successful
 // **********************************************************************************
 
-	// The message
-	$('body').prepend('<div id="mod_oneforall_success_b" class="animated bounceInDown" style="display: none;"></div>');
-	var success_msg = $('#mod_oneforall_success_b');
+	// Add the message div if not existing yet
+	if (document.getElementById('success_msg_b') === null) {
+		$('body').prepend('<div id="success_msg_b" class="animated bounceInDown" style="display: none;"></div>');
+    }
+	var success_msg = $('#success_msg_b');	
 
 	// Ajax success message
 	var loading = success_msg.hide();
@@ -54,31 +56,34 @@ $(document).ready(function() {
 
 		// Get current active button class
 		var button = $(this);
-		var current_class = button.attr('class');
+		var current_class = button.prop('class');
 		
 		// Check if item is enabled/disabled
 		if (current_class == 'mod_oneforall_active0_b') {
-			var value = 1;
+			var bt_value = 1;
+			var bt_title = mod_oneforall.txt_disable;
 		} else {
-			var value = 0;
+			var bt_value = 0;
+			var bt_title = mod_oneforall.txt_enable;
 		}
 
 		// Get the item_id
-		var item_id = button.closest('tr').attr('id').replace('id_', '');
+		var item_id = button.closest('tr').prop('id').replace('id_', '');
 
 		// Post active to the server
-		$.post('../../modules/' + mod_name + '/ajax/toggle_active.php',
+		$.post('../../modules/' + mod_oneforall.mod_name + '/ajax/toggle_active.php',
 		{
-			value:      value,
+			value:      bt_value,
 			item_id:    item_id,
-			mod_name:   mod_name,
+			mod_name:   mod_oneforall.mod_name,
 			action:     'update_active'
 		},
 		function() {
-			// On success remove current class and set new class
-			button.removeClass().addClass('mod_oneforall_active' + value + '_b');
+			// On success remove current class and set new class, change title text
+			button.removeClass().addClass('mod_oneforall_active' + bt_value + '_b');
+			button.prop('title', bt_title);
 			// Set the success message used by ajaxStop(), see on top of this file 
-			success_msg.text(txt_toggle_message);
+			success_msg.text(mod_oneforall.txt_toggle_message);
 		});
 	});
 
@@ -106,11 +111,11 @@ $(document).ready(function() {
 		$('#mod_oneforall_items_b tbody').sortable({
 			opacity: 0.8,
 			update: function() {
-				var order = $(this).sortable('serialize') + '&action=update_pos&mod_name=' + mod_name;
+				var order = $(this).sortable('serialize') + '&action=update_pos&mod_name=' + mod_oneforall.mod_name;
 				// Post ordering to the server
-				$.post('../../modules/' + mod_name + '/ajax/move_item.php', order, function() {
+				$.post('../../modules/' + mod_oneforall.mod_name + '/ajax/move_item.php', order, function() {
 					// Set the success message used by ajaxStop(), see on top of this file 
-					success_msg.text(txt_dragdrop_message);
+					success_msg.text(mod_oneforall.txt_dragdrop_message);
 				}); 	
 			}				
 		});
@@ -142,16 +147,16 @@ $(document).ready(function() {
 			opacity: 0.8,
 			items: "[id^='id_']",
 			update: function() {
-				var order = $(this).sortable('serialize') + '&action=update_pos&mod_name=' + mod_name;
+				var order = $(this).sortable('serialize') + '&action=update_pos&mod_name=' + mod_oneforall.mod_name;
 				// Post ordering to the server
-				$.post('../../modules/' + mod_name + '/ajax/move_image.php', order, function() {
+				$.post('../../modules/' + mod_oneforall.mod_name + '/ajax/move_image.php', order, function() {
 
 					// On success move 'main image' note to the top image
 					var txt_main_img = $('b, b + br', '#mod_oneforall_images_b');
 					$('#mod_oneforall_images_b tr:eq(1) td:eq(1)').prepend(txt_main_img);
 
 					// Set the success message used by ajaxStop(), see on top of this file 
-					success_msg.text(txt_dragdrop_message);
+					success_msg.text(mod_oneforall.txt_dragdrop_message);
 				}); 	
 			}				
 		});
@@ -165,7 +170,7 @@ $(document).ready(function() {
 //   Function to sinc selected file with file link or preview thumb
 // **********************************************************************************
 
-	$('#modify_item').change(function() {
+	$('#mod_oneforall_modify_item_b').change(function() {
 
 		// Hide all images and links ...
 		$('a.media_img, a.media_link').addClass('hidden');
@@ -192,20 +197,20 @@ $(document).ready(function() {
 	if (jQuery().sortable) {
 
 		// Fix the width of the cells so they do not collapse on drag&drop
-		$('td, th', '#custom_fields').each(function() {
+		$('td, th', '#mod_oneforall_custom_fields_b').each(function() {
 			var cell = $(this);
 			cell.width(cell.width());
 		});
 
 		// Make table sortable
-		$('#custom_fields > tbody').sortable({
+		$('#mod_oneforall_custom_fields_b > tbody').sortable({
 			opacity: 0.8,
 			update: function() {
-				var order = $(this).sortable('serialize') + '&action=update_pos&mod_name=' + mod_name;
+				var order = $(this).sortable('serialize') + '&action=update_pos&mod_name=' + mod_oneforall.mod_name;
 				// Post ordering to the server
-				$.post('../../modules/' + mod_name + '/ajax/move_field.php', order, function() {
+				$.post('../../modules/' + mod_oneforall.mod_name + '/ajax/move_field.php', order, function() {
 					// Set the success message used by ajaxStop(), see on top of this file 
-					success_msg.text(txt_dragdrop_message);
+					success_msg.text(mod_oneforall.txt_dragdrop_message);
 				});
 			}
 		});
@@ -219,30 +224,30 @@ $(document).ready(function() {
 //   Function to sinc form with selected field type
 // **********************************************************************************
 
-	$('#custom_fields select').change(function() {
+	$('#mod_oneforall_custom_fields_b select').change(function() {
 
 		// Get type (from select option)
 		var type = $(this).val();
 		// Get the elements
 		var textarea    = $(this).closest('tr').nextAll().eq(1).find('textarea');
-		var extra_label = $(this).parent().parent().prev().find('th:last');
+		var extra_label = $(this).closest('tbody').prev().find('th:last');
 		var extra_field = $(this).parent().nextAll().eq(2).find('input');
 		// First hide all labels and fields ...
-		extra_label.find('span').addClass('hidden_extra_label');
-		extra_field.addClass('hidden_extra_field');
+		extra_label.find('span').addClass('mod_oneforall_hidden_extra_label_b');
+		extra_field.addClass('mod_oneforall_hidden_extra_field_b');
 		// ...then display it if the type matches
 		var types = ['oneforall_link', 'foldergallery_link', 'media', 'upload', 'select', 'multiselect', 'checkbox', 'switch', 'radio', 'group'];
 		var tl    = types.length;
 		for	(i = 0; i < tl; i++) {
 			if (type == types[i]) {
 				child = i + 1;
-				extra_label.find(':nth-child('+child+')').removeClass('hidden_extra_label');
-				extra_field.removeClass('hidden_extra_field');
+				extra_label.find(':nth-child('+child+')').removeClass('mod_oneforall_hidden_extra_label_b');
+				extra_field.removeClass('mod_oneforall_hidden_extra_field_b');
 			}
 		}
 		// If sync is activated, get default template (tml) and insert it into the textarea
 		if ($('#sync_type_template').prop('checked')) {
-			var default_tml = $("#default_templates [class$='_"+type+"_f']").parent().html();
+			var default_tml = $("#mod_oneforall_default_templates_b [class$='_"+type+"_f']").parent().html();
 			if (default_tml !== null) {
 				textarea.html(default_tml.trim()).addClass('highlight');
 				// Delay until css animation has finished
@@ -264,13 +269,13 @@ $(document).ready(function() {
 
 function confirm_delete(message, txt_field) {
 
-	var fields = ''; // null oder false oder ???
-
-	$('select').each(function(index) {
+	var fields = '';
+	$('select[name^="fields"]').each(function(index) {
 		var type = $(this).val();
+		var id   = $(this).prop('name').replace(/[^0-9\.]/g, '');
 		if (type == 'delete') {
 			index++;
-			fields += "\n   • "+txt_field+' '+index;
+			fields += "\n   • "+txt_field+' id '+id;
 		}
 	});
 	if (fields != '') {

@@ -2,7 +2,7 @@
 
 /*
   Module developed for the Open Source Content Management System WebsiteBaker (http://websitebaker.org)
-  Copyright (C) 2016, Christoph Marti
+  Copyright (C) 2017, Christoph Marti
 
   LICENCE TERMS:
   This module is free software. You can redistribute it and/or modify it 
@@ -185,13 +185,12 @@ function field_oneforall_link($field_id, $name, $module_name, $label = 'OneForAl
 	$start .= $t2.'<td>'.$nl;
 	$end    = $t2.'</td>'.$nl;
 	$end   .= $t1.'</tr>'.$nl;
-	// Check if the module oneforall or renamed version is installed
-	$module_name = trim($module_name);
-	$module_name = empty($module_name) || !preg_match('/^[a-zA-Z0-9_ -]{3,20}$/', $module_name) ? 'oneforall' : $module_name;
-	$oneforall   = $database->get_one("SELECT EXISTS (SELECT 1 FROM `".TABLE_PREFIX."sections` WHERE module = '".strtolower($module_name)."')");
-	if (!$oneforall) {
+	// Verify if the entered module name is a oneforall module (or renamed one) and the module is installed
+	$check4ofa_1 = $database->get_one("SELECT EXISTS (SELECT 1 FROM `".TABLE_PREFIX."addons` WHERE type = 'module' AND directory = '".$module_name."' AND author LIKE '%OneForAll%')");
+	$check4ofa_2 = $database->get_one("SELECT EXISTS (SELECT 1 FROM `".TABLE_PREFIX."sections` WHERE module = '".$module_name."')");
+	if (!$check4ofa_1 || !$check4ofa_2) {
 		$error_msg = $MOD_ONEFORALL[$mod_name]['ERR_INSTALL_MODULE'];
-		$error     = $t3.'<span style="color: red;">'.sprintf($error_msg, $module_name, $module_name).'</span>';
+		$error     = $t3.'<span style="color: red;">'.sprintf($error_msg, $module_name.' (OneForAll)', $module_name).'</span>';
 		return $start.$error.$end;
 	}
 	// The items select
@@ -231,7 +230,7 @@ function field_foldergallery_link($field_id, $name, $sections, $label = 'Folder 
 	$start .= $t2.'<td>'.$nl;
 	$end    = $t2.'</td>'.$nl;
 	$end   .= $t1.'</tr>'.$nl;
-	// Check if the module foldergallery is installed
+	// Verify if the module foldergallery is installed
 	$foldergallery = $database->get_one("SELECT EXISTS (SELECT 1 FROM `".TABLE_PREFIX."sections` WHERE module = 'foldergallery')");
 	if (!$foldergallery) {
 		$error_msg = $MOD_ONEFORALL[$mod_name]['ERR_INSTALL_MODULE'];

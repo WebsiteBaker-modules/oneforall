@@ -2,7 +2,7 @@
 
 /*
   Module developed for the Open Source Content Management System WebsiteBaker (http://websitebaker.org)
-  Copyright (C) 2016, Christoph Marti
+  Copyright (C) 2017, Christoph Marti
 
   LICENCE TERMS:
   This module is free software. You can redistribute it and/or modify it 
@@ -215,7 +215,7 @@ if ($num_items > 0) {
 				$values[$field_id] = trim(stripslashes($item_fields['value']));
 
 				// If needed print group title
-				$current_group = $values[$field_id] - 1;
+				$current_group = is_numeric($values[$field_id]) ? $values[$field_id] - 1 : -1;
 				if ($types[$field_id] == 'group' && $printed_group !== $current_group && $show_group_headers) {
 					// Count groups to set the wrappers properly
 					$count_groups++;
@@ -422,9 +422,16 @@ if ($num_items > 0) {
 						$img_append    = '" alt="'.$img_alt.'" title="'.$img_title.'" class="mod_'.$mod_name.'_main_img_f" /></a>';
 					// ...else add thumb/image only
 					} else {
-						$thumb_prepend = '<a href="'.$item_link.'"><img src="';
+						// Add link to detail pages
+						if ($view_detail_pages) {
+							$thumb_prepend = '<a href="'.$item_link.'"><img src="';
+							$thumb_append  = '" alt="'.$img_alt.'" title="'.$img_title.'" class="mod_'.$mod_name.'_main_thumb_f" /></a>';
+						// No detail pages therefor no link needed
+						} else {
+							$thumb_prepend = '<img src="';
+							$thumb_append  = '" alt="'.$img_alt.'" title="'.$img_title.'" class="mod_'.$mod_name.'_main_thumb_f" />';
+						}
 						$img_prepend   = '<img src="';
-						$thumb_append  = '" alt="'.$img_alt.'" title="'.$img_title.'" class="mod_'.$mod_name.'_main_thumb_f" /></a>';
 						$img_append    = '" alt="'.$img_alt.'" title="'.$img_title.'" class="mod_'.$mod_name.'_main_img_f" />';
 					}
 					// Make array
@@ -494,6 +501,9 @@ else {
 	// No active item
 	echo '<p class="mod_'.$mod_name.'_none_found_f">'.$TEXT['NONE_FOUND'].'.</p>';
 }
+
+// Clear arrays in case we have another oneforall module section
+unset($field_placeholders_name, $field_placeholders_num, $templates);
 
 
 

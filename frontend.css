@@ -1,6 +1,6 @@
 /*
   CSS definition for WebsiteBaker module: OneForAll
-  Copyright (C) 2016, Christoph Marti
+  Copyright (C) 2017, Christoph Marti
 
   This CSS file is free software. You can redistribute it and/or modify it 
   under the terms of the GNU General Public License - version 2 or later, 
@@ -25,7 +25,12 @@ Modify the CSS of the main page and the item page in this stylesheet.
 
 /* GENERAL */
 
-#mod_oneforall_wrapper_f {
+div[id^="mod_oneforall_wrapper_"] {
+	
+}
+/* Section specific wrapper(s) using the section id */
+/* Replace 22 by the section id you like to address */
+#mod_oneforall_wrapper_22_f {
 	
 }
 
@@ -67,11 +72,17 @@ Modify the CSS of the main page and the item page in this stylesheet.
 .mod_oneforall_item_img_f {
 	border: none;
 }
+.mod_oneforall_item_caption_f {
+	
+}
 .mod_oneforall_item_title_f {
 	
 }
 .mod_oneforall_prev_next_links_f {
 	
+}
+.mod_oneforall_no_item_found_f {
+	color: red;
 }
 
 

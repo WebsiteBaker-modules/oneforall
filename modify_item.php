@@ -2,7 +2,7 @@
 
 /*
   Module developed for the Open Source Content Management System WebsiteBaker (http://websitebaker.org)
-  Copyright (C) 2016, Christoph Marti
+  Copyright (C) 2017, Christoph Marti
 
   LICENCE TERMS:
   This module is free software. You can redistribute it and/or modify it 
@@ -51,9 +51,22 @@ if (!isset($_GET['item_id']) OR !is_numeric($_GET['item_id'])) {
 // Include WB admin wrapper script
 require(WB_PATH.'/modules/admin.php');
 
+// Scheduling
+// Enable / disable items automatically against a start and end time
+if ($set_scheduling && file_exists($inc_path.'/scheduling.php')) {
+	include('scheduling.php');
+}
+
 // Get item
 $query_item = $database->query("SELECT * FROM `".TABLE_PREFIX."mod_".$mod_name."_items` WHERE item_id = '$item_id'");
 $fetch_item = $query_item->fetchRow();
+
+// Get item scheduling
+$scheduling = @unserialize($fetch_item['scheduling']);
+// Ignore start and end time if scheduling is disabled
+$scheduling = $set_scheduling === false ? false : $scheduling;
+
+// Sanitize
 $fetch_item = array_map('stripslashes', $fetch_item);
 $fetch_item = array_map('htmlspecialchars', $fetch_item);
 
@@ -70,6 +83,7 @@ if (isset($_SESSION[$mod_name]['item']) && is_array($_SESSION[$mod_name]['item']
 	$fetch_item['active']         = htmlspecialchars($_SESSION[$mod_name]['item']['active']);
 	$fetch_item['new_section_id'] = $_SESSION[$mod_name]['item']['new_section_id'];
 	$fetch_item['action']         = $_SESSION[$mod_name]['item']['action'];
+	$fetch_item['scheduling']     = $_SESSION[$mod_name]['item']['scheduling'];
 	$fetch_item['description']    = htmlspecialchars($_SESSION[$mod_name]['item']['description']);
 	unset($_SESSION[$mod_name]['item']);
 }
@@ -79,13 +93,42 @@ $setting_img_section = $database->get_one("SELECT img_section FROM `".TABLE_PREF
 
 
 
+
+// LOAD JQUERY STUFF
+// *****************
+
 // Load jquery ui js
 // The jquery ui css is loaded by @import() in the backend.css stylesheet
 ?>
 <script>window.jQuery.ui || document.write('<script src="<?php echo WB_URL; ?>/modules/<?php echo $mod_name; ?>/js/jquery/ui/jquery-ui.min.js"><\/script>')</script>
+
+<?php
+// Load jquery ui datepicker language file
+$datepicker_lang      = defined('LANGUAGE') && strlen(LANGUAGE) == 2 ? strtolower(LANGUAGE) : 'en';
+$datepicker_lang_path = '/include/jquery/i18n/jquery.ui.datepicker-'.$datepicker_lang.'.js';
+// By default datepicker will use english if there is no language file
+if (file_exists(WB_PATH.$datepicker_lang_path)) {
+	echo '<script src="'.WB_URL.$datepicker_lang_path.'" type="text/javascript"></script>';
+}
+
+// Load jquery timepicker js
+// The jquery timepicker css is loaded by @import() in the backend.css stylesheet
+echo '<script src="'.WB_URL.'/modules/'.$mod_name.'/js/timepicker/js/jquery-ui-timepicker-addon.js" type="text/javascript"></script>';
+
+// Load jquery ui timepicker language file
+$timepicker_lang      = defined('LANGUAGE') && strlen(LANGUAGE) == 2 ? strtolower(LANGUAGE) : '';
+$timepicker_lang_path = '/modules/'.$mod_name.'/js/timepicker/lang/jquery-ui-timepicker-'.$timepicker_lang.'.js';
+// By default timepicker will use english if there is no other language file
+if (file_exists(WB_PATH.$timepicker_lang_path)) {
+	echo '<script src="'.WB_URL.$timepicker_lang_path.'" type="text/javascript"></script>';
+}
+?>
 <script type="text/javascript">
-	var mod_name         = '<?php echo $mod_name; ?>',
-	txt_dragdrop_message = '<?php echo $MOD_ONEFORALL[$mod_name]['TXT_DRAGDROP_MESSAGE']; ?>';
+// Define an object with some properties
+var mod_<?php echo $mod_name; ?> = {
+	mod_name: '<?php echo $mod_name; ?>',
+	txt_dragdrop_message: '<?php echo $MOD_ONEFORALL[$mod_name]['TXT_DRAGDROP_MESSAGE']; ?>'
+};
 </script>
 
 <h2>1. <?php echo $TEXT['ADD'].' / '.$TEXT['MODIFY'].' '.$MOD_ONEFORALL[$mod_name]['TXT_ITEM']; ?></h2>
@@ -97,7 +140,7 @@ $setting_img_section = $database->get_one("SELECT img_section FROM `".TABLE_PREF
 <input type="hidden" name="item_id" value="<?php echo $item_id; ?>" />
 <input type="hidden" name="link" value="<?php echo $page['link'].$fetch_item['link']; ?>" />
 
-<table id="modify_item" cellpadding="2" cellspacing="0" border="0" align="center" width="98%">
+<table id="mod_<?php echo $mod_name; ?>_modify_item_b" cellpadding="2" cellspacing="0" border="0" align="center" width="98%">
 	<tr>
 		<td><?php echo $MOD_ONEFORALL[$mod_name]['TXT_TITLE']; ?>:</td>
 		<td>
@@ -107,11 +150,46 @@ $setting_img_section = $database->get_one("SELECT img_section FROM `".TABLE_PREF
 	<tr>
 		<td><?php echo $TEXT['ACTIVE']; ?>:</td>
 		<td>
+			<?php
+			// Users can toggle the item manually if scheduling is not used
+			if ($scheduling === false || count(array_filter($scheduling)) < 1) {
+			?>
 			<input type="radio" name="active" id="active_true" value="1" <?php if ($fetch_item['active'] == 1) { echo " checked='checked'"; } ?> />
 			<label for="active_true"><?php echo $TEXT['YES']; ?></label>
 			&nbsp;
 			<input type="radio" name="active" id="active_false" value="0" <?php if ($fetch_item['active'] == 0) { echo " checked='checked'"; } ?> />
 			<label for="active_false"><?php echo $TEXT['NO']; ?></label>
+			<?php
+			// If scheduling is used, just show an icon to indicate the item status
+			} else {
+				echo '<span class="mod_'.$mod_name.'_scheduling'.$fetch_item['active'].'_b" title="'.$MOD_ONEFORALL[$mod_name]['TXT_SCHEDULING'].'"></span>';
+			}
+			// Scheduling: Enable / disable items against a start and end time
+			if ($set_scheduling) {
+			?>
+			<script>
+				$(function() {
+					$("#scheduling_start").datetimepicker({
+						separator: " <?php echo $MOD_ONEFORALL[$mod_name]['TXT_DATETIME_SEPARATOR']; ?> ",
+						showOn: "button",
+						buttonImage: "images/calendar.png",
+						buttonImageOnly: true,
+						buttonText: "<?php echo $MOD_ONEFORALL[$mod_name]['TXT_ENABLE']; ?>"
+					});
+					$("#scheduling_end").datetimepicker({
+						separator: " <?php echo $MOD_ONEFORALL[$mod_name]['TXT_DATETIME_SEPARATOR']; ?> ",
+						showOn: "button",
+						buttonImage: "images/calendar.png",
+						buttonImageOnly: true,
+						buttonText: "<?php echo $MOD_ONEFORALL[$mod_name]['TXT_DISABLE']; ?>"
+					});
+				});
+			</script>
+			<span class="txt_scheduling"><?php echo $MOD_ONEFORALL[$mod_name]['TXT_SCHEDULING']; ?>:</span> 
+			<input type="text" class="datetimepicker" name="scheduling_start" id="scheduling_start" maxlength="30" value="<?php echo $scheduling['start']; ?>">
+			<input type="text" class="datetimepicker" name="scheduling_end" id="scheduling_end" maxlength="30" value="<?php echo $scheduling['end']; ?>">
+
+			<?php } ?>
 		</td>
 	</tr>
 <?php
@@ -235,28 +313,6 @@ if ($view_detail_pages && $field_meta_desc) {
 // GENERATE THE ITEM CUSTOM FIELDS
 // *******************************
 
-// Load jquery ui datepicker language file
-$datepicker_lang      = defined('LANGUAGE') && strlen(LANGUAGE) == 2 ? strtolower(LANGUAGE) : 'en';
-$datepicker_lang_path = '/include/jquery/i18n/jquery.ui.datepicker-'.$datepicker_lang.'.js';
-// By default datepicker will use english if there is no language file
-if (file_exists(WB_PATH.$datepicker_lang_path)) {
-	echo '<script src="'.WB_URL.$datepicker_lang_path.'" type="text/javascript"></script>';
-}
-
-// Load jquery timepicker js
-// The jquery timepicker css is loaded by @import() in the backend.css stylesheet
-echo '<script src="'.WB_URL.'/modules/'.$mod_name.'/js/timepicker/js/jquery-ui-timepicker-addon.js" type="text/javascript"></script>';
-
-// Load jquery ui timepicker language file
-$timepicker_lang      = defined('LANGUAGE') && strlen(LANGUAGE) == 2 ? strtolower(LANGUAGE) : '';
-$timepicker_lang_path = '/modules/'.$mod_name.'/js/timepicker/lang/jquery-ui-timepicker-'.$timepicker_lang.'.js';
-// By default timepicker will use english if there is no other language file
-if (file_exists(WB_PATH.$timepicker_lang_path)) {
-	echo '<script src="'.WB_URL.$timepicker_lang_path.'" type="text/javascript"></script>';
-}
-
-
-
 // GET ALL FIELDS FROM DB
 
 // Exclude field type code if not allowed in config.php
@@ -312,6 +368,7 @@ if ($query_fields->numRows() > 0) {
 				field_code($field_id, $name, $label, $value, $wysiwyg_full_width);
 				break;
 			case 'wb_link':
+				unset($options);
 				echo field_wb_link($field_id, $name, $page_id, $label, $value);
 				break;
 			case 'oneforall_link':
@@ -372,7 +429,7 @@ if ($query_fields->numRows() > 0) {
 }
 ?>
 
-	<tr height="40" class="mod_oneforall_submit_b">
+	<tr height="40" class="mod_<?php echo $mod_name; ?>_submit_b">
 		<td colspan="2">
 		<table width="100%" border="0" cellspacing="0" cellpadding="0">
 			<tr>
@@ -404,7 +461,7 @@ $display_img_section = $setting_img_section ? 'none;' : 'block;';
 	<br /><br /><br />
 	<a name="images"></a>
 	<h2>2. <?php echo $MOD_ONEFORALL[$mod_name]['TXT_ITEM'].' '.$MOD_ONEFORALL[$mod_name]['TXT_IMAGES']; ?></h2>
-	<table id="mod_oneforall_images_b" cellpadding="2" cellspacing="0" border="0" width="98%" align="center">
+	<table id="mod_<?php echo $mod_name; ?>_images_b" cellpadding="2" cellspacing="0" border="0" width="98%" align="center">
 		<thead>
 			<tr>
 				<th><?php echo $MOD_ONEFORALL[$mod_name]['TXT_PREVIEW']; ?></th>
@@ -510,7 +567,7 @@ $display_img_section = $setting_img_section ? 'none;' : 'block;';
 
 		// Display message if no directories nor images found
 		if ($no_image) {
-			echo '<tr height="30" id="mod_oneforall_no_image_b"><td colspan="8">'."\n";
+			echo '<tr height="30" id="mod_'.$mod_name.'_no_image_b"><td colspan="8">'."\n";
 			echo '<span style="color: red; padding-left: 50px;">'.$TEXT['NONE_FOUND'].'</span>'."\n";
 			echo '</td></tr>'."\n";
 		}
@@ -520,7 +577,7 @@ $display_img_section = $setting_img_section ? 'none;' : 'block;';
 	<br /><br />
 
 	<table width="100%" border="0" cellspacing="0" cellpadding="0">
-		<tr height="40" class="mod_oneforall_submit_b">
+		<tr height="40" class="mod_<?php echo $mod_name; ?>_submit_b">
 			<td align="left" style="padding-left: 12px;">
 				<input name="save_and_return_to_images" type="submit" value="<?php echo $TEXT['SAVE']; ?>" style="width: 100px;" />
 				<input name="save" type="submit" value="<?php echo $MOD_ONEFORALL[$mod_name]['TXT_SAVE_AND_BACK_TO_LISTING']; ?>" style="width: 240px; margin-left: 20px;" />
@@ -543,7 +600,7 @@ $display_img_section = $setting_img_section ? 'none;' : 'block;';
 	?>
 	<a name="images"></a>
 	<h2>3. <?php echo $TEXT['UPLOAD_FILES']; ?></h2>
-	<div id="resize_settings">
+	<div id="mod_<?php echo $mod_name; ?>_resize_settings_b">
 		<input type="checkbox" name="imgresize" id="imgresize" value="yes"<?php echo $img_resize['imgresize'] == 'yes' ? ' checked="checked"' : ''; ?> />
 		<label for="imgresize"><?php echo $MOD_ONEFORALL[$mod_name]['TXT_IMAGE'].' '.$TEXT['RESIZE']; ?>:</label>
 		<?php echo $MOD_ONEFORALL[$mod_name]['TXT_MAX_WIDTH']; ?><input type="text" size="5" name="maxwidth" value="<?php echo $img_resize['maxwidth']; ?>" />px
@@ -567,7 +624,7 @@ $display_img_section = $setting_img_section ? 'none;' : 'block;';
 			url: '<?php echo WB_URL; ?>/modules/<?php echo $mod_name; ?>/ajax/upload.php',
 
 			// Maximum file size
-			max_file_size: '2mb',
+			max_file_size: '<?php echo $max_file_size; ?>mb',
 			chunk_size: '1mb',
 
 			// Resize images on clientside if we can
@@ -634,12 +691,11 @@ $display_img_section = $setting_img_section ? 'none;' : 'block;';
 		uploader.bind('FileUploaded', function(up, file, res) {
 
 			// Success
-			//var error_msg;
 			var res_obj = JSON.parse(res.response);
 			if (res_obj.result === null) {
 
 				// Replace the 'non found' notice by the first uploaded image
-				var notice = $('#mod_oneforall_no_image_b');
+				var notice = $('#mod_<?php echo $mod_name; ?>_no_image_b');
 				if (notice.length) {
 					notice.remove();
 				}
@@ -651,7 +707,7 @@ $display_img_section = $setting_img_section ? 'none;' : 'block;';
 				// console.log('File ' + filename + ' uploaded successfully. New img id = ' + img_id);
 
 				// On success add thumb to the image table
-				$('#mod_oneforall_images_b tbody').append('<tr id="id_' + img_id + '"><td style="width: 94px;"><div class="tooltip"><a href="<?php echo WB_URL; ?>/media/<?php echo $mod_name; ?>/images/item<?php echo $item_id; ?>/' + filename + '" target="_blank"><img src="<?php echo WB_URL; ?>/media/<?php echo $mod_name; ?>/thumbs/item<?php echo $item_id; ?>/' + filename + '" alt="<?php echo $MOD_ONEFORALL[$mod_name]['TXT_IMAGE'].' '.$image_file; ?>"></a><div class="arrow_box"><img src="<?php echo WB_URL; ?>/media/<?php echo $mod_name; ?>/images/item<?php echo $item_id; ?>/' + filename + '" alt="<?php echo $MOD_ONEFORALL[$mod_name]['TXT_IMAGE'].' '.$image_file; ?>" title="<?php echo $image_file; ?>"></div></div></td><td style="width: 351px;"><a href="<?php echo WB_URL; ?>/media/<?php echo $mod_name; ?>/images/item<?php echo $item_id; ?>/' + filename + '" target="_blank">' + filename + '</a></td><td style="width: 156px;"><input type="text" name="images[' + img_id + '][title]" style="width: 150px;" maxlength="255" value=""><input type="text" name="images[' + img_id + '][alt]" style="width: 150px;" maxlength="255" value=""></td><td style="width: 206px;"><textarea name="images[' + img_id + '][caption]" rows="3" style="width: 200px;"></textarea></td><td></td><td></td><td style="width: 32px;"><input type="checkbox" name="images[' + img_id + '][active]" value="1" checked="checked"></td><td></td></tr>');
+				$('#mod_<?php echo $mod_name; ?>_images_b tbody').append('<tr id="id_' + img_id + '"><td style="width: 94px;"><div class="tooltip"><a href="<?php echo WB_URL; ?>/media/<?php echo $mod_name; ?>/images/item<?php echo $item_id; ?>/' + filename + '" target="_blank"><img src="<?php echo WB_URL; ?>/media/<?php echo $mod_name; ?>/thumbs/item<?php echo $item_id; ?>/' + filename + '" alt=""></a><div class="arrow_box"><img src="<?php echo WB_URL; ?>/media/<?php echo $mod_name; ?>/images/item<?php echo $item_id; ?>/' + filename + '" alt="" title="' + filename + '"></div></div></td><td style="width: 351px;"><a href="<?php echo WB_URL; ?>/media/<?php echo $mod_name; ?>/images/item<?php echo $item_id; ?>/' + filename + '" target="_blank">' + filename + '</a></td><td style="width: 156px;"><input type="text" name="images[' + img_id + '][title]" style="width: 150px;" maxlength="255" value=""><input type="text" name="images[' + img_id + '][alt]" style="width: 150px;" maxlength="255" value=""></td><td style="width: 206px;"><textarea name="images[' + img_id + '][caption]" rows="3" style="width: 200px;"></textarea></td><td></td><td></td><td style="width: 32px;"><input type="checkbox" name="images[' + img_id + '][active]" value="1" checked="checked"></td><td></td></tr>');
 			}
 
 			// Error
@@ -661,7 +717,7 @@ $display_img_section = $setting_img_section ? 'none;' : 'block;';
 				// console.log(res_obj.error.filename + ': ' + res_obj.error.message);
 
 				// Add an error message to the image table
-				$('#mod_oneforall_images_b tbody').append('<tr class="plupload_error_msg"><td class="ui-state-error" style="width: 94px;"><span class="ui-icon ui-icon-alert"></span></td><td colspan="6"><strong>' + res_obj.error.filename + '</strong>: ' + res_obj.error.message + '</td><td class="ui-state-error"><span class="ui-icon ui-icon-circle-close" title="<?php echo $TEXT['CLOSE']; ?>"></span></td></tr>');
+				$('#mod_<?php echo $mod_name; ?>_images_b tbody').append('<tr class="plupload_error_msg"><td class="ui-state-error" style="width: 94px;"><span class="ui-icon ui-icon-alert"></span></td><td colspan="6"><strong>' + res_obj.error.filename + '</strong>: ' + res_obj.error.message + '</td><td class="ui-state-error"><span class="ui-icon ui-icon-circle-close" title="<?php echo $TEXT['CLOSE']; ?>"></span></td></tr>');
 			}
 		});
 

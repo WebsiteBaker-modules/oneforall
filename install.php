@@ -2,7 +2,7 @@
 
 /*
   Module developed for the Open Source Content Management System WebsiteBaker (http://websitebaker.org)
-  Copyright (C) 2016, Christoph Marti
+  Copyright (C) 2017, Christoph Marti
 
   LICENCE TERMS:
   This module is free software. You can redistribute it and/or modify it 
@@ -25,7 +25,7 @@ require_once($inc_path.'/info.php');
 
 // Check module name for not allowed characters
 if (!preg_match('/^[a-zA-Z0-9_ -]{3,20}$/', $module_name)) {
-	$admin->print_error('Allowed characters for the module name are a-z, A-Z, 0-9, - (hyphen), _ (underscore) and spaces.<br />Min 3, max 20 characters.', ADMIN_URL.'/modules/index.php?advanced');
+	$admin->print_error('Allowed characters for the module name are a-z, A-Z, 0-9, - (hyphen), _ (underscore) and spaces.<br>Min 3, max 20 characters.', ADMIN_URL.'/modules/index.php?advanced');
 }
 
 // Old and new directory pathes
@@ -47,10 +47,10 @@ if (!isset($action)) {
 }
 
 
-// If module has been renamed some files have to be adopted
+// If module has been renamed some files have to be converted
 if ($mod_name != 'oneforall') {
 
-	// Adopt the frontend stylesheet to the new module name
+	// Convert the frontend stylesheet to the new module name
 	$search_file   = 'frontend.css';
 	$needle        = 'mod_oneforall';
 	$file_path     = $new_dir.'/'.$search_file;
@@ -62,7 +62,31 @@ if ($mod_name != 'oneforall') {
 	}
 	unset($file_contents);
 
-	// Adopt the search file to the new module name
+	// Convert the backend stylesheet to the new module name
+	$search_file   = 'backend.css';
+	$needle        = 'mod_oneforall';
+	$file_path     = $new_dir.'/'.$search_file;
+	$file_contents = file_get_contents($file_path);
+	$file_contents = str_replace($needle, 'mod_'.$mod_name, $file_contents, $count);
+	// Write replaced string back to file
+	if (file_put_contents($file_path, $file_contents) === false) {
+		$admin->print_error('<p style="font-weight: bold;">Failed to modify the backend stylesheet <code>'.$search_file.'</code>.</p><p>Please modify it manually by replacing the placeholders <code>'.$needle.'</code> by the new module name &quot;mod_'.$mod_name.'&quot;.</p>', ADMIN_URL.'/modules/index.php?advanced');
+	}
+	unset($file_contents);
+
+	// Convert the backend javascript file to the new module name
+	$search_file   = 'backend.js';
+	$needle        = 'mod_oneforall';
+	$file_path     = $new_dir.'/'.$search_file;
+	$file_contents = file_get_contents($file_path);
+	$file_contents = str_replace($needle, 'mod_'.$mod_name, $file_contents, $count);
+	// Write replaced string back to file
+	if (file_put_contents($file_path, $file_contents) === false) {
+		$admin->print_error('<p style="font-weight: bold;">Failed to modify the backend javascript file <code>'.$search_file.'</code>.</p><p>Please modify it manually by replacing the placeholders <code>'.$needle.'</code> by the new module name &quot;mod_'.$mod_name.'&quot;.</p>', ADMIN_URL.'/modules/index.php?advanced');
+	}
+	unset($file_contents);
+
+	// Convert the search file to the new module name
 	$search_file   = 'search.php';
 	$needle        = 'oneforall';
 	$file_path     = $new_dir.'/'.$search_file;
@@ -118,9 +142,10 @@ if (defined('WB_URL')) {
 			. "`page_id` INT(11) NOT NULL DEFAULT '0',"
 			. "`group_id` INT(11) NOT NULL DEFAULT '0',"
 			. "`active` INT(11) NOT NULL DEFAULT '0',"
+			. "`scheduling` VARCHAR(255) NOT NULL DEFAULT '',"
 			. "`position` INT(11) NOT NULL DEFAULT '0',"
 			. "`title` VARCHAR(255) NOT NULL DEFAULT '',"
-			. "`link` TEXT NOT NULL ,"
+			. "`link` TEXT NOT NULL,"
 			. "`description` TEXT NOT NULL,"
 			. "`main_image` VARCHAR(50) NOT NULL DEFAULT '',"
 			. "`modified_when` INT(11) NOT NULL DEFAULT '0',"

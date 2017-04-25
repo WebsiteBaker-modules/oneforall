@@ -2,7 +2,7 @@
 
 /*
   Module developed for the Open Source Content Management System WebsiteBaker (http://websitebaker.org)
-  Copyright (C) 2016, Christoph Marti
+  Copyright (C) 2017, Christoph Marti
 
   LICENCE TERMS:
   This module is free software. You can redistribute it and/or modify it 
@@ -55,48 +55,45 @@ $hide_setting = $view_detail_pages ? '' : 'display: none;';
 <input type="hidden" name="section_id" value="<?php echo $section_id; ?>" />
 <input type="hidden" name="page_id" value="<?php echo $page_id; ?>" />
 
-<table cellpadding="2" cellspacing="0" border="0" align="center" width="98%">
+<h2><?php echo $MOD_ONEFORALL[$mod_name]['TXT_PAGE_SETTINGS']; ?></h2>
+<table id="mod_<?php echo $mod_name; ?>_page_settings_b">
 	<tr>
-		<td colspan="3"><strong><?php echo $MOD_ONEFORALL[$mod_name]['TXT_PAGE_SETTINGS']; ?></strong></td>
-	</tr>
-
-	<tr valign="bottom">
-	  <td width="25%" height="32" align="right"><strong><?php echo $MOD_ONEFORALL[$mod_name]['TXT_LAYOUT'].' '.$MOD_ONEFORALL[$mod_name]['TXT_SETTINGS']; ?>:</strong></td>
-	  <td height="32" colspan="2"><input type="button" value="<?php echo $MENU['HELP']; ?>" onclick="javascript: window.location = '<?php echo WB_URL; ?>/modules/<?php echo $mod_name; ?>/help.php?page_id=<?php echo $page_id; ?>&section_id=<?php echo $section_id; ?>';" style="width: 100px;" /></td>
+	  <td><?php echo $MOD_ONEFORALL[$mod_name]['TXT_LAYOUT'].' '.$MOD_ONEFORALL[$mod_name]['TXT_SETTINGS']; ?>:</td>
+	  <td colspan="2"><input type="button" value="<?php echo $MENU['HELP']; ?>" onclick="javascript: window.location = '<?php echo WB_URL; ?>/modules/<?php echo $mod_name; ?>/help.php?page_id=<?php echo $page_id; ?>&section_id=<?php echo $section_id; ?>';" /></td>
     </tr>
 	<tr>
-		<td width="25%" align="right" valign="top"><?php echo $MOD_ONEFORALL[$mod_name]['TXT_OVERVIEW'].' ('.$TEXT['HEADER']; ?>):</td>
+		<td><?php echo $MOD_ONEFORALL[$mod_name]['TXT_OVERVIEW'].' ('.$TEXT['HEADER']; ?>):</td>
 		<td colspan="2">
-			<textarea name="header" style="width: 98%; height: 80px;"><?php echo stripslashes($fetch_page_settings['header']); ?></textarea></td>
+			<textarea name="header"><?php echo stripslashes($fetch_page_settings['header']); ?></textarea></td>
 	</tr>
 	<tr>
-		<td width="25%" align="right" valign="top"><?php echo $MOD_ONEFORALL[$mod_name]['TXT_OVERVIEW'].' ('.$MOD_ONEFORALL[$mod_name]['TXT_ITEM'].'-'.$TEXT['LOOP']; ?>):</td>
+		<td><?php echo $MOD_ONEFORALL[$mod_name]['TXT_OVERVIEW'].' ('.$MOD_ONEFORALL[$mod_name]['TXT_ITEM'].'-'.$TEXT['LOOP']; ?>):</td>
 		<td colspan="2">
-			<textarea name="item_loop" style="width: 98%; height: 80px;"><?php echo stripslashes($fetch_page_settings['item_loop']); ?></textarea></td>
+			<textarea name="item_loop"><?php echo stripslashes($fetch_page_settings['item_loop']); ?></textarea></td>
 	</tr>
 	<tr>
-		<td width="25%" align="right" valign="top"><?php echo $MOD_ONEFORALL[$mod_name]['TXT_OVERVIEW'].' ('.$TEXT['FOOTER']; ?>):</td>
+		<td><?php echo $MOD_ONEFORALL[$mod_name]['TXT_OVERVIEW'].' ('.$TEXT['FOOTER']; ?>):</td>
 		<td colspan="2">
-			<textarea name="footer" style="width: 98%; height: 80px;"><?php echo str_replace($raw, $friendly, stripslashes($fetch_page_settings['footer'])); ?></textarea></td>
+			<textarea name="footer"><?php echo str_replace($raw, $friendly, stripslashes($fetch_page_settings['footer'])); ?></textarea></td>
 	</tr>
 	<tr style="<?php echo $hide_setting; ?>">
-		<td width="25%" align="right" valign="top"><?php echo $MOD_ONEFORALL[$mod_name]['TXT_DETAIL'].' ('.$TEXT['HEADER']; ?>):</td>
+		<td><?php echo $MOD_ONEFORALL[$mod_name]['TXT_DETAIL'].' ('.$TEXT['HEADER']; ?>):</td>
 		<td colspan="2">
-			<textarea name="item_header" style="width: 98%; height: 80px;"><?php echo str_replace($raw, $friendly, stripslashes($fetch_page_settings['item_header'])); ?></textarea>		</td>
+			<textarea name="item_header"><?php echo str_replace($raw, $friendly, stripslashes($fetch_page_settings['item_header'])); ?></textarea>		</td>
 	</tr>
 	<tr style="<?php echo $hide_setting; ?>">
-		<td width="25%" align="right" valign="top"><?php echo $MOD_ONEFORALL[$mod_name]['TXT_DETAIL'].' ('.$TEXT['FOOTER']; ?>):</td>
+		<td><?php echo $MOD_ONEFORALL[$mod_name]['TXT_DETAIL'].' ('.$TEXT['FOOTER']; ?>):</td>
 		<td colspan="2">
-			<textarea name="item_footer" style="width: 98%; height: 80px;"><?php echo str_replace($raw, $friendly, stripslashes($fetch_page_settings['item_footer'])); ?></textarea>		</td>
+			<textarea name="item_footer"><?php echo str_replace($raw, $friendly, stripslashes($fetch_page_settings['item_footer'])); ?></textarea>		</td>
 	</tr>
 	<tr>
-		<td width="25%" align="right"><?php echo $MOD_ONEFORALL[$mod_name]['TXT_ITEMS_PER_PAGE']; ?>:</td>
+		<td><?php echo $MOD_ONEFORALL[$mod_name]['TXT_ITEMS_PER_PAGE']; ?>:</td>
 		<td colspan="2">
 			<input type="text" name="items_per_page" style="width: 35px" value="<?php echo $fetch_page_settings['items_per_page']; ?>" /> 0 = <?php echo $TEXT['UNLIMITED']; ?>		</td>
 	</tr>
 	<?php if (extension_loaded('gd') AND function_exists('imageCreateFromJpeg')) { /* Make's sure GD library is installed */ ?>
 	<tr>
-		<td width="25%" align="right"><?php echo $MOD_ONEFORALL[$mod_name]['TXT_THUMBNAIL'].' '.$TEXT['SIZE']; ?>:</td>
+		<td><?php echo $MOD_ONEFORALL[$mod_name]['TXT_THUMBNAIL'].' '.$TEXT['SIZE']; ?>:</td>
 		<td colspan="2">
 			<select name="resize">
 			<?php
@@ -109,7 +106,7 @@ $hide_setting = $view_detail_pages ? '' : 'display: none;';
 		</td>
 	</tr>
 	<tr>
-		<td width="25%" align="right">Lightbox2:</td>
+		<td>Lightbox2:</td>
 		<td colspan="4">
 		  <input type="checkbox" name="lb2_overview" id="lb2_overview" value="overview" <?php if ($fetch_page_settings['lightbox2'] == 'overview' || $fetch_page_settings['lightbox2'] == 'all') { echo "checked='checked'"; } ?> />
 		  <label for="lb2_overview"><?php echo $MOD_ONEFORALL[$mod_name]['TXT_OVERVIEW']; ?></label> &nbsp;&nbsp;
@@ -120,7 +117,7 @@ $hide_setting = $view_detail_pages ? '' : 'display: none;';
 		  </td>
 	</tr>
 	<tr>
-		<td width="25%" align="right"><?php echo $MOD_ONEFORALL[$mod_name]['TXT_BACKEND_ITEM_PAGE']; ?>:</td>
+		<td><?php echo $MOD_ONEFORALL[$mod_name]['TXT_BACKEND_ITEM_PAGE']; ?>:</td>
 		<td colspan="2">
 		  <input type="checkbox" name="img_section" id="img_section" value="1" <?php if ($fetch_page_settings['img_section'] == '1') { echo 'checked="checked"'; } ?> />
 		  <label for="img_section"><?php echo $MOD_ONEFORALL[$mod_name]['TXT_HIDE_IMG_SECTION']; ?></label> &nbsp;&nbsp;
@@ -174,7 +171,7 @@ if ($get_pages->numRows() > 0) {
 
 
 // Save page settings   ?>
-<table width="98%" align="center" cellpadding="0" cellspacing="4" class="mod_oneforall_submit_b" style="padding: 10px;">
+<table width="98%" align="center" cellpadding="0" cellspacing="4" class="mod_<?php echo $mod_name; ?>_submit_b" style="padding: 10px;">
 	<tr>
         <td><input type="radio" name="modify" id="modify_current" value="current" checked="checked" /></td>
         <td colspan="2"><label for="modify_current"><em><?php echo $MOD_ONEFORALL[$mod_name]['TXT_MODIFY_THIS']; ?></em></label></td>

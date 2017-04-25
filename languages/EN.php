@@ -2,7 +2,7 @@
 
 /*
   Module developed for the Open Source Content Management System WebsiteBaker (http://websitebaker.org)
-  Copyright (C) 2016, Christoph Marti
+  Copyright (C) 2017, Christoph Marti
 
   LICENCE TERMS:
   This module is free software. You can redistribute it and/or modify it 
@@ -115,6 +115,7 @@ $MOD_ONEFORALL[$mod_name]['TXT_SORT_BY2'] = '';
 
 $MOD_ONEFORALL[$mod_name]['TXT_TITLE'] = 'Item title';
 $MOD_ONEFORALL[$mod_name]['TXT_DESCRIPTION'] = 'Description';
+$MOD_ONEFORALL[$mod_name]['TXT_SCHEDULING'] = 'Timing';
 $MOD_ONEFORALL[$mod_name]['TXT_PREVIEW'] = 'Preview';
 $MOD_ONEFORALL[$mod_name]['TXT_FILE_NAME'] = 'File name';
 $MOD_ONEFORALL[$mod_name]['TXT_MAIN_IMAGE'] = 'Main image';
@@ -134,6 +135,7 @@ $MOD_ONEFORALL[$mod_name]['TXT_MOVE'] = 'move';
 $MOD_ONEFORALL[$mod_name]['TXT_DUPLICATE'] = 'duplicate';
 $MOD_ONEFORALL[$mod_name]['TXT_SAVE_AND_BACK_TO_LISTING'] = 'Save and go back to listing';
 
+$MOD_ONEFORALL[$mod_name]['ERR_INVALID_SCHEDULING'] = 'The scheduled start time &quot;%s&quot; must be before the end time &quot;%s&quot;.';
 $MOD_ONEFORALL[$mod_name]['ERR_INVALID_EMAIL'] = 'Email address &quot;%s&quot; is invalid.';
 $MOD_ONEFORALL[$mod_name]['ERR_INVALID_URL'] = 'URL &quot;%s&quot; is invalid.';
 $MOD_ONEFORALL[$mod_name]['ERR_INVALID_FILE_NAME'] = 'Invalid file name';

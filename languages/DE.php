@@ -2,7 +2,7 @@
 
 /*
   Module developed for the Open Source Content Management System WebsiteBaker (http://websitebaker.org)
-  Copyright (C) 2016, Christoph Marti
+  Copyright (C) 2017, Christoph Marti
 
   LICENCE TERMS:
   This module is free software. You can redistribute it and/or modify it 
@@ -114,6 +114,7 @@ $MOD_ONEFORALL[$mod_name]['TXT_SORT_BY2'] = 'sortieren';
 
 $MOD_ONEFORALL[$mod_name]['TXT_TITLE'] = 'Name';
 $MOD_ONEFORALL[$mod_name]['TXT_DESCRIPTION'] = 'Beschreibung';
+$MOD_ONEFORALL[$mod_name]['TXT_SCHEDULING'] = 'Zeitsteuerung';
 $MOD_ONEFORALL[$mod_name]['TXT_PREVIEW'] = 'Vorschau';
 $MOD_ONEFORALL[$mod_name]['TXT_FILE_NAME'] = 'Dateiname';
 $MOD_ONEFORALL[$mod_name]['TXT_MAIN_IMAGE'] = 'Hauptbild';
@@ -133,6 +134,7 @@ $MOD_ONEFORALL[$mod_name]['TXT_MOVE'] = 'verschieben';
 $MOD_ONEFORALL[$mod_name]['TXT_DUPLICATE'] = 'duplizieren';
 $MOD_ONEFORALL[$mod_name]['TXT_SAVE_AND_BACK_TO_LISTING'] = 'Speichern und zur&uuml;ck zur &Uuml;bersicht';
 
+$MOD_ONEFORALL[$mod_name]['ERR_INVALID_SCHEDULING'] = 'Die geplante Startzeit &quot;%s&quot; muss vor dem Endzeitpunkt &quot;%s&quot; liegen.';
 $MOD_ONEFORALL[$mod_name]['ERR_INVALID_EMAIL'] = 'Die angegebene E-Mail Adresse &quot;%s&quot; ist nicht g&uuml;ltig.';
 $MOD_ONEFORALL[$mod_name]['ERR_INVALID_URL'] = 'Die angegebene URL &quot;%s&quot; ist nicht g&uuml;ltig.';
 $MOD_ONEFORALL[$mod_name]['ERR_INVALID_FILE_NAME'] = 'Der Dateiname ist nicht g&uuml;ltig';

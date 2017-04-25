@@ -2,7 +2,7 @@
 
 /*
   Module developed for the Open Source Content Management System WebsiteBaker (http://websitebaker.org)
-  Copyright (C) 2016, Christoph Marti
+  Copyright (C) 2017, Christoph Marti
 
   LICENCE TERMS:
   This module is free software. You can redistribute it and/or modify it 
@@ -68,7 +68,7 @@ if ($query_page->numRows() > 0) {
 
 
 // If item with given page id exists get item data
-$query_item = $database->query("SELECT * FROM `".TABLE_PREFIX."mod_".$mod_name."_items` WHERE item_id = '".ITEM_ID."' AND active = '1'");
+$query_item = $database->query("SELECT * FROM `".TABLE_PREFIX."mod_".$mod_name."_items` WHERE item_id = '".ITEM_ID."' AND section_id = '".$section_id."' AND active = '1'");
 if ($query_item->numRows() > 0) {
 	$item = $query_item->fetchRow();
 
@@ -386,7 +386,7 @@ if ($query_item->numRows() > 0) {
 			}
 
 			// Prepare div image wrapper for image caption
-			$caption_prepend = empty($img_caption) ? '' : '<div class="mod_oneforall_item_caption_f">';
+			$caption_prepend = empty($img_caption) ? '' : '<div class="mod_'.$mod_name.'_item_caption_f">';
 			$caption_append  = empty($img_caption) ? '' : '<br />'.$img_caption.'</div>';
 
 			// Make array of all item thumbs and images
@@ -465,8 +465,12 @@ if ($query_item->numRows() > 0) {
 
 // No item found
 } else {
-	echo $TEXT['NONE_FOUND'];
+	echo '<p class="mod_'.$mod_name.'_no_item_found_f">'.$TEXT['NONE_FOUND'].'</p>';
+	// header("Location: ../../index.php");
 	return;
 }
+
+// Clear arrays in case we have another oneforall module section
+unset($field_placeholders_name, $field_placeholders_num, $templates);
 
 ?>

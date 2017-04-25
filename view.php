@@ -2,7 +2,7 @@
 
 /*
   Module developed for the Open Source Content Management System WebsiteBaker (http://websitebaker.org)
-  Copyright (C) 2016, Christoph Marti
+  Copyright (C) 2017, Christoph Marti
 
   LICENCE TERMS:
   This module is free software. You can redistribute it and/or modify it 
@@ -57,18 +57,28 @@ if ($query_users->numRows() > 0) {
 	}
 }
 
-// Add a wrapper for OneForAll to help with layout
-echo "\n<div id='mod_".$mod_name."_wrapper_f'>\n";
-$end_of_wrapper = "\n</div> <!-- End of ".$mod_name." wrapper -->\n";
 
+
+// ITEM SCHEDULING
+// ***************
+
+// Enable / disable items automatically against a start and end time
+if ($set_scheduling && file_exists($inc_path.'/scheduling.php')) {
+	include('scheduling.php');
+}
 
 
 // SHOW OVERVIEW PAGE
 // ******************
 
+// Add a module wrapper to help with layout
+$wrapper_start = "\n".'<div id="mod_'.$mod_name.'_wrapper_'.$section_id.'_f">'."\n";
+$wrapper_end   = "\n".'</div> <!-- End of #mod_'.$mod_name.'_wrapper_'.$section_id.'_f -->'."\n";
+
 if (!defined('ITEM_ID') OR !is_numeric(ITEM_ID)) {
+	echo $wrapper_start;
 	include('view_overview.php');
-	echo $end_of_wrapper;  // End of oneforall wrapper
+	echo $wrapper_end;
 }
 
 
@@ -76,10 +86,10 @@ if (!defined('ITEM_ID') OR !is_numeric(ITEM_ID)) {
 // SHOW ITEM DETAIL PAGE
 // *********************
 
-elseif (defined('ITEM_ID') AND is_numeric(ITEM_ID)) {
+if (defined('ITEM_ID') AND is_numeric(ITEM_ID) AND defined('ITEM_SID') AND $section_id == ITEM_SID) {
+	echo $wrapper_start;
 	include('view_item.php');
-	echo $end_of_wrapper;  // End of oneforall wrapper
+	echo $wrapper_end;
 }
-
 
 ?>

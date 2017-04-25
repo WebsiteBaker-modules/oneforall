@@ -2,7 +2,7 @@
 
 /*
   Module developed for the Open Source Content Management System WebsiteBaker (http://websitebaker.org)
-  Copyright (C) 2016, Christoph Marti
+  Copyright (C) 2017, Christoph Marti
 
   LICENCE TERMS:
   This module is free software. You can redistribute it and/or modify it 
@@ -68,7 +68,7 @@ if ($query_page->numRows() > 0) {
 
 <h2>KEYS TO THE PLACEHOLDERS USED IN THE <?php echo $module_name; ?> TEMPLATES</h2>
 <br />
-<table id="mod_oneforall_placeholders_b" width="100%" cellpadding="5" cellspacing="0">
+<table class="mod_<?php echo $mod_name; ?>_placeholders_b" width="100%" cellpadding="5" cellspacing="0">
   <tr>
     <td><blockquote><strong>Template</strong></blockquote>      
       <ul>
@@ -81,25 +81,25 @@ if ($query_page->numRows() > 0) {
 	</td>
     <td><blockquote><strong>Output Example Data</strong></blockquote>
 	  <ul>
-		<li><span class="mod_oneforall_placeholders_localisation_b">Blue: Localisation (example language = <?php echo(defined('LANGUAGE') ? LANGUAGE : "EN"); ?>)</span></li>
-		<li><span class="mod_oneforall_placeholders_page_settings_b">Brown: Page settings (example page id = <?php echo $page_id; ?>)</span></li>
-		<li><span class="mod_oneforall_placeholders_fields_b">Green: Field (example field id = <?php echo (isset($field['field_id']) ? $field['field_id'] : $TEXT['NONE_FOUND']); ?>)</span></li>
-		<li><span class="mod_oneforall_placeholders_items_b">Orange: Item (example item id = <?php echo (isset($item['item_id']) ? $item['item_id'] : $TEXT['NONE_FOUND']); ?>)</span></li>
-		<li><span class="mod_oneforall_placeholders_page_b">Pink: Page (example page id = <?php echo $page_id; ?>)</span></li>
+		<li><span class="mod_<?php echo $mod_name; ?>_placeholders_localisation_b">Blue: Localisation (example language = <?php echo(defined('LANGUAGE') ? LANGUAGE : "EN"); ?>)</span></li>
+		<li><span class="mod_<?php echo $mod_name; ?>_placeholders_page_settings_b">Brown: Page settings (example page id = <?php echo $page_id; ?>)</span></li>
+		<li><span class="mod_<?php echo $mod_name; ?>_placeholders_fields_b">Green: Field (example field id = <?php echo (isset($field['field_id']) ? $field['field_id'] : $TEXT['NONE_FOUND']); ?>)</span></li>
+		<li><span class="mod_<?php echo $mod_name; ?>_placeholders_items_b">Orange: Item (example item id = <?php echo (isset($item['item_id']) ? $item['item_id'] : $TEXT['NONE_FOUND']); ?>)</span></li>
+		<li><span class="mod_<?php echo $mod_name; ?>_placeholders_page_b">Pink: Page (example page id = <?php echo $page_id; ?>)</span></li>
       </ul>
 	</td>
   </tr>
 </table>
 <br />
-<table width="100%" cellpadding="5" cellspacing="0"  id="mod_oneforall_placeholders_b">
+<table width="100%" cellpadding="5" cellspacing="0" class="mod_<?php echo $mod_name; ?>_placeholders_b">
   <tr>
     <td height="30" align="right"><input name="button" type="button" style="margin-right: 20px;" onclick="javascript: window.location = '<?php echo WB_URL; ?>/modules/<?php echo $mod_name; ?>/modify_page_settings.php?page_id=<?php echo $page_id; ?>&amp;section_id=<?php echo $section_id; ?>';" value="&lt;&lt; <?php echo $MOD_ONEFORALL[$mod_name]['TXT_PAGE_SETTINGS']; ?>" />
 	</td>
   </tr>
 </table>
 <br />
-<table  id="mod_oneforall_placeholders_b" width="100%" cellpadding="5" cellspacing="0">
-  <tr class="mod_oneforall_placeholders_header_b">
+<table class="mod_<?php echo $mod_name; ?>_placeholders_b" width="100%" cellpadding="5" cellspacing="0">
+  <tr class="mod_<?php echo $mod_name; ?>_placeholders_header_b">
     <td colspan="8"><p><strong><a name="html"></a>Main Page and Item HTML Templates &nbsp;&nbsp;&nbsp;</strong>( &gt; Page Settings &gt; Layout Settings )</p></td>
   </tr>
   <tr>
@@ -114,319 +114,319 @@ if ($query_page->numRows() > 0) {
   </tr>
   <tr valign="top">
     <td>[BACK]</td>
-    <td class="mod_oneforall_placeholders_column_b">&nbsp;</td>
+    <td class="mod_<?php echo $mod_name; ?>_placeholders_column_b">&nbsp;</td>
     <td>&nbsp;</td>
-    <td class="mod_oneforall_placeholders_column_b">&nbsp;</td>
+    <td class="mod_<?php echo $mod_name; ?>_placeholders_column_b">&nbsp;</td>
     <td>IH</td>
-    <td class="mod_oneforall_placeholders_column_b">IF</td>
+    <td class="mod_<?php echo $mod_name; ?>_placeholders_column_b">IF</td>
     <td>URL to the current (overview) page</td>
-    <td class="mod_oneforall_placeholders_page_b"><?php echo (isset($page['link']) ? WB_URL.'<wbr>'.PAGES_DIRECTORY.$page['link'].PAGE_EXTENSION : '&nbsp;'); ?></td>
+    <td class="mod_<?php echo $mod_name; ?>_placeholders_page_b"><?php echo (isset($page['link']) ? WB_URL.'<wbr>'.PAGES_DIRECTORY.$page['link'].PAGE_EXTENSION : '&nbsp;'); ?></td>
   </tr>
   <tr valign="top">
     <td>[DATE]</td>
-    <td class="mod_oneforall_placeholders_column_b">&nbsp;</td>
+    <td class="mod_<?php echo $mod_name; ?>_placeholders_column_b">&nbsp;</td>
     <td>PIL</td>
-    <td class="mod_oneforall_placeholders_column_b">&nbsp;</td>
+    <td class="mod_<?php echo $mod_name; ?>_placeholders_column_b">&nbsp;</td>
     <td>IH</td>
-    <td class="mod_oneforall_placeholders_column_b">IF</td>
+    <td class="mod_<?php echo $mod_name; ?>_placeholders_column_b">IF</td>
     <td>Item modification date</td>
-    <td class="mod_oneforall_placeholders_items_b"><?php echo (isset($item['modified_when']) ? gmdate(DATE_FORMAT, $item['modified_when']+TIMEZONE) : '&nbsp;'); ?></td>
+    <td class="mod_<?php echo $mod_name; ?>_placeholders_items_b"><?php echo (isset($item['modified_when']) ? gmdate(DATE_FORMAT, $item['modified_when']+TIMEZONE) : '&nbsp;'); ?></td>
   </tr>
   <tr valign="top">
     <td>[DISPLAY_NAME]</td>
-    <td class="mod_oneforall_placeholders_column_b">&nbsp;</td>
+    <td class="mod_<?php echo $mod_name; ?>_placeholders_column_b">&nbsp;</td>
     <td>PIL</td>
-    <td class="mod_oneforall_placeholders_column_b">&nbsp;</td>
+    <td class="mod_<?php echo $mod_name; ?>_placeholders_column_b">&nbsp;</td>
     <td>IH</td>
-    <td class="mod_oneforall_placeholders_column_b">IF</td>
+    <td class="mod_<?php echo $mod_name; ?>_placeholders_column_b">IF</td>
     <td>User display name </td>
     <td><?php echo (isset($_SESSION['DISPLAY_NAME']) ? $_SESSION['DISPLAY_NAME'] : "Administrator"); ?></td>
   </tr>
   <tr valign="top">
     <td>[DISPLAY_PREVIOUS_NEXT_LINKS]</td>
-    <td class="mod_oneforall_placeholders_column_b">PH</td>
+    <td class="mod_<?php echo $mod_name; ?>_placeholders_column_b">PH</td>
     <td>&nbsp;</td>
-    <td class="mod_oneforall_placeholders_column_b">PF</td>
+    <td class="mod_<?php echo $mod_name; ?>_placeholders_column_b">PF</td>
     <td>&nbsp;</td>
-    <td class="mod_oneforall_placeholders_column_b">&nbsp;</td>
+    <td class="mod_<?php echo $mod_name; ?>_placeholders_column_b">&nbsp;</td>
     <td>CSS display: </td>
     <td>none</td>
   </tr>
   <tr valign="top">
     <td>[USER_EMAIL]</td>
-    <td class="mod_oneforall_placeholders_column_b">&nbsp;</td>
+    <td class="mod_<?php echo $mod_name; ?>_placeholders_column_b">&nbsp;</td>
     <td>PIL</td>
-    <td class="mod_oneforall_placeholders_column_b">&nbsp;</td>
+    <td class="mod_<?php echo $mod_name; ?>_placeholders_column_b">&nbsp;</td>
     <td>IH</td>
-    <td class="mod_oneforall_placeholders_column_b">IF</td>
+    <td class="mod_<?php echo $mod_name; ?>_placeholders_column_b">IF</td>
     <td>User email</td>
     <td><?php echo (isset($_SESSION['EMAIL']) ? $_SESSION['EMAIL'] : '&nbsp;'); ?></td>
   </tr>
   <tr valign="top">
     <td>[FIELD_NAME] or [FIELD_1]</td>
-    <td class="mod_oneforall_placeholders_column_b">&nbsp;</td>
+    <td class="mod_<?php echo $mod_name; ?>_placeholders_column_b">&nbsp;</td>
     <td>PIL</td>
-    <td class="mod_oneforall_placeholders_column_b">&nbsp;</td>
+    <td class="mod_<?php echo $mod_name; ?>_placeholders_column_b">&nbsp;</td>
     <td>IH</td>
-    <td class="mod_oneforall_placeholders_column_b">IF</td>
+    <td class="mod_<?php echo $mod_name; ?>_placeholders_column_b">IF</td>
     <td>Custom item fields which can be defined in the field settings. Either use the uppercase field_name or the uppercase field-string and field_id combination as a placeholder. For exact notation see the working examples at the <a href="<?php echo WB_URL; ?>/modules/<?php echo $mod_name; ?>/modify_fields.php?page_id=<?php echo $page_id; ?>&section_id=<?php echo $section_id; ?>">field settings page</a>.</td>
     <td>
-      <span class="mod_oneforall_placeholders_fields_b">
+      <span class="mod_<?php echo $mod_name; ?>_placeholders_fields_b">
         <?php echo (isset($field['name']) ? '['.htmlspecialchars(strtoupper($field['name'])).']' : ''); ?>
       </span>
        <?php echo (isset($field['name']) ? ' or ' : ''); ?>
-      <span class="mod_oneforall_placeholders_fields_b">
+      <span class="mod_<?php echo $mod_name; ?>_placeholders_fields_b">
         <?php echo (isset($field['field_id']) ? '[FIELD_'.$field['field_id'].']' : ''); ?>
       </span>
     </td>
   </tr>
   <tr valign="top">
     <td>[IMAGE]</td>
-    <td class="mod_oneforall_placeholders_column_b">&nbsp;</td>
+    <td class="mod_<?php echo $mod_name; ?>_placeholders_column_b">&nbsp;</td>
     <td>PIL</td>
-    <td class="mod_oneforall_placeholders_column_b">&nbsp;</td>
+    <td class="mod_<?php echo $mod_name; ?>_placeholders_column_b">&nbsp;</td>
     <td>IH</td>
-    <td class="mod_oneforall_placeholders_column_b">IF</td>
+    <td class="mod_<?php echo $mod_name; ?>_placeholders_column_b">IF</td>
     <td>Main item image - only displayed if selected at section &quot;2. Item Images&quot; of the &quot;Add/modify item&quot; page</td>
-    <td class="mod_oneforall_placeholders_items_b">Depends on various settings: For an example please see the source code of your <?php echo $module_name; ?> page! </td>
+    <td class="mod_<?php echo $mod_name; ?>_placeholders_items_b">Depends on various settings: For an example please see the source code of your <?php echo $module_name; ?> page! </td>
   </tr>
   <tr valign="top">
     <td>[IMAGES]</td>
-    <td class="mod_oneforall_placeholders_column_b">&nbsp;</td>
+    <td class="mod_<?php echo $mod_name; ?>_placeholders_column_b">&nbsp;</td>
     <td>PIL</td>
-    <td class="mod_oneforall_placeholders_column_b">&nbsp;</td>
+    <td class="mod_<?php echo $mod_name; ?>_placeholders_column_b">&nbsp;</td>
     <td>IH</td>
-    <td class="mod_oneforall_placeholders_column_b">IF</td>
+    <td class="mod_<?php echo $mod_name; ?>_placeholders_column_b">IF</td>
     <td>All item images except for the item main image </td>
-    <td class="mod_oneforall_placeholders_items_b">Depends on various settings: For an example please see the source code of your <?php echo $module_name; ?> page! </td>
+    <td class="mod_<?php echo $mod_name; ?>_placeholders_items_b">Depends on various settings: For an example please see the source code of your <?php echo $module_name; ?> page! </td>
   </tr> 
   <tr valign="top">
     <td>[ITEM_ID]</td>
-    <td class="mod_oneforall_placeholders_column_b">&nbsp;</td>
+    <td class="mod_<?php echo $mod_name; ?>_placeholders_column_b">&nbsp;</td>
     <td>PIL</td>
-    <td class="mod_oneforall_placeholders_column_b">&nbsp;</td>
+    <td class="mod_<?php echo $mod_name; ?>_placeholders_column_b">&nbsp;</td>
     <td>IH</td>
-    <td class="mod_oneforall_placeholders_column_b">IF</td>
+    <td class="mod_<?php echo $mod_name; ?>_placeholders_column_b">IF</td>
     <td>Item id</td>
-    <td class="mod_oneforall_placeholders_items_b"><?php echo (isset($item['item_id']) ? $item['item_id'] : '&nbsp;'); ?></td>
+    <td class="mod_<?php echo $mod_name; ?>_placeholders_items_b"><?php echo (isset($item['item_id']) ? $item['item_id'] : '&nbsp;'); ?></td>
   </tr>
   <tr valign="top">
     <td>[LINK]</td>
-    <td class="mod_oneforall_placeholders_column_b">&nbsp;</td>
+    <td class="mod_<?php echo $mod_name; ?>_placeholders_column_b">&nbsp;</td>
     <td>PIL</td>
-    <td class="mod_oneforall_placeholders_column_b">&nbsp;</td>
+    <td class="mod_<?php echo $mod_name; ?>_placeholders_column_b">&nbsp;</td>
     <td>&nbsp;</td>
-    <td class="mod_oneforall_placeholders_column_b">&nbsp;</td>
+    <td class="mod_<?php echo $mod_name; ?>_placeholders_column_b">&nbsp;</td>
     <td>Link to the item detail page</td>
-    <td class="mod_oneforall_placeholders_items_b"><?php echo (isset($item['link']) ? WB_URL.PAGES_DIRECTORY.'<wbr>'.$page['link'].$item['link'].PAGE_EXTENSION : '&nbsp;'); ?></td>
+    <td class="mod_<?php echo $mod_name; ?>_placeholders_items_b"><?php echo (isset($item['link']) ? WB_URL.PAGES_DIRECTORY.'<wbr>'.$page['link'].$item['link'].PAGE_EXTENSION : '&nbsp;'); ?></td>
   </tr>
   <tr valign="top">
     <td>[NEXT]</td>
-    <td class="mod_oneforall_placeholders_column_b">&nbsp;</td>
+    <td class="mod_<?php echo $mod_name; ?>_placeholders_column_b">&nbsp;</td>
     <td>&nbsp;</td>
-    <td class="mod_oneforall_placeholders_column_b">&nbsp;</td>
+    <td class="mod_<?php echo $mod_name; ?>_placeholders_column_b">&nbsp;</td>
     <td>IH</td>
-    <td class="mod_oneforall_placeholders_column_b">IF</td>
+    <td class="mod_<?php echo $mod_name; ?>_placeholders_column_b">IF</td>
     <td>Link to the next item</td>
-    <td class="mod_oneforall_placeholders_items_b"><a><?php echo $TEXT['NEXT']; ?> &gt;&gt;</a></td>
+    <td class="mod_<?php echo $mod_name; ?>_placeholders_items_b"><a><?php echo $TEXT['NEXT']; ?> &gt;&gt;</a></td>
   </tr>
   <tr valign="top">
     <td>[NEXT_LINK]</td>
-    <td class="mod_oneforall_placeholders_column_b">PH</td>
+    <td class="mod_<?php echo $mod_name; ?>_placeholders_column_b">PH</td>
     <td>&nbsp;</td>
-    <td class="mod_oneforall_placeholders_column_b">PF</td>
+    <td class="mod_<?php echo $mod_name; ?>_placeholders_column_b">PF</td>
     <td>&nbsp;</td>
-    <td class="mod_oneforall_placeholders_column_b">&nbsp;</td>
+    <td class="mod_<?php echo $mod_name; ?>_placeholders_column_b">&nbsp;</td>
     <td>Link to the next page</td>
-    <td class="mod_oneforall_placeholders_page_b"><a><?php echo $TEXT['NEXT']; ?> &gt;&gt;</a></td>
+    <td class="mod_<?php echo $mod_name; ?>_placeholders_page_b"><a><?php echo $TEXT['NEXT']; ?> &gt;&gt;</a></td>
   </tr>
   <tr valign="top">
     <td>[NEXT_PAGE_LINK]</td>
-    <td class="mod_oneforall_placeholders_column_b">PH</td>
+    <td class="mod_<?php echo $mod_name; ?>_placeholders_column_b">PH</td>
     <td>&nbsp;</td>
-    <td class="mod_oneforall_placeholders_column_b">PF</td>
+    <td class="mod_<?php echo $mod_name; ?>_placeholders_column_b">PF</td>
     <td>&nbsp;</td>
-    <td class="mod_oneforall_placeholders_column_b">&nbsp;</td>
+    <td class="mod_<?php echo $mod_name; ?>_placeholders_column_b">&nbsp;</td>
     <td>Link to the next page</td>
-    <td class="mod_oneforall_placeholders_page_b"><a><?php echo $TEXT['NEXT_PAGE']; ?> &gt;&gt;</a></td>
+    <td class="mod_<?php echo $mod_name; ?>_placeholders_page_b"><a><?php echo $TEXT['NEXT_PAGE']; ?> &gt;&gt;</a></td>
   </tr>
   <tr valign="top">
     <td>[OF]</td>
-    <td class="mod_oneforall_placeholders_column_b">PH</td>
+    <td class="mod_<?php echo $mod_name; ?>_placeholders_column_b">PH</td>
     <td>&nbsp;</td>
-    <td class="mod_oneforall_placeholders_column_b">PF</td>
+    <td class="mod_<?php echo $mod_name; ?>_placeholders_column_b">PF</td>
     <td>IH</td>
-    <td class="mod_oneforall_placeholders_column_b">IF</td>
+    <td class="mod_<?php echo $mod_name; ?>_placeholders_column_b">IF</td>
     <td>View number of items out of total number of items </td>
-    <td class="mod_oneforall_placeholders_page_settings_b">1-3 <?php echo $TEXT['OF']; ?> 10 </td>
+    <td class="mod_<?php echo $mod_name; ?>_placeholders_page_settings_b">1-3 <?php echo $TEXT['OF']; ?> 10 </td>
   </tr>
   <tr valign="top">
     <td>[OUT_OF]</td>
-    <td class="mod_oneforall_placeholders_column_b">PH</td>
+    <td class="mod_<?php echo $mod_name; ?>_placeholders_column_b">PH</td>
     <td>&nbsp;</td>
-    <td class="mod_oneforall_placeholders_column_b">PF</td>
+    <td class="mod_<?php echo $mod_name; ?>_placeholders_column_b">PF</td>
     <td>IH</td>
-    <td class="mod_oneforall_placeholders_column_b">IF</td>
+    <td class="mod_<?php echo $mod_name; ?>_placeholders_column_b">IF</td>
     <td>View item number out of total number of items</td>
-    <td class="mod_oneforall_placeholders_items_b">2 <?php echo $TEXT['OUT_OF']; ?> 10 </td>
+    <td class="mod_<?php echo $mod_name; ?>_placeholders_items_b">2 <?php echo $TEXT['OUT_OF']; ?> 10 </td>
   </tr>
   <tr valign="top">
     <td>[PAGE_TITLE]</td>
-    <td class="mod_oneforall_placeholders_column_b">PH</td>
+    <td class="mod_<?php echo $mod_name; ?>_placeholders_column_b">PH</td>
     <td>PIL</td>
-    <td class="mod_oneforall_placeholders_column_b">PF</td>
+    <td class="mod_<?php echo $mod_name; ?>_placeholders_column_b">PF</td>
     <td>IH</td>
-    <td class="mod_oneforall_placeholders_column_b">IF</td>
+    <td class="mod_<?php echo $mod_name; ?>_placeholders_column_b">IF</td>
     <td>Page title</td>
-    <td class="mod_oneforall_placeholders_page_b"><?php echo (isset($page['page_title']) ? $page['page_title'] : '&nbsp;'); ?></td>
+    <td class="mod_<?php echo $mod_name; ?>_placeholders_page_b"><?php echo (isset($page['page_title']) ? $page['page_title'] : '&nbsp;'); ?></td>
   </tr>
   <tr valign="top">
     <td>[PREVIOUS]</td>
-    <td class="mod_oneforall_placeholders_column_b">&nbsp;</td>
+    <td class="mod_<?php echo $mod_name; ?>_placeholders_column_b">&nbsp;</td>
     <td>&nbsp;</td>
-    <td class="mod_oneforall_placeholders_column_b">&nbsp;</td>
+    <td class="mod_<?php echo $mod_name; ?>_placeholders_column_b">&nbsp;</td>
     <td>IH</td>
-    <td class="mod_oneforall_placeholders_column_b">IF</td>
+    <td class="mod_<?php echo $mod_name; ?>_placeholders_column_b">IF</td>
     <td>Link to the previous item</td>
-    <td class="mod_oneforall_placeholders_items_b"><a>&lt;&lt; <?php echo $TEXT['PREVIOUS']; ?></a></td>
+    <td class="mod_<?php echo $mod_name; ?>_placeholders_items_b"><a>&lt;&lt; <?php echo $TEXT['PREVIOUS']; ?></a></td>
   </tr>
   <tr valign="top">
     <td>[PREVIOUS_LINK]</td>
-    <td class="mod_oneforall_placeholders_column_b">PH</td>
+    <td class="mod_<?php echo $mod_name; ?>_placeholders_column_b">PH</td>
     <td>&nbsp;</td>
-    <td class="mod_oneforall_placeholders_column_b">PF</td>
+    <td class="mod_<?php echo $mod_name; ?>_placeholders_column_b">PF</td>
     <td>&nbsp;</td>
-    <td class="mod_oneforall_placeholders_column_b">&nbsp;</td>
+    <td class="mod_<?php echo $mod_name; ?>_placeholders_column_b">&nbsp;</td>
     <td>Link to the previous page</td>
-    <td class="mod_oneforall_placeholders_page_b"><a>&lt;&lt; <?php echo $TEXT['PREVIOUS']; ?></a></td>
+    <td class="mod_<?php echo $mod_name; ?>_placeholders_page_b"><a>&lt;&lt; <?php echo $TEXT['PREVIOUS']; ?></a></td>
   </tr>
   <tr valign="top">
     <td>[PREVIOUS_PAGE_LINK]</td>
-    <td class="mod_oneforall_placeholders_column_b">PH</td>
+    <td class="mod_<?php echo $mod_name; ?>_placeholders_column_b">PH</td>
     <td>&nbsp;</td>
-    <td class="mod_oneforall_placeholders_column_b">PF</td>
+    <td class="mod_<?php echo $mod_name; ?>_placeholders_column_b">PF</td>
     <td>&nbsp;</td>
-    <td class="mod_oneforall_placeholders_column_b">&nbsp;</td>
+    <td class="mod_<?php echo $mod_name; ?>_placeholders_column_b">&nbsp;</td>
     <td>Link to the previous page</td>
-    <td class="mod_oneforall_placeholders_page_b"><a>&lt;&lt; <?php echo $TEXT['PREVIOUS_PAGE']; ?></a></td>
+    <td class="mod_<?php echo $mod_name; ?>_placeholders_page_b"><a>&lt;&lt; <?php echo $TEXT['PREVIOUS_PAGE']; ?></a></td>
   </tr>
   <tr valign="top">
     <td>[TEXT_OF]</td>
-    <td class="mod_oneforall_placeholders_column_b">&nbsp;</td>
+    <td class="mod_<?php echo $mod_name; ?>_placeholders_column_b">&nbsp;</td>
     <td>&nbsp;</td>
-    <td class="mod_oneforall_placeholders_column_b">&nbsp;</td>
+    <td class="mod_<?php echo $mod_name; ?>_placeholders_column_b">&nbsp;</td>
     <td>IH</td>
-    <td class="mod_oneforall_placeholders_column_b">IF</td>
+    <td class="mod_<?php echo $mod_name; ?>_placeholders_column_b">IF</td>
     <td>Localisation of &quot;<em>of</em>&quot;</td>
-    <td class="mod_oneforall_placeholders_localisation_b"><?php echo $TEXT['OF']; ?></td>
+    <td class="mod_<?php echo $mod_name; ?>_placeholders_localisation_b"><?php echo $TEXT['OF']; ?></td>
   </tr>
   <tr valign="top">
     <td>[TEXT_OUT_OF]</td>
-    <td class="mod_oneforall_placeholders_column_b">&nbsp;</td>
+    <td class="mod_<?php echo $mod_name; ?>_placeholders_column_b">&nbsp;</td>
     <td>&nbsp;</td>
-    <td class="mod_oneforall_placeholders_column_b">&nbsp;</td>
+    <td class="mod_<?php echo $mod_name; ?>_placeholders_column_b">&nbsp;</td>
     <td>IH</td>
-    <td class="mod_oneforall_placeholders_column_b">IF</td>
+    <td class="mod_<?php echo $mod_name; ?>_placeholders_column_b">IF</td>
     <td>Localisation of &quot;<em>out of</em>&quot;</td>
-    <td class="mod_oneforall_placeholders_localisation_b"><?php echo $TEXT['OUT_OF']; ?></td>
+    <td class="mod_<?php echo $mod_name; ?>_placeholders_localisation_b"><?php echo $TEXT['OUT_OF']; ?></td>
   </tr>
   <tr valign="top">
     <td>[TEXT_READ_MORE]</td>
-    <td class="mod_oneforall_placeholders_column_b">&nbsp;</td>
+    <td class="mod_<?php echo $mod_name; ?>_placeholders_column_b">&nbsp;</td>
     <td>PIL</td>
-    <td class="mod_oneforall_placeholders_column_b">&nbsp;</td>
+    <td class="mod_<?php echo $mod_name; ?>_placeholders_column_b">&nbsp;</td>
     <td>&nbsp;</td>
-    <td class="mod_oneforall_placeholders_column_b">&nbsp;</td>
+    <td class="mod_<?php echo $mod_name; ?>_placeholders_column_b">&nbsp;</td>
     <td>Localisation of "<em>Read more</em>"</td>
-    <td class="mod_oneforall_placeholders_localisation_b"><?php echo $TEXT['READ_MORE']; ?></td>
+    <td class="mod_<?php echo $mod_name; ?>_placeholders_localisation_b"><?php echo $TEXT['READ_MORE']; ?></td>
   </tr>
   <tr valign="top">
     <td>[TXT_BACK]</td>
-    <td class="mod_oneforall_placeholders_column_b">&nbsp;</td>
+    <td class="mod_<?php echo $mod_name; ?>_placeholders_column_b">&nbsp;</td>
     <td>&nbsp;</td>
-    <td class="mod_oneforall_placeholders_column_b">&nbsp;</td>
+    <td class="mod_<?php echo $mod_name; ?>_placeholders_column_b">&nbsp;</td>
     <td>IH</td>
-    <td class="mod_oneforall_placeholders_column_b">IF</td>
+    <td class="mod_<?php echo $mod_name; ?>_placeholders_column_b">IF</td>
     <td>Localisation of "<em>Back</em>"</td>
-    <td class="mod_oneforall_placeholders_localisation_b"><?php echo $TEXT['BACK']; ?></td>
+    <td class="mod_<?php echo $mod_name; ?>_placeholders_localisation_b"><?php echo $TEXT['BACK']; ?></td>
   </tr>
   <tr valign="top">
     <td>[TXT_DESCRIPTION]</td>
-    <td class="mod_oneforall_placeholders_column_b">&nbsp;</td>
+    <td class="mod_<?php echo $mod_name; ?>_placeholders_column_b">&nbsp;</td>
     <td>&nbsp;</td>
-    <td class="mod_oneforall_placeholders_column_b">&nbsp;</td>
+    <td class="mod_<?php echo $mod_name; ?>_placeholders_column_b">&nbsp;</td>
     <td>IH</td>
-    <td class="mod_oneforall_placeholders_column_b">IF</td>
+    <td class="mod_<?php echo $mod_name; ?>_placeholders_column_b">IF</td>
     <td>Localisation of &quot;<em>Description</em>&quot;</td>
-    <td class="mod_oneforall_placeholders_localisation_b"><?php echo $MOD_ONEFORALL[$mod_name]['TXT_DESCRIPTION']; ?></td>
+    <td class="mod_<?php echo $mod_name; ?>_placeholders_localisation_b"><?php echo $MOD_ONEFORALL[$mod_name]['TXT_DESCRIPTION']; ?></td>
   </tr>
   <tr valign="top">
     <td>[TXT_ITEM]</td>
-    <td class="mod_oneforall_placeholders_column_b">PH</td>
+    <td class="mod_<?php echo $mod_name; ?>_placeholders_column_b">PH</td>
     <td>PIL</td>
-    <td class="mod_oneforall_placeholders_column_b">PF</td>
+    <td class="mod_<?php echo $mod_name; ?>_placeholders_column_b">PF</td>
     <td>IH</td>
-    <td class="mod_oneforall_placeholders_column_b">IF</td>
+    <td class="mod_<?php echo $mod_name; ?>_placeholders_column_b">IF</td>
     <td>Localisation of "<em>Item</em>"</td>
-    <td class="mod_oneforall_placeholders_localisation_b"><?php echo $MOD_ONEFORALL[$mod_name]['TXT_ITEM']; ?></td>
+    <td class="mod_<?php echo $mod_name; ?>_placeholders_localisation_b"><?php echo $MOD_ONEFORALL[$mod_name]['TXT_ITEM']; ?></td>
   </tr>
   <tr valign="top">
     <td>[THUMB]</td>
-    <td class="mod_oneforall_placeholders_column_b">&nbsp;</td>
+    <td class="mod_<?php echo $mod_name; ?>_placeholders_column_b">&nbsp;</td>
     <td>PIL</td>
-    <td class="mod_oneforall_placeholders_column_b">&nbsp;</td>
+    <td class="mod_<?php echo $mod_name; ?>_placeholders_column_b">&nbsp;</td>
     <td>IH</td>
-    <td class="mod_oneforall_placeholders_column_b">IF</td>
+    <td class="mod_<?php echo $mod_name; ?>_placeholders_column_b">IF</td>
     <td>Thumbnail of the main item image - only displayed if selected at section &quot;2. Item Images&quot; of the &quot;Add/modify item&quot; page</td>
-    <td class="mod_oneforall_placeholders_items_b">Depends on various settings: For an example please see the source code of your <?php echo $module_name; ?> page!	</td>
+    <td class="mod_<?php echo $mod_name; ?>_placeholders_items_b">Depends on various settings: For an example please see the source code of your <?php echo $module_name; ?> page!	</td>
   </tr>
   <tr valign="top">
     <td>[THUMBS]</td>
-    <td class="mod_oneforall_placeholders_column_b">&nbsp;</td>
+    <td class="mod_<?php echo $mod_name; ?>_placeholders_column_b">&nbsp;</td>
     <td>PIL</td>
-    <td class="mod_oneforall_placeholders_column_b">&nbsp;</td>
+    <td class="mod_<?php echo $mod_name; ?>_placeholders_column_b">&nbsp;</td>
     <td>IH</td>
-    <td class="mod_oneforall_placeholders_column_b">IF</td>
+    <td class="mod_<?php echo $mod_name; ?>_placeholders_column_b">IF</td>
     <td>All thumbnails of the item images except for  the item main image </td>
-    <td class="mod_oneforall_placeholders_items_b">Depends on various settings: For an example please see the source code of your <?php echo $module_name; ?> page! </td>
+    <td class="mod_<?php echo $mod_name; ?>_placeholders_items_b">Depends on various settings: For an example please see the source code of your <?php echo $module_name; ?> page! </td>
   </tr>
   <tr valign="top">
     <td>[TIME]</td>
-    <td class="mod_oneforall_placeholders_column_b">&nbsp;</td>
+    <td class="mod_<?php echo $mod_name; ?>_placeholders_column_b">&nbsp;</td>
     <td>PIL</td>
-    <td class="mod_oneforall_placeholders_column_b">&nbsp;</td>
+    <td class="mod_<?php echo $mod_name; ?>_placeholders_column_b">&nbsp;</td>
     <td>IH</td>
-    <td class="mod_oneforall_placeholders_column_b">IF</td>
+    <td class="mod_<?php echo $mod_name; ?>_placeholders_column_b">IF</td>
     <td>Item modification time</td>
-    <td class="mod_oneforall_placeholders_items_b"><?php echo (isset($item['modified_when']) ? gmdate(TIME_FORMAT, $item['modified_when']+TIMEZONE) : '&nbsp;'); ?></td>
+    <td class="mod_<?php echo $mod_name; ?>_placeholders_items_b"><?php echo (isset($item['modified_when']) ? gmdate(TIME_FORMAT, $item['modified_when']+TIMEZONE) : '&nbsp;'); ?></td>
   </tr>
   <tr valign="top">
     <td>[TITLE]</td>
-    <td class="mod_oneforall_placeholders_column_b">&nbsp;</td>
+    <td class="mod_<?php echo $mod_name; ?>_placeholders_column_b">&nbsp;</td>
     <td>PIL</td>
-    <td class="mod_oneforall_placeholders_column_b">&nbsp;</td>
+    <td class="mod_<?php echo $mod_name; ?>_placeholders_column_b">&nbsp;</td>
     <td>IH</td>
-    <td class="mod_oneforall_placeholders_column_b">IF</td>
+    <td class="mod_<?php echo $mod_name; ?>_placeholders_column_b">IF</td>
     <td>Item title</td>
-    <td class="mod_oneforall_placeholders_items_b"><?php echo (isset($item['title']) ? $item['title'] : '&nbsp;'); ?></td>
+    <td class="mod_<?php echo $mod_name; ?>_placeholders_items_b"><?php echo (isset($item['title']) ? $item['title'] : '&nbsp;'); ?></td>
   </tr>
   <tr valign="top">
     <td>[USERNAME]</td>
-    <td class="mod_oneforall_placeholders_column_b">&nbsp;</td>
+    <td class="mod_<?php echo $mod_name; ?>_placeholders_column_b">&nbsp;</td>
     <td>PIL</td>
-    <td class="mod_oneforall_placeholders_column_b">&nbsp;</td>
+    <td class="mod_<?php echo $mod_name; ?>_placeholders_column_b">&nbsp;</td>
     <td>IH</td>
-    <td class="mod_oneforall_placeholders_column_b">IF</td>
+    <td class="mod_<?php echo $mod_name; ?>_placeholders_column_b">IF</td>
     <td>User name</td>
     <td><?php echo (isset($_SESSION['USERNAME']) ? $_SESSION['USERNAME'] : "admin"); ?></td>
   </tr>
   <tr valign="top">
     <td>[USER_ID]</td>
-    <td class="mod_oneforall_placeholders_column_b">&nbsp;</td>
+    <td class="mod_<?php echo $mod_name; ?>_placeholders_column_b">&nbsp;</td>
     <td>PIL</td>
-    <td class="mod_oneforall_placeholders_column_b">&nbsp;</td>
+    <td class="mod_<?php echo $mod_name; ?>_placeholders_column_b">&nbsp;</td>
     <td>IH</td>
-    <td class="mod_oneforall_placeholders_column_b">IF</td>
+    <td class="mod_<?php echo $mod_name; ?>_placeholders_column_b">IF</td>
     <td>User id</td>
     <td><?php echo (isset($_SESSION['USER_ID']) ? $_SESSION['USER_ID'] : "1"); ?></td>
   </tr>

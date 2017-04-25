@@ -2,7 +2,7 @@
 
 /*
   Module developed for the Open Source Content Management System WebsiteBaker (http://websitebaker.org)
-  Copyright (C) 2016, Christoph Marti
+  Copyright (C) 2017, Christoph Marti
 
   LICENCE TERMS:
   This module is free software. You can redistribute it and/or modify it 
@@ -37,6 +37,55 @@ $module_name = 'OneForAll'; // default: OneForAll
  -----------------------------------------------------------------------------------------
 
 	DEVELOPMENT HISTORY:
+
+   v1.0.6  (Christoph Marti; 04/05/2017)
+	 + Added Dutch language file (thanks to CodeALot)
+	 + Bugfix: Using multiple fields of type wb_link the select options representing the wb page tree
+	   have been multiplied with each new field (reported by astricia)
+	 + [save_fields.php] Defining a field type oneforall_link now it is possible to enter either the module
+	   directory name as well as the module name as initially defined in the info.php (reported by astricia)
+	 + [functions.php] Added more checks to verify that the entered module name is a oneforall module
+
+   v1.0.5  (Christoph Marti; 03/03/2017)
+	 + [view_overview.php] Fixed warning in PHP 7.1 about a non-numeric value (reported by dbs)
+	 + [modify.php] Fixed undefined index when group_id is empty
+
+   v1.0.4  (Christoph Marti; 01/27/2017)
+	 + [view.php] Bugfix: Fixed double opening <div> tag when there is more than one OneForAll section and
+	   an item detail page is viewed (thanks to jacobi22)
+	 + Added section id to the module wrapper, eg. section id 22: mod_oneforall_wrapper_22_f (thanks to jacobi22)
+
+   v1.0.3  (Christoph Marti; 01/22/2017)
+	 + [backend.css] Added support for the advanced theme wbce flat
+	 + Fixed some hardcoded attributes prefixed with mod_oneforall_[...]
+	 + Fixed item scheduling (reported by CodeALot and jacobi22)
+
+   v1.0.2  (Christoph Marti; 01/17/2017)
+	 + [upgrade.php] Improved updating of item access files (thanks to jacobi22)
+
+   v1.0.1  (Christoph Marti; 01/16/2017)
+	 + [upgrade.php] Only update module access files if item detail pages are enabled in config.php
+	 + [upgrade.php] Check for missing item link before creating the access file (reported by jacobi22)
+	 + [modify.php, table_sort.js] Fixed an issue with the TableSort localisation vars (reported by jacobi22)
+
+   v1.0.0  (Christoph Marti; 01/14/2017)
+	 + [ajax/upload.php] Fixed generating of multiple database records when uploading an image in chunks
+	   (reported by dbs, thanks to Ruud)
+	 + Added plupload max file size to the config.php (default is 2MB)
+	 + [modify_item.php] Fixed undefined variable $image_file that broke plupload js (reported by dbs and Boudi)
+	 + [modify_fields.php] Fixed interchange of extra field label depending on field type
+	 + Added item scheduling: Enable / disable items against a start and end time (suggested by astricia)
+	   Enable scheduling in the config.php file. Experimental, depends on wb constant TIMEZONE which can be buggy
+	 + [backend.js] Changed delete field confirmation message to display the field id instead of the field position
+	 + [backend.js] Fixed toggling of the button title when enabling/disabling an item of the sortable items table
+	 + Added support for multiple oneforall module sections on the same page,
+	   including the renamed oneforall module versions (suggested by flipoflip)
+		 + [view_item.php, view_overview.php] Prevent fields from beeing mixed up
+		 + Eliminate js and css interferences between oneforall modules by making backend attributes module specific
+		 + [install.php, upgrade.php] Added module name converting of the files backend.css and backend.js
+		 + [save_item.php, view.php] Display only one item on oneforall detail pages
+		   Added constant ITEM_SID (item section id) which helps to assign an item to its original section
+		 + [upgrade.php] Update all module access files and add the constant ITEM_SID
 
    v0.9.9  (Christoph Marti; 12/03/2016)
 	 + Added an image tooltip to the thumbs at the sortable image table
@@ -106,7 +155,8 @@ $module_name = 'OneForAll'; // default: OneForAll
 	 + Added drag&drop sorting to the item table
 
    v0.7  (Christoph Marti; 09/27/2015)
-	 + [search.php] Bugfix: Fixed search script that produced multiple identical search results (reported by instantflorian)
+	 + [search.php] Bugfix: Fixed search script that produced multiple identical search results
+	   (reported by instantflorian)
 	 + [FR.php] Added french language file
 	 + [upgrade.php] Bugfix: Fixed renaming of module on upgrade
 
@@ -138,12 +188,14 @@ $module_name = 'OneForAll'; // default: OneForAll
 	 + [save_field.php] Bugfix: Prevent conflicts between customized field names and general placeholders
 	 + [functions.php] Bugfix: Fixed fatal error "Cannot redeclare show_wysiwyg_editor()"
 	   when using more than one wysiwyg editor (reported by instantflorian)
-	 + [view_overview.php, view_item.php] Bugfix: Fixed shifted option of field type select (reported by instantflorian)
+	 + [view_overview.php, view_item.php] Bugfix: Fixed shifted option of field type select
+	   (reported by instantflorian)
 
    v0.3  (Christoph Marti; 01/22/2015)
 	 + Fixed some warnings which were thrown when no fields had been defined (reported by BlackBird)
 	 + [save_item.php] Bugfix: When saving a new item, the page access file still was deleted by mistake
-	 + [config.php] Added option to deactivate item detail pages and suspend corresponding access files (suggested by jacobi22)
+	 + [config.php] Added option to deactivate item detail pages and suspend corresponding access files
+	   (suggested by jacobi22)
 	 + Added field type group. Items are grouped on the overview page. (suggested by jacobi22)
 	   Note: Just one group field allowed!
 	   [config.php] Also see group settings for headers and ordering at config.php
@@ -178,7 +230,7 @@ $mod_name           = $module_directory;
 $renamed_to         = $mod_name == 'oneforall' ? '' : '(renamed to <strong>'.$module_name.'</strong>) ';
 
 $module_function    = 'page';
-$module_version     = '0.9.9';
+$module_version     = '1.0.6';
 $module_platform    = '2.8.x';
 $module_author      = 'Christoph Marti. OneForAll '.$renamed_to.'is based on the module Showcase v0.5';
 $module_license     = 'GNU General Public License';

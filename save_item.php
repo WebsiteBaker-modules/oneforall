@@ -2,7 +2,7 @@
 
 /*
   Module developed for the Open Source Content Management System WebsiteBaker (http://websitebaker.org)
-  Copyright (C) 2016, Christoph Marti
+  Copyright (C) 2017, Christoph Marti
 
   LICENCE TERMS:
   This module is free software. You can redistribute it and/or modify it 
@@ -58,12 +58,14 @@ require(WB_PATH.'/modules/admin.php');
 $item_dir = $page['link'];
 
 // Remove any tags and add slashes
-$old_link       = strip_tags($admin->get_post('link'));
-$old_section_id = strip_tags($admin->get_post('section_id'));
-$new_section_id = strip_tags($admin->get_post('new_section_id'));
-$action         = strip_tags($admin->get_post('action'));
-$title          = $admin->add_slashes(strip_tags($admin->get_post('title')));
-$description    = $admin->add_slashes(strip_tags($admin->get_post('description')));
+$old_link         = strip_tags($admin->get_post('link'));
+$old_section_id   = strip_tags($admin->get_post('section_id'));
+$new_section_id   = strip_tags($admin->get_post('new_section_id'));
+$action           = strip_tags($admin->get_post('action'));
+$title            = $admin->add_slashes(strip_tags($admin->get_post('title')));
+$scheduling_start = strip_tags($admin->get_post('scheduling_start'));
+$scheduling_end   = strip_tags($admin->get_post('scheduling_end'));
+$description      = $admin->add_slashes(strip_tags($admin->get_post('description')));
 
 // Images
 $images = array();
@@ -88,12 +90,74 @@ $active    = strip_tags($admin->get_post('active'));
 
 
 
+// SCHEDULING
+
+// Get the datetime format defined in config.php or ...
+if (!empty($scheduling_format)) {
+	$format = $scheduling_format;
+}
+// ... get the datetime format defined in the jquery ui datepicker language file
+else {	
+	// Load jquery ui datepicker language file
+	$datepicker_lang      = defined('LANGUAGE') && strlen(LANGUAGE) == 2 ? strtolower(LANGUAGE) : 'en';
+	$datepicker_lang_path = '/include/jquery/i18n/jquery.ui.datepicker-'.$datepicker_lang.'.js';
+	// Get the date format used by datepicker language file
+	if (file_exists(WB_PATH.$datepicker_lang_path)) {
+		// Read file line by line into array
+		$lines = file(WB_PATH.$datepicker_lang_path);
+		foreach ($lines as $line) {
+			// Check if the line contains the string we are looking for
+			if (strpos($line, 'dateFormat') !== false) {
+				// Extract the format part
+				$pattern     = '#.+\'(.+)\'.+#is';
+				$result      = preg_match($pattern, $line, $subpattern);
+				// Make the format we will use to parse the datetime with php 
+				$date_format = str_replace(array('.', '/', '-'), '#', $subpattern[1]);
+				$format      = str_ireplace(array('dd', 'mm', 'yy'), array('d', 'm', 'Y'), $date_format).' * H#i';
+				break;
+			}
+		}
+	}
+}
+
+// Keep the original datetime with the jquery ui datepicker format
+$scheduling['start'] = $admin->add_slashes($scheduling_start);
+$scheduling['end']   = $admin->add_slashes($scheduling_end);
+
+// Parse the datetime into a timestamp using the given format
+$scheduling['ts_start'] = 0;
+$scheduling['ts_end']   = 0;
+if (!empty($scheduling_start)) {
+	$s                      = date_parse_from_format($format, $scheduling_start);
+	$scheduling['ts_start'] = mktime($s['hour'], $s['minute'], 0, $s['month'], $s['day'], $s['year']);
+}
+if (!empty($scheduling_end)) {
+	$e                    = date_parse_from_format($format, $scheduling_end);
+	$scheduling['ts_end'] = mktime($e['hour'], $e['minute'], 0, $e['month'], $e['day'], $e['year']);
+}
+
+
+
+
 // FIELD VALIDATION
 
 // Enter a default title if it has been left blank
 if (empty($title)) {
 	$title = $MOD_ONEFORALL[$mod_name]['TXT_ITEM'].' '.$id;
 }
+
+// Only change 'active' if $_POST['active'] has been sent
+// Otherwise the item would be disabled after going back to manual toggling of active state
+$query_active = isset($_POST['active']) ? " active = '$active'," : '';
+
+// Check start and end time of item scheduling
+if ($scheduling['ts_start'] && $scheduling['ts_end'] && $scheduling['ts_start'] >= $scheduling['ts_end']) {
+	$scheduling['end']    = $scheduling['start'];
+	$scheduling['ts_end'] = $scheduling['ts_start'];
+	$errors[] = sprintf($MOD_ONEFORALL[$mod_name]['ERR_INVALID_SCHEDULING'], htmlspecialchars($scheduling_start), htmlspecialchars($scheduling_end));
+}
+// Serialize start and end time
+$scheduling = serialize($scheduling);
 
 // Check email fields
 $query_fields = $database->query("SELECT field_id FROM `".TABLE_PREFIX."mod_".$mod_name."_fields` WHERE type = 'email'");
@@ -228,6 +292,8 @@ if (!empty($errors)) {
 	$_SESSION[$mod_name]['item']['active']         = $active;
 	$_SESSION[$mod_name]['item']['new_section_id'] = $new_section_id;
 	$_SESSION[$mod_name]['item']['action']         = $action;
+	$_SESSION[$mod_name]['item']['scheduling']     = $scheduling;
+	$_SESSION[$mod_name]['item']['description']    = $description;
 }
 
 
@@ -276,7 +342,7 @@ if ($view_detail_pages) {
 	}
 	// Create a new access file
 	else {
-		// First, delete old file if it exists
+		// First, delete old access file if it exists
 		if (file_exists($old_path) && !$new) {
 			unlink($old_path);
 		}
@@ -291,10 +357,12 @@ if ($view_detail_pages) {
 		// Write to the file
 		$content = ''.
 '<?php
-$page_id = '.$page_id.';
+$page_id    = '.$page_id.';
 $section_id = '.$section_id.';
-$item_id = '.$item_id.';
-define("ITEM_ID", $item_id);
+$item_id    = '.$item_id.';
+$item_sid   = '.$section_id.';
+define("ITEM_ID",  $item_id);
+define("ITEM_SID", $item_sid);
 require("'.$index_location.'config.php");
 require(WB_PATH."/index.php");
 ?>';
@@ -516,7 +584,7 @@ if ($admin->get_post('fields')) {
 }
 
 // Item itself
-$database->query("UPDATE `".TABLE_PREFIX."mod_".$mod_name."_items` SET section_id = '$section_id', page_id = '$page_id', title = '$title', link = '$new_link', `description` = '$description', active = '$active',$query_position modified_when = '".time()."', modified_by = '".$admin->get_user_id()."' WHERE item_id = '$item_id'");
+$database->query("UPDATE `".TABLE_PREFIX."mod_".$mod_name."_items` SET section_id = '$section_id', page_id = '$page_id', title = '$title', link = '$new_link', description = '$description',$query_active scheduling = '$scheduling',$query_position modified_when = '".time()."', modified_by = '".$admin->get_user_id()."' WHERE item_id = '$item_id'");
 
 // Check if there was a db error
 if ($database->is_error()) {
@@ -525,7 +593,6 @@ if ($database->is_error()) {
 
 // Clean up item ordering of former section id
 $order->clean($old_section_id); 
-
 
 
 
@@ -589,10 +656,12 @@ if ($action == 'duplicate') {
 			// Write to the file
 			$content = ''.
 '<?php
-$page_id = '.$page_id.';
+$page_id    = '.$page_id.';
 $section_id = '.$section_id.';
-$item_id = '.$item_id.';
-define("ITEM_ID", $item_id);
+$item_id    = '.$item_id.';
+$item_sid   = '.$section_id.';
+define("ITEM_ID",  $item_id);
+define("ITEM_SID", $item_sid);
 require("'.$index_location.'config.php");
 require(WB_PATH."/index.php");
 ?>';
@@ -691,7 +760,7 @@ require(WB_PATH."/index.php");
 	}
 
 	// Update duplicated item data
-	$database->query("UPDATE `".TABLE_PREFIX."mod_".$mod_name."_items` SET section_id = '$section_id', page_id = '$page_id', title = '$title', link = '$new_link', `description` = '$description', active = '0', modified_when = '".time()."', modified_by = '".$admin->get_user_id()."' WHERE item_id = '$item_id'");
+	$database->query("UPDATE `".TABLE_PREFIX."mod_".$mod_name."_items` SET section_id = '$section_id', page_id = '$page_id', title = '$title', link = '$new_link', description = '$description', active = '0', modified_when = '".time()."', modified_by = '".$admin->get_user_id()."' WHERE item_id = '$item_id'");
 
 	// Check if there was a db error
 	if ($database->is_error()) {

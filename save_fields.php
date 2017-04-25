@@ -2,7 +2,7 @@
 
 /*
   Module developed for the Open Source Content Management System WebsiteBaker (http://websitebaker.org)
-  Copyright (C) 2016, Christoph Marti
+  Copyright (C) 2017, Christoph Marti
 
   LICENCE TERMS:
   This module is free software. You can redistribute it and/or modify it 
@@ -100,6 +100,13 @@ if (!empty($_POST['fields'])) {
 		// If template is blank use the default one 
 		if (empty($template)) {
 			$template = $field_template[$type];
+		}
+
+		// If field type oneforall_link check the module name and convert it if needed
+		if ($type == 'oneforall_link') {
+			$extra = trim($extra);
+			$extra = str_replace(' ', '_', strtolower($extra));
+			$extra = empty($extra) || !preg_match('/^[a-z0-9_-]{3,20}$/', $extra) ? 'oneforall' : $extra;
 		}
 
 		// If no error occurred, update existing field

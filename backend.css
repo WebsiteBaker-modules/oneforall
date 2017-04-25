@@ -1,6 +1,6 @@
 /*
   Module developed for the Open Source Content Management System WebsiteBaker (http://websitebaker.org)
-  Copyright (C) 2016, Christoph Marti
+  Copyright (C) 2017, Christoph Marti
 
   LICENCE TERMS:
   This module is free software. You can redistribute it and/or modify it 
@@ -35,6 +35,12 @@ Modify the CSS of the main page and the item page in the frontend stylesheet.
 @import 'js/plupload/js/jquery.ui.plupload/css/jquery.ui.plupload.css';
 
 
+
+
+/* *********** */
+/* Argos Theme */
+/* *********** */
+
 /* GENERAL */
 
 #mod_oneforall_modify_b {
@@ -54,11 +60,6 @@ Modify the CSS of the main page and the item page in the frontend stylesheet.
 	font-size: 12px;
 	font-weight: normal;
 }
-.mod_oneforall_img_resize_table_b {
-	background-color: #E7F0F6;
-	border: 1px solid #CECECE;
-	margin: 5px;
-}
 input[type="submit"], input[type="button"] {
 
 }
@@ -72,8 +73,8 @@ input[class$="_edit_css"] {
 /* JQUERY AND AJAX RELATED */
 
 #mod_oneforall_items_b tbody tr:hover,
-#mod_oneforall_images_b tbody tr[id^='id_']:hover,
-#custom_fields table:hover {
+#mod_oneforall_images_b tbody tr[id^="id_"]:hover,
+#mod_oneforall_custom_fields_b table:hover {
 	background-color: #E8E8E8 !important;
 	cursor: ns-resize !important;
 }
@@ -81,10 +82,11 @@ input[class$="_edit_css"] {
 	border: 1px dotted grey;
 	box-shadow: 2px 2px 20px 0px rgba(0,0,0,0.5);
 }
-#mod_oneforall_success_b {
+#success_msg_b {
 	position: fixed;
 	right: 4%;
 	top: 5%;
+	z-index: 1000000;
 	padding: 15px;
 	color: #009900;
 	font-size: 14px;
@@ -234,13 +236,14 @@ input[class$="_edit_css"] {
 	text-align: center;
 }
 
-span[class^="mod_oneforall_active"] {
+span[class^="mod_oneforall_active"],
+span[class^="mod_oneforall_scheduling"] {
 	display: inline-block;
 	width: 8px;
 	height: 8px;
 	-webkit-border-radius: 50%;
 	-moz-border-radius: 50%;
-	border-radius: 50%
+	border-radius: 50%;
 	-webkit-transition: all 0.2s ease-in-out;
 	-moz-transition: all 0.2s ease-in-out;
 	-o-transition: all 0.2s ease-in-out;
@@ -254,68 +257,70 @@ span[class^="mod_oneforall_active"]:hover {
 	height: 14px;
 	cursor: pointer;
 }
-.mod_oneforall_active0_b {
+.mod_oneforall_active0_b,
+.mod_oneforall_scheduling0_b {
 	background-color: #B52B22;
 }
-.mod_oneforall_active1_b {
+.mod_oneforall_active1_b,
+.mod_oneforall_scheduling1_b {
 	background-color: #159F2F;
 }
 
 
 /* MODIFY FIELDS */
 
-#default_templates,
-#default_templates div,
-#default_templates code {
+#mod_oneforall_default_templates_b,
+#mod_oneforall_default_templates_b div,
+#mod_oneforall_default_templates_b code {
 	display: none !important;
 }
-#custom_fields > thead > tr {
+#mod_oneforall_custom_fields_b > thead > tr {
 	height: 60px;
 }
-#custom_fields label[for="sync_type_template"] {
+#mod_oneforall_custom_fields_b label[for="sync_type_template"] {
 	font-weight: bold;
 }
-#custom_fields th:first-child {
+#mod_oneforall_custom_fields_b th:first-child {
 	width: 19%;
 }
-#custom_fields th {
+#mod_oneforall_custom_fields_b th {
 	font-weight: bold;
 }
-#custom_fields td {
+#mod_oneforall_custom_fields_b td {
 	padding: 3px 0;
 }
-#custom_fields .field_number {
+#mod_oneforall_custom_fields_b .mod_oneforall_field_number_b {
 	font-weight: bold;
 }
-#custom_fields .field_placeholder + td code {
+#mod_oneforall_custom_fields_b .mod_oneforall_field_placeholder_b + td code {
 	font-size: larger;
 }
-#custom_fields .field_template {
+#mod_oneforall_custom_fields_b .mod_oneforall_field_template_b {
 	vertical-align: top;
 }
-#custom_fields input[type="text"],
-#custom_fields select {
+#mod_oneforall_custom_fields_b input[type="text"],
+#mod_oneforall_custom_fields_b select {
 	width: 92%;
 }
-#custom_fields .hidden_extra_label {
+#mod_oneforall_custom_fields_b .mod_oneforall_hidden_extra_label_b {
 	display: none;
 }
-#custom_fields .hidden_extra_field {
+#mod_oneforall_custom_fields_b .mod_oneforall_hidden_extra_field_b {
 	visibility: hidden;
 }
-#custom_fields textarea {
+#mod_oneforall_custom_fields_b textarea {
 	width: 98%;
 	height: 80px;
 	margin-bottom: 10px;
 }
 
-#custom_fields table {
+#mod_oneforall_custom_fields_b table {
 	padding: 25px 0 20px 10px;
 }
-#custom_fields tr:nth-child(even) table {
+#mod_oneforall_custom_fields_b tr:nth-child(even) table {
 	background-color: transparent;
 }
-#custom_fields tr:nth-child(odd) table {
+#mod_oneforall_custom_fields_b tr:nth-child(odd) table {
 	background-color: #EBF3FF;
 }
 
@@ -345,34 +350,72 @@ span[class^="mod_oneforall_active"]:hover {
 }
 
 
+/* MODIFY PAGE SETTINGS */
+
+#mod_oneforall_page_settings_b {
+	width: 98%;
+	border: none;
+	margin-bottom: 40px;
+}
+#mod_oneforall_page_settings_b td:first-child {
+	width: 25%;
+	height: 40px;
+	text-align: right;
+	font-weight: bold;
+}
+#mod_oneforall_page_settings_b tr:nth-child(1) input[type="button"] {
+	width: 120px;
+	margin-top: 0;
+}
+#mod_oneforall_page_settings_b tr:nth-child(2) td,
+#mod_oneforall_page_settings_b tr:nth-child(3) td,
+#mod_oneforall_page_settings_b tr:nth-child(4) td,
+#mod_oneforall_page_settings_b tr:nth-child(5) td,
+#mod_oneforall_page_settings_b tr:nth-child(6) td {
+	vertical-align: top;
+}
+#mod_oneforall_page_settings_b textarea {
+	width: 98%;
+	height: 80px;
+}
+
+
 /* MODIFY ITEM */
 
-#modify_item {
+#mod_oneforall_modify_item_b {
 	border-spacing: 0px 6px;
 }
-#modify_item td:first-child {
+#mod_oneforall_modify_item_b td:first-child {
 	width: 20%;
 	text-align: right;
 	font-weight: bold;
 }
-#modify_item td.align_top {
+#mod_oneforall_modify_item_b span[class^="mod_oneforall_scheduling"] {
+	width: 12px;
+	height: 12px;
+	margin: 0 30px -2px 10px;
+}
+#mod_oneforall_modify_item_b span.txt_scheduling {
+	font-weight: bold;
+}
+#mod_oneforall_modify_item_b td.align_top {
 	vertical-align: top;
 }
-#modify_item table td:first-child {
+#mod_oneforall_modify_item_b table td:first-child {
 	width: 75%;
 	text-align: left;
 	font-weight: normal;
 }
-#modify_item input[type="text"],
-#modify_item select,
-#modify_item textarea {
+#mod_oneforall_modify_item_b input[type="text"],
+#mod_oneforall_modify_item_b select,
+#mod_oneforall_modify_item_b textarea {
 	width: 98%;
 }
-#modify_item select.media {
+#mod_oneforall_modify_item_b select.media {
 	width: 60%;
 	float: left;
 }
-#modify_item a.media_img img {
+#mod_oneforall_modify_item_b a.media_img img {
 	width: auto;
 	height: auto;
 	max-width: 230px;
@@ -380,34 +423,35 @@ span[class^="mod_oneforall_active"]:hover {
 	margin-left: 40px;
 	border: none;
 }
-#modify_item a.media_link {
+#mod_oneforall_modify_item_b a.media_link {
 	display: inline-block;
 	position: relative;
 	top: 5px;
 	left: 40px;
 }
-#modify_item a.hidden {
+#mod_oneforall_modify_item_b a.hidden {
 	display: none !important;
 }
-#modify_item .delete_file + label {
+#mod_oneforall_modify_item_b .delete_file + label {
 	margin-right: 40px;
 }
-#modify_item input.datepicker {
+#mod_oneforall_modify_item_b input.datepicker {
 	width: 120px;
 	text-align: center;
 }
-#modify_item input.datetimepicker {
+#mod_oneforall_modify_item_b input.datetimepicker {
 	width: 180px;
 	text-align: center;
 }
-#modify_item input.datepicker + img,
-#modify_item input.datetimepicker + img {
+#mod_oneforall_modify_item_b input.datepicker + img,
+#mod_oneforall_modify_item_b input.datetimepicker + img {
 	position: relative;
 	top: 4px;
 	left: 6px;
 	margin-right: 30px;
 }
-#modify_item input.datepicker + img:hover {
+#mod_oneforall_modify_item_b input.datepicker + img:hover,
+#mod_oneforall_modify_item_b input.datetimepicker + img:hover {
 	cursor: pointer;
 }
 
@@ -536,18 +580,18 @@ span[class^="mod_oneforall_active"]:hover {
 
 /* IMAGE UPLOAD (PLUPLOAD) */
 
-#resize_settings {
+#mod_oneforall_resize_settings_b {
 	height: 40px;
 	line-height: 40px;
 }
-#resize_settings label[for='imgresize'] {
+#mod_oneforall_resize_settings_b label[for="imgresize"] {
 	font-weight: bold;
 	margin-right: 16px;
 }
-#resize_settings input[type='text'] {
+#mod_oneforall_resize_settings_b input[type="text"] {
 	text-align: center;
 }
-#resize_settings span {
+#mod_oneforall_resize_settings_b span {
 	margin: 0 10px;
 }
 
@@ -582,7 +626,7 @@ span[class^="mod_oneforall_active"]:hover {
 /* SWITCH */
 /* http://www.htmllion.com/css3-toggle-switch-button.html */
 
-#modify_item .switch {
+#mod_oneforall_modify_item_b .switch {
 	position: relative;
 	display: block;
 	vertical-align: top;
@@ -596,13 +640,13 @@ span[class^="mod_oneforall_active"]:hover {
 	box-shadow: inset 0 -1px white, inset 0 1px 1px rgba(0, 0, 0, 0.05);
 	cursor: pointer;
 }
-#modify_item .switch-input {
+#mod_oneforall_modify_item_b .switch-input {
 	position: absolute;
 	top: 0;
 	left: 0;
 	opacity: 0;
 }
-#modify_item .switch-label {
+#mod_oneforall_modify_item_b .switch-label {
 	position: relative;
 	display: block;
 	height: inherit;
@@ -612,8 +656,8 @@ span[class^="mod_oneforall_active"]:hover {
 	border-radius: inherit;
 	box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.12), inset 0 0 2px rgba(0, 0, 0, 0.15);
 }
-#modify_item .switch-label:before,
-#modify_item .switch-label:after {
+#mod_oneforall_modify_item_b .switch-label:before,
+#mod_oneforall_modify_item_b .switch-label:after {
 	position: absolute;
 	top: 50%;
 	margin-top: -.5em;
@@ -623,30 +667,30 @@ span[class^="mod_oneforall_active"]:hover {
 	-o-transition: inherit;
 	transition: inherit;
 }
-#modify_item .switch-label:before {
+#mod_oneforall_modify_item_b .switch-label:before {
 	content: attr(data-off);
 	right: 15px; /* 11px */
 	color: #AAAAAA;
 	text-shadow: 0 1px rgba(255, 255, 255, 0.5);
 }
-#modify_item .switch-label:after {
+#mod_oneforall_modify_item_b .switch-label:after {
 	content: attr(data-on);
 	left: 15px; /* 11px */
 	color: #FFFFFF;
 	text-shadow: 0 1px rgba(0, 0, 0, 0.2);
 	opacity: 0;
 }
-#modify_item .switch-input:checked ~ .switch-label {
+#mod_oneforall_modify_item_b .switch-input:checked ~ .switch-label {
 	background: #8EADE9; /* Change color of switch when on */
 	box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.15), inset 0 0 3px rgba(0, 0, 0, 0.2);
 }
-#modify_item .switch-input:checked ~ .switch-label:before {
+#mod_oneforall_modify_item_b .switch-input:checked ~ .switch-label:before {
 	opacity: 0;
 }
-#modify_item .switch-input:checked ~ .switch-label:after {
+#mod_oneforall_modify_item_b .switch-input:checked ~ .switch-label:after {
 	opacity: 1;
 }
-#modify_item .switch-handle {
+#mod_oneforall_modify_item_b .switch-handle {
 	position: absolute;
 	top: 4px;
 	left: 4px;
@@ -657,7 +701,7 @@ span[class^="mod_oneforall_active"]:hover {
 	border-radius: 100%;
 	box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.2);
 }
-#modify_item .switch-handle:before {
+#mod_oneforall_modify_item_b .switch-handle:before {
 	content: "";
 	position: absolute;
 	top: 50%;
@@ -670,12 +714,12 @@ span[class^="mod_oneforall_active"]:hover {
 	border-radius: 6px;
 	box-shadow: inset 0 1px rgba(0, 0, 0, 0.02);
 }
-#modify_item .switch-input:checked ~ .switch-handle {
+#mod_oneforall_modify_item_b .switch-input:checked ~ .switch-handle {
 	left: 77px; /* 74px */
 	box-shadow: -1px 1px 5px rgba(0, 0, 0, 0.2);
 }
-#modify_item .switch-label,
-#modify_item .switch-handle {
+#mod_oneforall_modify_item_b .switch-label,
+#mod_oneforall_modify_item_b .switch-handle {
 	-webkit-transition: all 0.3s ease;
 	-moz-transition: all 0.3s ease;
 	-o-transition: all 0.3s ease;
@@ -686,14 +730,14 @@ span[class^="mod_oneforall_active"]:hover {
 /* CHECKBOXES AND RADIO BUTTONS */
 /* http://www.hongkiat.com/blog/css3-checkbox-radio/ */
 
-#modify_item input[type="radio"],
-#modify_item input[type="checkbox"] {
+#mod_oneforall_modify_item_b input[type="radio"],
+#mod_oneforall_modify_item_b input[type="checkbox"] {
 	display: none !important;
 }
-#modify_item input[type="checkbox"] + label {
+#mod_oneforall_modify_item_b input[type="checkbox"] + label {
 	margin-right: 12px;
 }
-#modify_item input[type="checkbox"] + label:before {
+#mod_oneforall_modify_item_b input[type="checkbox"] + label:before {
 	content: "";
 	display: inline-block;
 	width: 15px;
@@ -704,7 +748,7 @@ span[class^="mod_oneforall_active"]:hover {
 	box-shadow: inset 0px 2px 2px rgba(0, 0, 0, .3);
 	border-radius: 4px;
 }
-#modify_item input[type="checkbox"]:checked + label:before {
+#mod_oneforall_modify_item_b input[type="checkbox"]:checked + label:before {
 	content: "\2714"; /* Tick */
 	color: white;
 	background-color: #8EADE9; /* Change color of checkbox when checked */
@@ -712,10 +756,10 @@ span[class^="mod_oneforall_active"]:hover {
 	line-height: 15px;
 	text-shadow: 0px 0px 3px #EEEEEE;
 }
-#modify_item input[type="radio"] + label {
+#mod_oneforall_modify_item_b input[type="radio"] + label {
 	margin-right: 12px;
 }
-#modify_item input[type="radio"] + label:before {
+#mod_oneforall_modify_item_b input[type="radio"] + label:before {
 	content: "";
 	display: inline-block;
 	width: 15px;
@@ -726,7 +770,7 @@ span[class^="mod_oneforall_active"]:hover {
 	box-shadow: inset 0px 2px 2px rgba(0, 0, 0, .3);
 	border-radius: 8px;
 }
-#modify_item input[type="radio"]:checked + label:before {
+#mod_oneforall_modify_item_b input[type="radio"]:checked + label:before {
 	content: "\2022"; /* Bullet */
 	color: white;
 	background-color: #8EADE9; /* Change color of radio button when checked */
@@ -735,16 +779,21 @@ span[class^="mod_oneforall_active"]:hover {
 	line-height: 14px;
 	text-shadow: 0px 0px 3px #EEEEEE;
 }
-#modify_item input[type="radio"]:checked + label[for="active_true"]:before {
+#mod_oneforall_modify_item_b input[type="radio"]:checked + label[for="active_true"]:before {
 	background-color: #159F2F;
 }
-#modify_item input[type="radio"]:checked + label[for="active_false"]:before {
+#mod_oneforall_modify_item_b input[type="radio"]:checked + label[for="active_false"]:before {
 	background-color: #B52B22;
 }
-#modify_item input[type="radio"] + label[for="action_move"]:before,
-#modify_item input[type="radio"] + label[for="action_duplicate"]:before {
+#mod_oneforall_modify_item_b input[type="radio"] + label[for="active_true"]:before,
+#mod_oneforall_modify_item_b input[type="radio"] + label[for="active_false"]:before,
+#mod_oneforall_modify_item_b input[type="radio"] + label[for="action_move"]:before,
+#mod_oneforall_modify_item_b input[type="radio"] + label[for="action_duplicate"]:before {
 	vertical-align: middle;
 	margin-left: 12px;
+}
+#mod_oneforall_modify_item_b input[type="radio"] + label[for="active_false"] {
+	margin-right: 52px;
 }
 
 
@@ -779,18 +828,18 @@ span[class^="mod_oneforall_active"]:hover {
 
 /* PLACEHOLDERS USED IN THE ONEFORALL TEMPLATES (help.php) */
 
-#mod_oneforall_placeholders_b {
+.mod_oneforall_placeholders_b {
 	border-collapse: collapse;
 }
 .mod_oneforall_placeholders_header_b {
 	border: none;
 	background-color: #C1D2EE;
 }
-#mod_oneforall_placeholders_b th {
+.mod_oneforall_placeholders_b th {
 	background-color: #DBEBF2;
 	border: 1px solid #E1E1E1;
 }
-#mod_oneforall_placeholders_b td {
+.mod_oneforall_placeholders_b td {
 	border: 1px solid #E1E1E1;
 }
 .mod_oneforall_placeholders_column_b {
@@ -810,4 +859,218 @@ span[class^="mod_oneforall_active"]:hover {
 }
 .mod_oneforall_placeholders_page_b {
 	color: #FF0099;
+}
+
+
+
+
+/* ************************ */
+/* Advanced Theme WBCE Flat */
+/* ************************ */
+
+/* GENERAL */
+
+#mainarea #mod_oneforall_modify_b {
+	border: solid 2px #D5DDE7;
+	margin-top: 0;
+	padding: 4px;
+}
+#mainarea .mod_oneforall_submit_b {
+	background-color: transparent;
+}
+#mainarea .mod_oneforall_section_header_b {
+	color: #CBCFD8;
+	background-color: #303641;
+}
+
+
+/* JQUERY AND AJAX RELATED */
+
+#mod_oneforall_items_b tbody tr:hover,
+#mod_oneforall_images_b tbody tr[id^="id_"]:hover,
+#mod_oneforall_custom_fields_b table:hover {
+	background-color: #D9DDE3 !important;
+	cursor: ns-resize !important;
+}
+
+
+/* SORTABLE ITEM TABLE */
+
+#mainarea #mod_oneforall_items_b {
+	border-spacing: 0 3px;
+}
+#mainarea #mod_oneforall_items_b a > img {
+	margin-bottom: -5px;
+}
+#mainarea #mod_oneforall_items_b thead > tr {
+	line-height: 30px;
+	color: #CBCFD8;
+	background-color: #303641;
+}
+#mainarea #mod_oneforall_items_b thead > tr button {
+	margin-top: 0;
+	font-weight: bold;
+}
+#mainarea #mod_oneforall_items_b thead th:nth-child(3) button {
+	text-align: left;
+}
+#mainarea #mod_oneforall_items_b tbody tr {
+	line-height: 35px;
+	background-color: #E8EAEE;
+}
+
+
+/* MODIFY FIELDS */
+
+#mainarea #mod_oneforall_custom_fields_b tr:nth-child(even) table {
+	background-color: #E8EAEE;
+}
+#mainarea #mod_oneforall_custom_fields_b tr:nth-child(odd) table {
+	background-color: #E8EAEE;
+}
+
+@-webkit-keyframes highlight {
+	0% {
+		background: #EE4E26;
+	}
+	100% {
+		background: none;
+	}
+}
+@keyframes highlight {
+	0% {
+		background: #EE4E26;
+	}
+	100% {
+		background: none;
+	}
+}
+
+
+/* MODIFY ITEM */
+
+#mainarea #mod_oneforall_modify_item_b {
+	border-spacing: 0px 6px;
+}
+#mainarea #mod_oneforall_modify_item_b td:first-child {
+	width: 20%;
+	text-align: right;
+	font-weight: bold;
+}
+#mainarea #mod_oneforall_modify_item_b table td:first-child {
+	width: 75%;
+	text-align: left;
+	font-weight: normal;
+}
+#mainarea #mod_oneforall_modify_item_b input.datetimepicker {
+	width: 140px;
+}
+
+
+/* SORTABLE IMAGE TABLE */
+
+#mainarea #mod_oneforall_images_b {
+	border-collapse: separate;
+	border-spacing: 0px 6px;
+}
+
+#mainarea #mod_oneforall_images_b thead > tr {
+	height: 58px;
+	color: #CBCFD8;
+	background-color: #303641;
+}
+#mainarea #mod_oneforall_images_b thead > tr th {
+	vertical-align: bottom;
+	font-weight: bold;
+}
+#mod_oneforall_images_b thead th:nth-child(1) {
+	width: 10%;
+}
+#mod_oneforall_images_b thead th:nth-child(3) {
+	width: 19%;
+}
+#mod_oneforall_images_b thead th:nth-child(4) {
+	width: 25%;
+}
+#mod_oneforall_images_b thead th:nth-child(5) {
+	width: 2.5%;
+}
+#mod_oneforall_images_b thead th:nth-child(6) {
+	width: 2.5%;
+}
+#mainarea #mod_oneforall_images_b thead th:nth-child(7) {
+	width: 6%;
+	padding: 0 5px 0 8px;
+	text-align: left;
+}
+
+#mainarea #mod_oneforall_images_b tbody tr {
+	height: 80px;
+}
+#mainarea #mod_oneforall_images_b tbody tr:nth-child(even) {
+	background-color: #E8EAEE;
+}
+#mainarea #mod_oneforall_images_b tbody tr:nth-child(odd) {
+	background-color: #E8EAEE;
+}
+
+#mainarea #mod_oneforall_images_b .arrow_box {
+	background-color: #E8EAEE;
+	border-radius: 0;
+}
+#mainarea #mod_oneforall_images_b .arrow_box > img {
+	max-width: 150px;
+	max-height: 150px;
+	vertical-align: top;
+}
+#mainarea #mod_oneforall_images_b .arrow_box:after {
+	border-right-color: #303641;
+}
+
+
+/* CHECKBOXES AND RADIO BUTTONS */
+/* http://www.hongkiat.com/blog/css3-checkbox-radio/ */
+
+#mainarea #mod_oneforall_modify_item_b input[type="radio"]:checked + label:before {
+	line-height: 15px;
+}
+#mainarea #mod_oneforall_modify_item_b input[type="radio"] + label[for="active_false"] {
+	margin-right: 36px;
+}
+
+
+/* SUBMIT TABLE */
+
+#mainarea .mod_oneforall_submit_table_b {
+	background-color:  transparent;
+}
+
+
+/* PLACEHOLDERS USED IN THE ONEFORALL TEMPLATES (help.php) */
+
+#mainarea .mod_oneforall_placeholders_header_b {
+	color: #CBCFD8;
+	background-color: #303641;
+}
+#mainarea .mod_oneforall_placeholders_header_b:hover td {
+	background-color: #303641 !important;
+}
+#mainarea .mod_oneforall_placeholders_b ul {
+	padding-left: 55px;
+}
+#mainarea .mod_oneforall_placeholders_b:nth-of-type(3) tr:hover td {
+	background-color: #D9DDE3;
+}
+#mainarea .mod_oneforall_placeholders_b th {
+	padding: 5px;
+	font-weight: bold;
+	background-color: #E8EAEE;
+	border: 1px solid #E1E1E1;
+}
+#mainarea .mod_oneforall_placeholders_b td {
+	padding: 5px;
+	border: 1px solid #E1E1E1;
+}
+#mainarea .mod_oneforall_placeholders_column_b {
+	background-color: #E8EAEE;
 }

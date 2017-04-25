@@ -2,7 +2,7 @@
 
 /*
   Module developed for the Open Source Content Management System WebsiteBaker (http://websitebaker.org)
-  Copyright (C) 2016, Christoph Marti
+  Copyright (C) 2017, Christoph Marti
 
   LICENCE TERMS:
   This module is free software. You can redistribute it and/or modify it 
@@ -39,7 +39,7 @@ if (LANGUAGE_LOADED) {
 // Get default field types
 require_once($inc_path.'/add_field.php');
 
-echo '<div id="default_templates" style="display: none;">'."\n";
+echo '<div id="mod_'.$mod_name.'_default_templates_b" style="display: none;">'."\n";
 foreach ($field_template as $template) {
 	echo '<code>'.$template."\n</code>\n";
 }
@@ -49,22 +49,22 @@ echo '</div>';
 // Get $sync_type_template from the session
 $sync_type_template = isset($_SESSION[$mod_name]['sync_type_template']) ? $_SESSION[$mod_name]['sync_type_template'] : ' checked="checked"';
 
-// Load jQuery ui if not loaded yet ...
-// and start with fields table
 ?>
 <script type="text/javascript">
+// Load jQuery ui if not loaded yet
 jQuery().sortable || document.write('<script src="<?php echo WB_URL; ?>/modules/<?php echo $mod_name; ?>/js/jquery/ui/jquery-ui.min.js"><\/script>');
-</script>
-<script type="text/javascript">
-	var mod_name         = '<?php echo $mod_name; ?>',
-	txt_dragdrop_message = '<?php echo $MOD_ONEFORALL[$mod_name]['TXT_DRAGDROP_MESSAGE']; ?>';
+// Define an object with some properties
+var mod_<?php echo $mod_name; ?> = {
+	mod_name: '<?php echo $mod_name; ?>',
+	txt_dragdrop_message: '<?php echo $MOD_ONEFORALL[$mod_name]['TXT_DRAGDROP_MESSAGE']; ?>'
+};
 </script>
 
 <form name="modify" action="<?php echo WB_URL; ?>/modules/<?php echo $mod_name; ?>/save_fields.php" method="post" style="margin: 0;">
 <input type="hidden" name="section_id" value="<?php echo $section_id; ?>" />
 <input type="hidden" name="page_id" value="<?php echo $page_id; ?>" />
 
-<table id="custom_fields" cellpadding="0" cellspacing="0" border="0" align="center" width="100%">
+<table id="mod_<?php echo $mod_name; ?>_custom_fields_b" cellpadding="0" cellspacing="0" border="0" align="center" width="100%">
 	<thead>
 		<tr>
 			<th>
@@ -94,18 +94,18 @@ if ($query_fields->numRows() > 0) {
 		$template = $field['template'];
 
 		// Set extra field visibility
-		$extra_field_class        = 'hidden_extra_field';
+		$extra_field_class        = 'mod_'.$mod_name.'_hidden_extra_field_b';
 		// Hide extra field label
-		$ofa_link_label_class     = 'hidden_extra_label';
-		$fg_link_label_class      = 'hidden_extra_label';
-		$directory_label_class    = 'hidden_extra_label';
-		$upload_dir_label_class   = 'hidden_extra_label';
-		$options_label_class      = 'hidden_extra_label';
-		$multioptions_label_class = 'hidden_extra_label';
-		$checkbox_label_class     = 'hidden_extra_label';
-		$switch_label_class       = 'hidden_extra_label';
-		$radio_label_class        = 'hidden_extra_label';
-		$groups_label_class       = 'hidden_extra_label';
+		$ofa_link_label_class     = 'mod_'.$mod_name.'_hidden_extra_label_b';
+		$fg_link_label_class      = 'mod_'.$mod_name.'_hidden_extra_label_b';
+		$directory_label_class    = 'mod_'.$mod_name.'_hidden_extra_label_b';
+		$upload_dir_label_class   = 'mod_'.$mod_name.'_hidden_extra_label_b';
+		$options_label_class      = 'mod_'.$mod_name.'_hidden_extra_label_b';
+		$multioptions_label_class = 'mod_'.$mod_name.'_hidden_extra_label_b';
+		$checkbox_label_class     = 'mod_'.$mod_name.'_hidden_extra_label_b';
+		$switch_label_class       = 'mod_'.$mod_name.'_hidden_extra_label_b';
+		$radio_label_class        = 'mod_'.$mod_name.'_hidden_extra_label_b';
+		$groups_label_class       = 'mod_'.$mod_name.'_hidden_extra_label_b';
 
 		switch ($type) {
 			case 'oneforall_link':
@@ -165,7 +165,7 @@ if ($query_fields->numRows() > 0) {
 			<td colspan="2">
 				<table cellpadding="0" cellspacing="0" border="0" align="center" width="100%">
 					<thead>
-						<tr class="custom_fields_header">
+						<tr class="mod_'.$mod_name.'_custom_fields_header_b">
 							<th>&nbsp;</th>
 							<th><?php echo $MOD_ONEFORALL[$mod_name]['TXT_FIELD_TYPE']; ?></th>
 							<th><?php echo $MOD_ONEFORALL[$mod_name]['TXT_FIELD_NAME']; ?></th>
@@ -175,7 +175,7 @@ if ($query_fields->numRows() > 0) {
 					</thead>
 					<tbody>
 						<tr>
-							<td class="field_number"><?php echo $MOD_ONEFORALL[$mod_name]['TXT_CUSTOM_FIELD'].' id '.$id; ?></td>
+							<td class="mod_<?php echo $mod_name; ?>_field_number_b"><?php echo $MOD_ONEFORALL[$mod_name]['TXT_CUSTOM_FIELD'].' id '.$id; ?></td>
 							<td>
 								<select name="fields[<?php echo $id; ?>][type]">
 								<?php
@@ -191,11 +191,11 @@ if ($query_fields->numRows() > 0) {
 							<td><input class="<?php echo $extra_field_class; ?>" name="fields[<?php echo $id; ?>][extra]" type="text" value="<?php echo htmlspecialchars($extra); ?>"></td>
 						</tr>
 						<tr>
-							<td class="field_placeholder"><?php echo $MOD_ONEFORALL[$mod_name]['TXT_FIELD_PLACEHOLDER']; ?></td>
+							<td class="mod_<?php echo $mod_name; ?>_field_placeholder_b"><?php echo $MOD_ONEFORALL[$mod_name]['TXT_FIELD_PLACEHOLDER']; ?></td>
 							<td colspan="4"><code>[<?php echo htmlspecialchars(strtoupper($name)).']</code> '.$MOD_ONEFORALL[$mod_name]['TXT_OR'].' <code>[FIELD_'.htmlspecialchars($id); ?>]</code></td>
 						</tr>
 						<tr>
-							<td class="field_template"><?php echo $MOD_ONEFORALL[$mod_name]['TXT_FIELD_TEMPLATE']; ?></td>
+							<td class="mod_<?php echo $mod_name; ?>_field_template_b"><?php echo $MOD_ONEFORALL[$mod_name]['TXT_FIELD_TEMPLATE']; ?></td>
 							<td colspan="4">
 								<textarea name="fields[<?php echo $id; ?>][template]"><?php echo htmlspecialchars($template); ?></textarea>
 							</td>
@@ -211,7 +211,7 @@ if ($query_fields->numRows() > 0) {
 	</tbody>
 </table>
 
-<table width="100%" align="center" cellpadding="0" cellspacing="0" class="mod_oneforall_submit_table_b">
+<table width="100%" align="center" cellpadding="0" cellspacing="0" class="mod_<?php echo $mod_name; ?>_submit_table_b">
 	<tr>
 		<td class="">
 			<input name="save" type="submit" value="<?php echo $TEXT['SAVE']; ?>" onclick="javascript: return confirm_delete('<?php echo $MOD_ONEFORALL[$mod_name]['TXT_CONFIRM_DELETE_FIELD']; ?>', '<?php echo $MOD_ONEFORALL[$mod_name]['TXT_CUSTOM_FIELD']; ?>')" />

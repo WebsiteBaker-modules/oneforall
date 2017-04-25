@@ -2,7 +2,7 @@
 
 /*
   Module developed for the Open Source Content Management System WebsiteBaker (http://websitebaker.org)
-  Copyright (C) 2016, Christoph Marti
+  Copyright (C) 2017, Christoph Marti
 
   LICENCE TERMS:
   This module is free software. You can redistribute it and/or modify it 
@@ -17,7 +17,7 @@
 */
 
 
-//Prevent this file from being accessed directly
+// Prevent this file from being accessed directly
 if (defined('WB_PATH') == false) {
 	exit('Cannot access this file directly'); 
 }
@@ -25,9 +25,9 @@ if (defined('WB_PATH') == false) {
 
 
 
-// **********************************************
-// SET DEFAULT VALUES OF SOME ADDITIONAL SETTINGS
-// **********************************************
+// *****************************************
+// SET DEFAULT VALUES OF SOME BASIC SETTINGS
+// *****************************************
 
 
 // GENERAL SETTINGS
@@ -46,10 +46,13 @@ $show_group_headers = true;
 $order_by_group_asc = true;
 
 // Generate item detail pages and corresponding access files
-// Changing this setting after adding items may cause problems!
+// WARNING: Changing this setting after adding items may cause problems!
+// Item access files and their corresponding links will not be updated automatically
+// After changing you might have to resave all items manually to be up-to-date
 $view_detail_pages = true;
 
 // Show additional field meta description on the modify item page
+// This will only take effect if item detail pages are enabled
 // For SEO optimization use module SimplePageHead to insert item title
 // and a meta description into the html head of every item detail page
 $field_meta_desc = true;
@@ -81,8 +84,35 @@ $field_type_code = false;
 
 
 
+// ***************
+// ITEM SCHEDULING
+// ***************
 
+// This feature enables / disables items automatically against a start and end time.
+// It is not possible to enable / disable a scheduled item manually since scheduling is prioritized.
+
+// Enable scheduling
+$set_scheduling = true;
+
+// Enable scheduling debug mode
+$scheduling_debug = false;
+
+// If this format is set, it will overwrite the datetime format given by the jquery ui datepicker language file
+// Important! Format must match your datetime format
+// eg. 'd#m#Y * H#i'
+// See http://php.net/manual/en/datetime.createfromformat.php
+$scheduling_format = '';
+
+// Set your timezone adjustment explicitly if the wb constant DEFAULT_TIMEZONE returns unexpected values
+// eg. GMT + 1 hour  => $scheduling_timezone = 1;
+// eg. GMT - 4 hours => $scheduling_timezone = -4;
+$scheduling_timezone = '';
+
+
+
+// ****************************************
 // IMAGES AND THUMBNAILS DEFAULTS (BACKEND)
+// PLUPLOAD, A MULTI RUNTIME FILE UPLOADER
 // ****************************************
 
 // Selectable thumbnail default sizes (modify page settings)
@@ -98,6 +128,9 @@ $img_resize['imgresize'] = '';  // yes = selected by default
 $img_resize['quality']   = 75;
 $img_resize['maxwidth']  = 400;
 $img_resize['maxheight'] = 300;
+
+// Plupload max file size in MB
+$max_file_size           = 2;
 
 
 

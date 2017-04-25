@@ -2,7 +2,7 @@
 
 /*
   Module developed for the Open Source Content Management System WebsiteBaker (http://websitebaker.org)
-  Copyright (C) 2016, Christoph Marti
+  Copyright (C) 2017, Christoph Marti
 
   LICENCE TERMS:
   This module is free software. You can redistribute it and/or modify it 
@@ -74,10 +74,10 @@ $MOD_ONEFORALL[$mod_name]['TXT_DATEPICKER'] = 'S&eacute;lecteur de date';
 $MOD_ONEFORALL[$mod_name]['TXT_DATEPICKER_START_END'] = 'Date &agrave; partir de &#8230; jusqu&apos;&agrave; &#8230;';
 $MOD_ONEFORALL[$mod_name]['TXT_DATETIMEPICKER'] = 'S&eacute;lecteur de temps et date';
 $MOD_ONEFORALL[$mod_name]['TXT_DATETIMEPICKER_START_END'] = 'Temps et date &agrave; partir de &#8230; jusqu&apos;&agrave; &#8230;';
-$MOD_ONEFORALL[$mod_name]['TXT_JS_SELECT_DATE'] = 'S&eacute;lectionnez une date';
-$MOD_ONEFORALL[$mod_name]['TXT_JS_SELECT_DATETIME'] = 'S&eacute;lectionnez un temps et une date';
-$MOD_ONEFORALL[$mod_name]['TXT_DATETIME_SEPARATOR'] = '&agrave;';
-$MOD_ONEFORALL[$mod_name]['TXT_DATEDATE_SEPARATOR'] = 'jusqu&apos;&agrave;';
+$MOD_ONEFORALL[$mod_name]['TXT_JS_SELECT_DATE'] = 'Sélectionnez une date';
+$MOD_ONEFORALL[$mod_name]['TXT_JS_SELECT_DATETIME'] = 'Sélectionnez un temps et une date';
+$MOD_ONEFORALL[$mod_name]['TXT_DATETIME_SEPARATOR'] = 'à';
+$MOD_ONEFORALL[$mod_name]['TXT_DATEDATE_SEPARATOR'] = 'jusqu\'à';
 $MOD_ONEFORALL[$mod_name]['TXT_DROPLET'] = 'Droplet WebsiteBaker';
 $MOD_ONEFORALL[$mod_name]['TXT_SELECT'] = 'S&eacute;lection';
 $MOD_ONEFORALL[$mod_name]['TXT_MULTISELECT'] = 'Multiple s&eacute;lection';
@@ -105,7 +105,7 @@ $MOD_ONEFORALL[$mod_name]['TXT_MODIFY_ALL'] = 'Mettre &agrave; jour les param&eg
 $MOD_ONEFORALL[$mod_name]['TXT_MODIFY_MULTIPLE'] = 'Mettre &agrave; jour les param&egrave;tres de la page seulement pour les pages &quot;'.$module_name.'&quot; <b>S&eacute;lectionn&eacute;es</b> (Utilisez la liste suivante avec possibilit&eacute; de choix multiples):';
 
 $MOD_ONEFORALL[$mod_name]['TXT_ADD_ITEM'] = 'Ajouter un article';
-$MOD_ONEFORALL[$mod_name]['TXT_DISABLE'] = 'D&eacute;sactiver';
+$MOD_ONEFORALL[$mod_name]['TXT_DISABLE'] = 'Désactiver';
 $MOD_ONEFORALL[$mod_name]['TXT_ENABLE'] = 'Activer';
 $MOD_ONEFORALL[$mod_name]['TXT_ENABLED'] = 'Aktiv&eacute;';
 $MOD_ONEFORALL[$mod_name]['TXT_SORT_TABLE'] = 'Clicker un titre de la colonne pour sorter le tableau.';
@@ -114,6 +114,7 @@ $MOD_ONEFORALL[$mod_name]['TXT_SORT_BY2'] = '';
 
 $MOD_ONEFORALL[$mod_name]['TXT_TITLE'] = 'Titre d&apos;article';
 $MOD_ONEFORALL[$mod_name]['TXT_DESCRIPTION'] = 'Description';
+$MOD_ONEFORALL[$mod_name]['TXT_SCHEDULING'] = 'Activer temporal';
 $MOD_ONEFORALL[$mod_name]['TXT_PREVIEW'] = 'Aper&ccedil;u';
 $MOD_ONEFORALL[$mod_name]['TXT_FILE_NAME'] = 'Nom du fichier';
 $MOD_ONEFORALL[$mod_name]['TXT_MAIN_IMAGE'] = 'L&apos;image principale';
@@ -126,13 +127,14 @@ $MOD_ONEFORALL[$mod_name]['TXT_SHOW_GENUINE_IMAGE'] = 'Montrer image originale';
 $MOD_ONEFORALL[$mod_name]['TXT_FILE_LINK'] = 'Lien du fichier';
 $MOD_ONEFORALL[$mod_name]['TXT_MAX_WIDTH'] = 'max. largeur';
 $MOD_ONEFORALL[$mod_name]['TXT_MAX_HEIGHT'] = 'max. hauteur';
-$MOD_ONEFORALL[$mod_name]['TXT_JPG_QUALITY'] = 'Qualité JPG';
+$MOD_ONEFORALL[$mod_name]['TXT_JPG_QUALITY'] = 'Qualit&eacute; JPG';
 $MOD_ONEFORALL[$mod_name]['TXT_NON'] = 'aucun';
 $MOD_ONEFORALL[$mod_name]['TXT_ITEM_TO_PAGE'] = 'D&eacute;placer l&apos;article &agrave; la page';
 $MOD_ONEFORALL[$mod_name]['TXT_MOVE'] = 'd&eacute;placer';
 $MOD_ONEFORALL[$mod_name]['TXT_DUPLICATE'] = 'dupliquer';
 $MOD_ONEFORALL[$mod_name]['TXT_SAVE_AND_BACK_TO_LISTING'] = 'Sauvegarder et retourner &agrave; la liste';
 
+$MOD_ONEFORALL[$mod_name]['ERR_INVALID_SCHEDULING'] = 'L&apos;heure de d&eacute;but planifi&eacute;e &quot;%s&quot; doit &ecirc;tre avant la fin de l&apos;heure &quot;%s&quot;.';
 $MOD_ONEFORALL[$mod_name]['ERR_INVALID_EMAIL'] = 'Adresse e-mail &quot;%s&quot; est invalide.';
 $MOD_ONEFORALL[$mod_name]['ERR_INVALID_URL'] = 'URL &quot;%s&quot; est invalide.';
 $MOD_ONEFORALL[$mod_name]['ERR_INVALID_FILE_NAME'] = 'Le nom du fichier est invalide';

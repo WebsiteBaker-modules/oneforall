@@ -2,7 +2,7 @@
 
 /*
   Module developed for the Open Source Content Management System WebsiteBaker (http://websitebaker.org)
-  Copyright (C) 2016, Christoph Marti
+  Copyright (C) 2017, Christoph Marti
 
   LICENCE TERMS:
   This module is free software. You can redistribute it and/or modify it 
@@ -54,32 +54,49 @@ if (file_exists(WB_PATH.'/framework/module.functions.php') && file_exists(WB_PAT
 $database->query("DELETE FROM `".TABLE_PREFIX."mod_".$mod_name."_items` WHERE page_id = '$page_id' and section_id = '$section_id' and title = ''");
 $database->query("ALTER TABLE `".TABLE_PREFIX."mod_".$mod_name."_items` auto_increment = 1");
 
+// Scheduling: Enable / disable items automatically against a start and end time
+if ($set_scheduling && file_exists($inc_path.'/scheduling.php')) {
+	include('scheduling.php');
+}
+
 // Display settings to admin only
 $display_settings = 'inline';
 if ($settings_admin_only && $_SESSION['USER_ID'] != 1) {
 	$display_settings = 'none';
 }
 
-// Load jQuery ui if not loaded yet
+// Add space to the text var TXT_SORT_BY2 if it is not empty
+if (!empty($MOD_ONEFORALL[$mod_name]['TXT_SORT_BY2'])) {
+	$MOD_ONEFORALL[$mod_name]['TXT_SORT_BY2'] = ' '.$MOD_ONEFORALL[$mod_name]['TXT_SORT_BY2'];
+}
 ?>
 <script type="text/javascript">
+// Load jQuery ui if not loaded yet
 jQuery().sortable || document.write('<script src="<?php echo WB_URL; ?>/modules/<?php echo $mod_name; ?>/js/jquery/ui/jquery-ui.min.js"><\/script>');
-</script>
-<script type="text/javascript" src="<?php echo WB_URL; ?>/modules/<?php echo $mod_name; ?>/js/table_sort.js"></script>
-<script type="text/javascript">
-	var mod_name         = '<?php echo $mod_name; ?>',
-	txt_sort_table       = '<?php echo $MOD_ONEFORALL[$mod_name]['TXT_SORT_TABLE']; ?>',
-	txt_sort_by1         = '<?php echo $MOD_ONEFORALL[$mod_name]['TXT_SORT_BY1']; ?>',
-	txt_sort_by2         = '<?php echo $MOD_ONEFORALL[$mod_name]['TXT_SORT_BY2']; ?>',
-	txt_toggle_message   = '<?php echo $MOD_ONEFORALL[$mod_name]['TXT_TOGGLE_MESSAGE']; ?>',
-	txt_dragdrop_message = '<?php echo $MOD_ONEFORALL[$mod_name]['TXT_DRAGDROP_MESSAGE']; ?>';
-	if (txt_sort_by2.length > 0) txt_sort_by2 = ' ' + txt_sort_by2;
+// Load table_sort.js if not loaded yet
+if (typeof(table_sort_loaded) === 'undefined') {
+	document.write('<script src="<?php echo WB_URL; ?>/modules/<?php echo $mod_name; ?>/js/table_sort.js"><\/script>');
+	var table_sort_loaded = true;
+}
+// Define an object with some properties
+// We need an object with a unique name (module name) in order to prevent interference between the modules
+var mod_<?php echo $mod_name; ?> = {
+	mod_name: '<?php echo $mod_name; ?>',
+	txt_enable: '<?php echo $MOD_ONEFORALL[$mod_name]['TXT_ENABLE']; ?>',
+	txt_disable: '<?php echo $MOD_ONEFORALL[$mod_name]['TXT_DISABLE']; ?>',
+	txt_toggle_message: '<?php echo $MOD_ONEFORALL[$mod_name]['TXT_TOGGLE_MESSAGE']; ?>',
+	txt_dragdrop_message: '<?php echo $MOD_ONEFORALL[$mod_name]['TXT_DRAGDROP_MESSAGE']; ?>'
+};
+// Define some localisation vars for TableSort
+var txt_sort_table = '<?php echo $MOD_ONEFORALL[$mod_name]['TXT_SORT_TABLE']; ?>',
+	txt_sort_by1   = '<?php echo $MOD_ONEFORALL[$mod_name]['TXT_SORT_BY1']; ?>',
+	txt_sort_by2   = '<?php echo $MOD_ONEFORALL[$mod_name]['TXT_SORT_BY2']; ?>';
 </script>
 
-<div id="mod_oneforall_modify_b">
+<div id="mod_<?php echo $mod_name; ?>_modify_b">
 <table cellpadding="0" cellspacing="0" border="0" width="100%">
 	<tr>
-		<td colspan="2" rowspan="2" align="left"><h2 class="mod_oneforall_section_header_b"><?php echo $TEXT['PAGE_TITLE'].": ".get_page_title($page_id)." <span>".$TEXT['SECTION'].": ".$section_id; ?></span></h2></td>
+		<td colspan="2" rowspan="2" align="left"><h2 class="mod_<?php echo $mod_name; ?>_section_header_b"><?php echo $TEXT['PAGE_TITLE'].": ".get_page_title($page_id)." <span>".$TEXT['SECTION'].": ".$section_id; ?></span></h2></td>
 		<td align="right" valign="bottom">
 			<input type="button" value="<?php echo $MOD_ONEFORALL[$mod_name]['TXT_FIELDS']; ?>" onclick="javascript: window.location = '<?php echo WB_URL; ?>/modules/<?php echo $mod_name; ?>/modify_fields.php?page_id=<?php echo $page_id; ?>&section_id=<?php echo $section_id; ?>';" style="width: 200px; display: <?php echo $display_settings; ?>;" />
 		</td>
@@ -96,11 +113,11 @@ jQuery().sortable || document.write('<script src="<?php echo WB_URL; ?>/modules/
 		<td align="right">
 			<?php
 			if (function_exists('edit_module_css')) {
-				if ($display_settings == "inline") {
+				if ($display_settings == 'inline') {
 					edit_module_css($mod_name);
 				}
 			} else {
-				echo "<input type='button' name='edit_module_file' class='mod_oneforall_edit_css' value='{$TEXT['CAP_EDIT_CSS']}' onclick=\"javascript: alert('To take advantage of this feature please upgrade to WB 2.7 or higher.')\" />";
+				echo '<input type="button" name="edit_module_file" class="mod_'.$mod_name.'_edit_css" value="'.$TEXT['CAP_EDIT_CSS'].'" onclick="javascript: alert(\'To take advantage of this feature please upgrade to WB 2.7 or higher.\')" />';
 			} ?>
 		</td>
 	</tr>
@@ -123,7 +140,7 @@ if ($query_fields->numRows() > 0) {
 }
 ?>
 
-<table id="mod_oneforall_items_b" class="sortierbar" cellpadding="2" cellspacing="0" border="0" width="100%">
+<table id="mod_<?php echo $mod_name; ?>_items_b" class="sortierbar" cellpadding="2" cellspacing="0" border="0" width="100%">
 <thead>
 	<tr>
 		<th class="sortierbar">ID</th>
@@ -160,53 +177,73 @@ if ($query_items->numRows() > 0) {
 	$num_items = $query_items->numRows();
 
 	// Loop through existing items
-	while ($post = $query_items->fetchRow()) {
+	while ($item = $query_items->fetchRow()) {
+
+		// Get item scheduling
+		$scheduling = @unserialize($item['scheduling']);
+		// Ignore start and end time if scheduling is disabled
+		$scheduling = $set_scheduling === false ? false : $scheduling;
+
+		// Sanitize
+		$item = array_map('stripslashes', $item);
+		$item = array_map('htmlspecialchars', $item);
 
 		// Get item group id
 		if ($field_id) {
-			$group_id = $database->get_one("SELECT value FROM `".TABLE_PREFIX."mod_".$mod_name."_item_fields` WHERE item_id = '".$post['item_id']."' AND field_id = '".$field_id."'");
-			$group_id   = $group_id === null ? 0 : $group_id;
+			$group_id = $database->get_one("SELECT value FROM `".TABLE_PREFIX."mod_".$mod_name."_item_fields` WHERE item_id = '".$item['item_id']."' AND field_id = '".$field_id."'");
+			$group_id   = empty($group_id) ? 0 : $group_id;
 			$group_name = $label.': '.$a_groups[$group_id];
 		} else {
 			$group_name = '';
 		}
 
 		?>
-		<tr id="id_<?php echo $post['item_id']; ?>">
-			<td class="sortierbar"><?php echo $post['item_id']; ?></td>
+		<tr id="id_<?php echo $item['item_id']; ?>">
+			<td class="sortierbar"><?php echo $item['item_id']; ?></td>
 			<td>
-				<a href="<?php echo WB_URL; ?>/modules/<?php echo $mod_name; ?>/modify_item.php?page_id=<?php echo $page_id; ?>&section_id=<?php echo $section_id; ?>&item_id=<?php echo $post['item_id']; ?>" title="<?php echo $TEXT['MODIFY']; ?>">
+				<a href="<?php echo WB_URL; ?>/modules/<?php echo $mod_name; ?>/modify_item.php?page_id=<?php echo $page_id; ?>&section_id=<?php echo $section_id; ?>&item_id=<?php echo $item['item_id']; ?>" title="<?php echo $TEXT['MODIFY']; ?>">
 					<img src="<?php echo THEME_URL; ?>/images/modify_16.png" border="0" alt="<?php echo $TEXT['MODIFY']; ?>" />
 				</a>
 			</td>
 			<td class="sortierbar">
-				<a href="<?php echo WB_URL; ?>/modules/<?php echo $mod_name; ?>/modify_item.php?page_id=<?php echo $page_id; ?>&section_id=<?php echo $section_id; ?>&item_id=<?php echo $post['item_id']; ?>">
-					<?php echo stripslashes($post['title']); ?>
+				<a href="<?php echo WB_URL; ?>/modules/<?php echo $mod_name; ?>/modify_item.php?page_id=<?php echo $page_id; ?>&section_id=<?php echo $section_id; ?>&item_id=<?php echo $item['item_id']; ?>">
+					<?php echo stripslashes($item['title']); ?>
 				</a>
 			</td>
 			<td>
 				<?php echo $group_name; ?>
 			</td>
 			<td class="sortierbar">
-				<?php $active_title = $post['active'] == 1 ? $MOD_ONEFORALL[$mod_name]['TXT_DISABLE'] : $MOD_ONEFORALL[$mod_name]['TXT_ENABLE']; ?>
-				<span class="mod_oneforall_active<?php echo $post['active']; ?>_b" title="<?php echo $active_title; ?>"><span><?php echo $post['active']; ?></span></span>
+				<?php
+				// 
+				$scheduling_title = $item['active'] == 1 ? $MOD_ONEFORALL[$mod_name]['TXT_ENABLED'] : $MOD_ONEFORALL[$mod_name]['TXT_DISABLED'];
+				$active_title = $item['active'] == 1 ? $MOD_ONEFORALL[$mod_name]['TXT_DISABLE'] : $MOD_ONEFORALL[$mod_name]['TXT_ENABLE'];
+				// If scheduling is used, just show a calendar icon to indicate the item status
+				if ($scheduling !== false && count(array_filter($scheduling)) > 0) {
+					echo '<img src="'.WB_URL.'/modules/'.$mod_name.'/images/scheduled'.$item['active'].'.png" width="16" height="16" border="0" alt="'.$scheduling_title.'" title="'.$scheduling_title.' ('.$MOD_ONEFORALL[$mod_name]['TXT_SCHEDULING'].')">';
+				}
+				// Users can toggle the item manually if scheduling is not used
+				else {
+					echo '<span class="mod_'.$mod_name.'_active'.$item['active'].'_b" title="'.$active_title.'"><span>'.$item['active'].'</span></span>';
+				}
+				?>
 			</td>
 			<td>
-			<?php if ($post['position'] != 1) { ?>
-				<a href="<?php echo WB_URL; ?>/modules/<?php echo $mod_name; ?>/move_up.php?page_id=<?php echo $page_id; ?>&section_id=<?php echo $section_id; ?>&item_id=<?php echo $post['item_id']; ?>" title="<?php echo $arrow1_title; ?>">
+			<?php if ($item['position'] != 1) { ?>
+				<a href="<?php echo WB_URL; ?>/modules/<?php echo $mod_name; ?>/move_up.php?page_id=<?php echo $page_id; ?>&section_id=<?php echo $section_id; ?>&item_id=<?php echo $item['item_id']; ?>" title="<?php echo $arrow1_title; ?>">
 					<img src="<?php echo THEME_URL; ?>/images/<?php echo $arrow1; ?>_16.png" border="0" alt="^" />
 				</a>
 			<?php } ?>
 			</td>
 			<td>
-			<?php if ($post['position'] != $num_items) { ?>
-				<a href="<?php echo WB_URL; ?>/modules/<?php echo $mod_name; ?>/move_down.php?page_id=<?php echo $page_id; ?>&section_id=<?php echo $section_id; ?>&item_id=<?php echo $post['item_id']; ?>" title="<?php echo $arrow2_title; ?>">
+			<?php if ($item['position'] != $num_items) { ?>
+				<a href="<?php echo WB_URL; ?>/modules/<?php echo $mod_name; ?>/move_down.php?page_id=<?php echo $page_id; ?>&section_id=<?php echo $section_id; ?>&item_id=<?php echo $item['item_id']; ?>" title="<?php echo $arrow2_title; ?>">
 					<img src="<?php echo THEME_URL; ?>/images/<?php echo $arrow2; ?>_16.png" border="0" alt="v" />
 				</a>
 			<?php } ?>
 			</td>
 			<td>
-				<a href="javascript: confirm_link('<?php echo $TEXT['ARE_YOU_SURE']; ?>', '<?php echo WB_URL; ?>/modules/<?php echo $mod_name; ?>/delete_item.php?page_id=<?php echo $page_id; ?>&section_id=<?php echo $section_id; ?>&item_id=<?php echo $post['item_id']; ?>');" title="<?php echo $TEXT['DELETE']; ?>">
+				<a href="javascript: confirm_link('<?php echo $TEXT['ARE_YOU_SURE']; ?>', '<?php echo WB_URL; ?>/modules/<?php echo $mod_name; ?>/delete_item.php?page_id=<?php echo $page_id; ?>&section_id=<?php echo $section_id; ?>&item_id=<?php echo $item['item_id']; ?>');" title="<?php echo $TEXT['DELETE']; ?>">
 					<img src="<?php echo THEME_URL; ?>/images/delete_16.png" border="0" alt="X" />
 				</a>
 			</td>
@@ -221,4 +258,4 @@ if ($query_items->numRows() > 0) {
 	echo $TEXT['NONE_FOUND'];
 }
 ?>
-</div> <!-- enddiv #mod_oneforall_modify_b -->
+</div> <!-- enddiv #mod_<?php echo $mod_name; ?>_modify_b -->
