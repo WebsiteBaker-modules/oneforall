@@ -32,7 +32,7 @@ $inc_path = dirname(__FILE__);
 require('../../config.php');
 require($inc_path.'/resize_img.php');
 require($inc_path.'/pngthumb.php');
-require(WB_PATH.'/framework/functions.php');
+require_once(WB_PATH.'/framework/functions.php');
 
 // Get module name and config
 require_once($inc_path.'/info.php');
@@ -316,20 +316,23 @@ if ($old_section_id != $new_section_id AND $action == 'move') {
 
 
 // ACCESS FILE
-
+ 
 // New item filename
 $filename = '/'.page_filename($title);
 // New item link (replace double and triple by single page spacer)
-$new_link = $filename.PAGE_SPACER.$item_id;
-$new_link = str_replace(PAGE_SPACER.PAGE_SPACER.PAGE_SPACER, PAGE_SPACER, $new_link);
-$new_link = str_replace(PAGE_SPACER.PAGE_SPACER, PAGE_SPACER, $new_link);
+$new_link = str_replace(PAGE_SPACER.PAGE_SPACER.PAGE_SPACER, PAGE_SPACER, $filename);
+$new_link = str_replace(PAGE_SPACER.PAGE_SPACER, PAGE_SPACER, $filename);
 // New item dir path
 $dir_path = WB_PATH.PAGES_DIRECTORY.$item_dir;
 
-// New access file (full path)
-$new_path = $dir_path.$new_link.PAGE_EXTENSION;
 // Old access file (full path)
 $old_path = WB_PATH.PAGES_DIRECTORY.$old_link.PAGE_EXTENSION;
+
+// New access file (full path)
+$new_path = $dir_path.$new_link.PAGE_EXTENSION;
+if (file_exists($new_path) && $new_path != $old_path) {
+   $new_path = $dir_path.$new_link.PAGE_SPACER.$item_id.PAGE_EXTENSION;
+}
 
 // Check if we have a new item
 $new = $database->get_one("SELECT EXISTS (SELECT 1 FROM `".TABLE_PREFIX."mod_".$mod_name."_items` WHERE item_id = '".$item_id."' AND title = '' AND modified_when = '0' AND modified_by = '0')");
@@ -436,99 +439,6 @@ foreach ($images as $img_id  => $image) {
 
 		// Delete image in database
 		$database->query("DELETE FROM `".TABLE_PREFIX."mod_".$mod_name."_images` WHERE img_id = '$img_id'");
-		// Check if there was a db error
-		if ($database->is_error()) {
-			$errors[] = $database->get_error();
-		}
-	}
-}
-
-
-// Add uploaded images
-$file_type_error = false;
-$num_images      = isset($_FILES['image']) ? count($_FILES['image']['name']) : 0;
-
-// Get thumb size for this page
-$resize = $database->get_one("SELECT resize FROM `".TABLE_PREFIX."mod_".$mod_name."_page_settings` WHERE section_id = '$section_id'");
-
-// Loop through the uploaded image(s)
-for ($i = 0; $i < $num_images; $i++) {
-	if (isset($_FILES['image']['tmp_name'][$i]) AND $_FILES['image']['tmp_name'][$i] != '') {
-
-		// Get real filename and set new filename
-		$file       = $_FILES['image']['name'][$i];
-		$path_parts = pathinfo($file);
-		$filename   = $path_parts['basename'];
-		$fileext    = $path_parts['extension'];
-		$filename   = str_replace('.'.$fileext, '', $filename);  // Filename without extension
-		$filename   = str_replace(' ', '_', $filename);          // Replace spaces by underscores
-		$fileext    = strtolower($fileext);
-
-		// Path to the new file
-		$new_file = WB_PATH.MEDIA_DIRECTORY.'/'.$mod_name.'/images/item'.$item_id.'/'.$filename.'.'.$fileext;
-
-		// Make sure the image is a jpg or png file
-		if (!($fileext == 'jpg' || $fileext == 'jpeg' || $fileext == 'png')) {
-			$file_type_error = true;
-			continue;
-		}
-		// Check for invalid chars in filename
-		if (!preg_match('#^[a-zA-Z0-9._-]*$#', $filename)) {
-			$errors[] = $MOD_ONEFORALL[$mod_name]['ERR_INVALID_FILE_NAME'].': '.htmlspecialchars($filename.'.'.$fileext);
-			continue;
-		}
-		// Check if filename already exists
-		if (file_exists($new_file)) {
-			$errors[] = $MESSAGE['MEDIA']['FILE_EXISTS'].': '.htmlspecialchars($filename.'.'.$fileext);
-			continue;
-		}
-
-		// Upload image
-		move_uploaded_file($_FILES['image']['tmp_name'][$i], $new_file);
-		change_mode($new_file);
-
-
-		// Check if we need to create a thumb
-		if ($resize != 0) {
-
-			// Thumbnail destination
-			$thumb_destination = WB_PATH.MEDIA_DIRECTORY.'/'.$mod_name.'/thumbs/item'.$item_id.'/'.$filename.'.'.$fileext;
-
-			// Check thumbnail type
-			if ($fileext == 'png') {
-				make_thumb_png($new_file, $thumb_destination, $resize);
-			} else {
-				make_thumb($new_file, $thumb_destination, $resize);
-			}
-			change_mode($thumb_destination);
-		}
-
-		// Check if we need to resize the image
-		if ($imgresize == 'yes' && file_exists($new_file)) {
-
-			// Image destination
-			$img_destination = WB_PATH.MEDIA_DIRECTORY.'/'.$mod_name.'/images/item'.$item_id.'/'.$filename.'.'.$fileext;
-
-			// Check image type
-			if ($fileext == 'png') {
-				resizePNG($new_file, $img_destination, $maxwidth, $maxheight);
-			} else {
-				resizeJPEG($new_file, $maxwidth, $maxheight, $quality);
-			}
-			change_mode($img_destination);
-		}
-
-
-		// Insert new image data into the db
-
-		// Get image top position for this item
-		$top_position = $database->get_one("SELECT MAX(position) AS top_position FROM `".TABLE_PREFIX."mod_".$mod_name."_images` WHERE item_id = '$item_id'");
-		// Increment position (db function returns NULL if this item has no image yet)
-		$top_position = intval($top_position) + 1;
-
-		// Insert file into database
-		$filename = $filename.'.'.$fileext;
-		$database->query("INSERT INTO `".TABLE_PREFIX."mod_".$mod_name."_images` (item_id, filename, position) VALUES ('$item_id', '$filename', '$top_position')");
 		// Check if there was a db error
 		if ($database->is_error()) {
 			$errors[] = $database->get_error();
@@ -777,15 +687,9 @@ require(WB_PATH."/index.php");
 
 // Generate error message
 $error = false;
-if ($file_type_error || !empty($errors)) {
+if (!empty($errors)) {
 	$error     = true;
-	$error_msg = '';
-	if ($file_type_error) {
-		$error_msg = $MESSAGE['GENERIC_FILE_TYPES'].' .jpg / .jpeg / .png<br />';
-	}
-	if (!empty($errors)) {
-		$error_msg .= implode("<br />", $errors);
-	}
+	$error_msg = implode("<br />", $errors);
 }
 
 // Different targets depending on the save action

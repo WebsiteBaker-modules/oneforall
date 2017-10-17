@@ -64,7 +64,7 @@ $inc_path = dirname(dirname(__FILE__));
 require($inc_path.'/info.php');
 require($inc_path.'/resize_img.php');
 require($inc_path.'/pngthumb.php');
-require(WB_PATH.'/framework/functions.php');
+require_once(WB_PATH.'/framework/functions.php');
 
 // Look for language file
 if (LANGUAGE_LOADED) {
@@ -284,7 +284,7 @@ if ($resize > 0) {
 	if ($fileext == 'png') {
 		make_thumb_png($img_path, $thumb_path, $resize);
 	} else {
-		make_thumb($img_path, $thumb_path, $resize);
+		resizeJPEG($img_path, $thumb_path, $resize, $resize, '90');
 	}
 	change_mode($thumb_path);
 }
@@ -300,7 +300,7 @@ if ($imgresize == 1 && file_exists($img_path)) {
 	if ($fileext == 'png') {
 		resizePNG($img_path, $img_path, $maxwidth, $maxheight);
 	} else {
-		resizeJPEG($img_path, $maxwidth, $maxheight, $quality);
+		resizeJPEG($img_path, $img_path, $maxwidth, $maxheight, $quality);
 	}
 	change_mode($img_path);
 }

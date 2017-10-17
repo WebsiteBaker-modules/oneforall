@@ -44,10 +44,12 @@ if ($query_details->numRows() > 0) {
 	$admin->print_error($TEXT['NOT_FOUND'], ADMIN_URL.'/pages/modify.php?page_id='.$page_id);
 }
 
-// Unlink item access file
-$item_link = WB_PATH.PAGES_DIRECTORY.$page['link'].$get_details['link'].PAGE_EXTENSION;
-if (is_writable($item_link)) {
-	unlink($item_link);
+// Unlink item access file only if the link has initially been stored
+if (!empty($get_details['link'])) {
+	$item_link = WB_PATH.PAGES_DIRECTORY.$page['link'].$get_details['link'].PAGE_EXTENSION;
+	if (is_writable($item_link)) {
+		unlink($item_link);
+	}
 }
 
 // Delete any images if they exists

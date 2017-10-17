@@ -28,6 +28,13 @@ if (!preg_match('/^[a-zA-Z0-9_ -]{3,20}$/', $module_name)) {
 	$admin->print_error('Allowed characters for the module name are a-z, A-Z, 0-9, - (hyphen), _ (underscore) and spaces.<br>Min 3, max 20 characters.', ADMIN_URL.'/modules/index.php?advanced');
 }
 
+
+// Check if there is not yet a media directory using the module name
+if (is_dir(WB_URL.MEDIA_DIRECTORY.'/'.$module_name)) {
+	$admin->print_error('<p style="font-weight: bold;">A media directory with the name &quot;'.$module_name.'&quot; is already in use.</p><p>Please change the name of your module in the <code>info.php</code> file.</p>', ADMIN_URL.'/modules/index.php?advanced');
+}
+
+
 // Old and new directory pathes
 $old_dir = dirname(__FILE__);
 $new_dir = WB_PATH.'/modules/'.$module_directory;

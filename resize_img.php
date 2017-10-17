@@ -60,13 +60,13 @@ function resizePNG($source, $destination, $new_max_w, $new_max_h) {
 
 
 // Resize JPEG image
-function resizeJPEG($source, $new_max_w, $new_max_h, $quality = 75) {
+function resizeJPEG($source, $destination, $new_max_w, $new_max_h, $quality = 75) {
 
+	$exif = @exif_read_data($source);
 	if ($img = imagecreatefromjpeg($source)) {
+	
 		$orig_w = imagesx($img);
 		$orig_h = imagesy($img);
-		$resize = FALSE;
-		$handle;
 		if ($orig_w > $new_max_w) {
 			$new_w = $new_max_w;
 			$new_h = intval($orig_h * ($new_w / $orig_w));
@@ -74,35 +74,40 @@ function resizeJPEG($source, $new_max_w, $new_max_h, $quality = 75) {
 				$new_h = $new_max_h;
 				$new_w = intval($orig_w * ($new_h / $orig_h));
 			}
-			$resize = TRUE;
 		} else if ($orig_h > $new_max_h) {
 			$new_h = $new_max_h;
 			$new_w = intval($orig_w * ($new_h / $orig_h));
-			$resize = TRUE;
 		} else {
 			// Image to small to be downsized
 			return false;
 		}
 
-		if ($resize) {
-			// Resize using appropriate function
-			if (function_exists('imagecopyresampled')) {
-				$imageId = imagecreatetruecolor($new_w, $new_h);
-				imagecopyresampled($imageId, $img, 0,0,0,0, $new_w, $new_h, $orig_w, $orig_h);
-			} else {
-				$imageId = imagecreate($new_w , $new_h);
-				imagecopyresized($imageId, $img, 0,0,0,0, $new_w, $new_h, $orig_w, $orig_h);
-			}
-			$handle = $imageId;
-			// Free original image
-			imagedestroy($img);
+		// Resize using appropriate function
+		if (function_exists('imagecopyresampled')) {
+			$new_img = imagecreatetruecolor($new_w, $new_h);
+			imagecopyresampled($new_img, $img, 0,0,0,0, $new_w, $new_h, $orig_w, $orig_h);
 		} else {
-			$handle = $img;
+			$new_img = imagecreate($new_w , $new_h);
+			imagecopyresized($new_img, $img, 0,0,0,0, $new_w, $new_h, $orig_w, $orig_h);
 		}
-		imagejpeg($handle, $source, $quality);
-		imagedestroy($handle);
+		imagedestroy($img); // Free original image
+		
+		if (!empty($exif['Orientation'])) {
+			switch ($exif['Orientation']) {
+				case 3:
+					$new_img = imagerotate($new_img, 180, 0);
+					break;
+				case 6:
+					$new_img = imagerotate($new_img, -90, 0);
+					break;
+				case 8:
+					$new_img = imagerotate($new_img, 90, 0);
+					break;
+			}
+		}
+		imagejpeg($new_img, $destination, $quality);
+		imagedestroy($new_img);
 	}
 }
-
 
 ?>

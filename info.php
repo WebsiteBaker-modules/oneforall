@@ -38,6 +38,22 @@ $module_name = 'OneForAll'; // default: OneForAll
 
 	DEVELOPMENT HISTORY:
 
+   v1.0.8  (Christoph Marti; 09/12/2017)
+   	 + [upload.php] Changed require() to require_once() for file framework/functions.php (thanks to Norbert Heimsath)
+	 + [save_item.php] Changed require() to require_once() for file framework/functions.php (thanks to Norbert Heimsath)
+	 + [resize_img.php] Added better support for images taken on mobile devices using exif data 'orientation'
+	   (thanks to Ruud)
+	 + [save_item.php] Changed the way of item filename creation. The item_id is no longer used unless two names are
+	   identical (thanks to Ruud)
+	 + [save_item.php] Removed code for image handling - not concerning duplicating items! (thanks to Ruud)
+
+   v1.0.7  (Christoph Marti; 05/30/2017)
+	 + [install.php] Added check to see if there is already a media directory using the module name
+	   Can cause problems when deleting the module (reported by sky writer, thanks to CodeALot)
+	 + [delete_item.php] Bugfix: For items without accessfile the field link is empty and
+	   hence the page accessfile will be deleted instead of the item accessfile
+	   (reported by dbs, thanks to Ruud)
+
    v1.0.6  (Christoph Marti; 04/05/2017)
 	 + Added Dutch language file (thanks to CodeALot)
 	 + Bugfix: Using multiple fields of type wb_link the select options representing the wb page tree
@@ -230,7 +246,7 @@ $mod_name           = $module_directory;
 $renamed_to         = $mod_name == 'oneforall' ? '' : '(renamed to <strong>'.$module_name.'</strong>) ';
 
 $module_function    = 'page';
-$module_version     = '1.0.6';
+$module_version     = '1.0.8';
 $module_platform    = '2.8.x';
 $module_author      = 'Christoph Marti. OneForAll '.$renamed_to.'is based on the module Showcase v0.5';
 $module_license     = 'GNU General Public License';
