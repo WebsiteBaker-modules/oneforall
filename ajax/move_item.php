@@ -39,7 +39,7 @@ else {
 	}
 
 	// Check if module is registered in the database
-	$addon_id = $database->get_one("SELECT addon_id FROM `".TABLE_PREFIX."addons` WHERE type = 'module' AND directory = '".$mod_name."'");
+	$addon_id = $database->get_one('SELECT `addon_id` FROM `'.TABLE_PREFIX.'addons` WHERE `type` = \'module\' AND `directory` = \''.$mod_name.'\' ');
 	if (!is_numeric($addon_id)) {
 		die();
 	}
@@ -55,7 +55,7 @@ else {
 		$positions = array_reverse($positions);
 	}
 	foreach ($positions as $position => $item_id) {
-		$database->query("UPDATE `".TABLE_PREFIX."mod_".$mod_name."_items` SET position = ".(int)$position." + 1 WHERE item_id = ".(int)$item_id);
+		$database->query('UPDATE `'.TABLE_PREFIX.'mod_'.$mod_name.'_items` SET `position` = '.(int)$position.' + 1 WHERE `item_id` = '.(int)$item_id);
 	}
 }
 ?>

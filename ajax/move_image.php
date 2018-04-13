@@ -38,7 +38,7 @@ else {
 	}
 
 	// Check if module is registered in the database
-	$addon_id = $database->get_one("SELECT addon_id FROM `".TABLE_PREFIX."addons` WHERE type = 'module' AND directory = '".$mod_name."'");
+	$addon_id = $database->get_one('SELECT `addon_id` FROM `'.TABLE_PREFIX.'addons` WHERE `type` = \'module\' AND `directory` = \''.$mod_name.'\' ');
 	if (!is_numeric($addon_id)) {
 		die();
 	}
@@ -51,7 +51,6 @@ else {
 	// Set the new image positions
 	$positions = $_POST['id'];
 	foreach ($positions as $position => $img_id) {
-		$database->query("UPDATE `".TABLE_PREFIX."mod_".$mod_name."_images` SET position = ".(int)$position." + 1 WHERE img_id = ".(int)$img_id);
+		$database->query('UPDATE `'.TABLE_PREFIX.'mod_'.$mod_name.'_images` SET `position` = '.(int)$position.' + 1 WHERE `img_id` = '.(int)$img_id);
 	}
 }
-?>

@@ -5,28 +5,28 @@
   Copyright (C) 2017, Christoph Marti
 
   LICENCE TERMS:
-  This module is free software. You can redistribute it and/or modify it 
-  under the terms of the GNU General Public License - version 2 or later, 
+  This module is free software. You can redistribute it and/or modify it
+  under the terms of the GNU General Public License - version 2 or later,
   as published by the Free Software Foundation: http://www.gnu.org/licenses/gpl.html.
 
   DISCLAIMER:
-  This module is distributed in the hope that it will be useful, 
-  but WITHOUT ANY WARRANTY; without even the implied warranty of 
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+  This module is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
   GNU General Public License for more details.
 */
 
 
-require('../../config.php');
+if (!defined('SYSTEM_RUN')) {require( (dirname(dirname((__DIR__)))).'/config.php');}
 
 // Include WB admin wrapper script
 $update_when_modified = true; // Tells script to update when this page was last updated
 require(WB_PATH.'/modules/admin.php');
 
 // Include path
-$inc_path = dirname(__FILE__);
+$inc_path = str_replace(DIRECTORY_SEPARATOR,'/',__DIR__);
 // Get module name
-require_once($inc_path.'/info.php');
+require($inc_path.'/info.php');
 
 // This code removes any php tags and adds slashes
 $friendly = array('&lt;', '&gt;', '?php');
@@ -39,53 +39,84 @@ $item_header    = $admin->add_slashes(str_replace($friendly, $raw, $_POST['item_
 $item_footer    = $admin->add_slashes(str_replace($friendly, $raw, $_POST['item_footer']));
 $items_per_page = $_POST['items_per_page'];
 if (extension_loaded('gd') AND function_exists('imageCreateFromJpeg')) {
-	$resize = $_POST['resize'];
+    $resize = $_POST['resize'];
 } else {
-	$resize = '';
+    $resize = '';
 }
 if (isset($_POST['lb2_overview']) && isset($_POST['lb2_detail'])) {
-	$lightbox2 = "all";
+    $lightbox2 = "all";
 } elseif (isset($_POST['lb2_overview'])) {
-	$lightbox2 = "overview";
+    $lightbox2 = "overview";
 } elseif (isset($_POST['lb2_detail'])) {
-	$lightbox2 = "detail";
+    $lightbox2 = "detail";
 } else {
-	$lightbox2 = '';
+    $lightbox2 = '';
 }
 $img_section = empty($_POST['img_section']) ? 0 : 1;
 
+$aInputs = compact(['header','item_loop','footer','item_header','item_footer','items_per_page','lightbox2','img_section']);
+
 // Update settings of specified section ids
 if ($_POST['modify'] == "multiple") {
-	$where_clause = '';
-	foreach ($_POST['modify_sections'] as $section_id) {
-		if (!is_numeric($section_id)) {
-			continue;
-		}
-		$where_clause .= "section_id = '$section_id' OR ";
-	}
-	$where_clause = rtrim($where_clause, ' OR ');
+    $where_clause = '';
+    foreach ($_POST['modify_sections'] as $section_id) {
+        if (!is_numeric($section_id)) {
+            continue;
+        }
+        $where_clause .= '`section_id` = '.(int)$section_id.' OR ';
+    }
+    $where_clause = rtrim($where_clause, ' OR ');
 
-	$database->query("UPDATE `".TABLE_PREFIX."mod_".$mod_name."_page_settings` SET header = '$header', item_loop = '$item_loop', footer = '$footer', item_header = '$item_header', item_footer = '$item_footer', items_per_page = '$items_per_page', img_section = '$img_section', resize = '$resize', lightbox2 = '$lightbox2' WHERE $where_clause");
+    $database->query('UPDATE `'.TABLE_PREFIX.'mod_'.$mod_name.'_page_settings` '
+                    .'SET `header` = \''.$header.'\', '
+                    .'    `item_loop` = \''.$item_loop.'\', '
+                    .'    `footer` = \''.$footer.'\', '
+                    .'    `item_header` = \''.$item_header.'\', '
+                    .'    `item_footer` = \''.$item_footer.'\', '
+                    .'    `items_per_page` = \''.$items_per_page.'\', '
+                    .'    `img_section` = \''.$img_section.'\', '
+                    .'    `resize` = \''.$resize.'\', '
+                    .'    `lightbox2` = \''.$lightbox2.'\' '
+                    .'WHERE '.$where_clause.' ');
 }
 
-// Update settings of all section ids 
+// Update settings of all section ids
 elseif ($_POST['modify'] == "all") {
-$database->query("UPDATE `".TABLE_PREFIX."mod_".$mod_name."_page_settings` SET header = '$header', item_loop = '$item_loop', footer = '$footer', item_header = '$item_header', item_footer = '$item_footer', items_per_page = '$items_per_page', img_section = '$img_section', resize = '$resize', lightbox2 = '$lightbox2'");
+    $database->query('UPDATE `'.TABLE_PREFIX.'mod_'.$mod_name.'_page_settings` '
+                    .'SET `header` = \''.$header.'\', '
+                    .'    `item_loop` = \''.$item_loop.'\', '
+                    .'    `footer` = \''.$footer.'\', '
+                    .'    `item_header` = \''.$item_header.'\', '
+                    .'    `item_footer` = \''.$item_footer.'\', '
+                    .'    `items_per_page` = \''.$items_per_page.'\', '
+                    .'    `img_section` = \''.$img_section.'\', '
+                    .'    `resize` = \''.$resize.'\', '
+                    .'    `lightbox2` = \''.$lightbox2.'\' ');
 }
 
 // Update settings of current section id only
 elseif ($_POST['modify'] == "current") {
-$database->query("UPDATE `".TABLE_PREFIX."mod_".$mod_name."_page_settings` SET header = '$header', item_loop = '$item_loop', footer = '$footer', item_header = '$item_header', item_footer = '$item_footer', items_per_page = '$items_per_page', img_section = '$img_section', resize = '$resize', lightbox2 = '$lightbox2' WHERE section_id = '$section_id'");
+    $database->query('UPDATE `'.TABLE_PREFIX.'mod_'.$mod_name.'_page_settings` '
+                    .'SET `header` = \''.$header.'\', '
+                    .'    `item_loop` = \''.$item_loop.'\', '
+                    .'    `footer` = \''.$footer.'\', '
+                    .'    `item_header` = \''.$item_header.'\', '
+                    .'    `item_footer` = \''.$item_footer.'\', '
+                    .'    `items_per_page` = \''.$items_per_page.'\', '
+                    .'    `img_section` = \''.$img_section.'\', '
+                    .'    `resize` = \''.$resize.'\', '
+                    .'    `lightbox2` = \''.$lightbox2.'\' '
+                    .'WHERE `section_id` = '.(int)$section_id.' ');
 }
 
 // Check if there is a db error, otherwise say successful
 if ($database->is_error()) {
-	$admin->print_error($database->get_error(), ADMIN_URL.'/pages/modify.php?page_id='.$page_id);
+    $admin->print_error($database->get_error(), ADMIN_URL.'/pages/modify.php?page_id='.$page_id);
 } else {
-	$admin->print_success($TEXT['SUCCESS'], ADMIN_URL.'/pages/modify.php?page_id='.$page_id);
+    $admin->print_success($TEXT['SUCCESS'], ADMIN_URL.'/pages/modify.php?page_id='.$page_id);
 }
 
 // Print admin footer
 $admin->print_footer();
 
-?>
+

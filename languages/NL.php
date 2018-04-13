@@ -31,7 +31,7 @@
 
 */
 
-
+$mod_name = basename(dirname(__DIR__));
 // MODUL DESCRIPTION
 $module_description = 'OneForAll is een module zo veelzijdig als een kameleon. De module kan meerdere malen binnen een WebsiteBaker-installatie worden gebruikt door steeds een nieuwe naam aan te geven in het bestand info.php voordat u de module uploadt en installeert. De module biedt bovendien de mogelijkheid tot zeer vergaande maatwerk-pagina\'s. Enerzijds kunt u in het beheer aangepaste velden instellen, anderzijds kunt u door middel van de vrije html-templates binnen de module de uitvoer geheel naar uw hand zetten. <br />In de standaardinstallatie is slechts een titelveld en afbeeldingsupload ingesteld. U kunt geheel naar wens velden van uiteenlopende types en functies toevoegen. Items binnen de module kunnen worden getoond in een overzichtspagina en indien gewenst ook op een corresponderende detailpagina. OneForAll maakt gebruik van het Lightbox2 Javascript om afbeeldingen vergroot in een overlay weer te geven.';
 
@@ -40,6 +40,7 @@ $module_description = 'OneForAll is een module zo veelzijdig als een kameleon. D
 $MOD_ONEFORALL[$mod_name]['TXT_SETTINGS'] = 'Instellingen';
 $MOD_ONEFORALL[$mod_name]['TXT_FIELDS'] = 'Velden';
 $MOD_ONEFORALL[$mod_name]['TXT_SYNC_TYPE_TEMPLATE'] = 'Pas veldtemplate automatisch aan op veldtype.';
+$MOD_ONEFORALL[$mod_name]['TXT_FEATURED'] = 'Aanbevolen';
 
 $MOD_ONEFORALL[$mod_name]['TXT_CUSTOM_FIELD'] = 'Aangepast veld';
 $MOD_ONEFORALL[$mod_name]['TXT_FIELD_TYPE'] = 'Type';
@@ -104,11 +105,11 @@ $MOD_ONEFORALL[$mod_name]['TXT_ITEMS'] = 'Items';
 $MOD_ONEFORALL[$mod_name]['TXT_ITEMS_PER_PAGE'] = 'Items per pagina';
 $MOD_ONEFORALL[$mod_name]['TXT_BACKEND_ITEM_PAGE'] = 'Item pagina (Backend)';
 $MOD_ONEFORALL[$mod_name]['TXT_HIDE_IMG_SECTION'] = 'Verberg afbeeldingsinstellingen en uploadopties';
-$MOD_ONEFORALL[$mod_name]['TXT_MODIFY_THIS'] = 'Werk alleen de instellingen van de <b>huidige</b> &quot;'.$module_name.'&quot;-pagina bij.';
+$MOD_ONEFORALL[$mod_name]['TXT_MODIFY_THIS'] = 'Werk alleen de instellingen van de <b>huidige</b> &quot;'.$mod_name.'&quot;-pagina bij.';
 
-$MOD_ONEFORALL[$mod_name]['TXT_MODIFY_ALL'] = 'Werk de instellingen van <b>alle</b> &quot;'.$module_name.'&quot;-pagina\'s bij.';
+$MOD_ONEFORALL[$mod_name]['TXT_MODIFY_ALL'] = 'Werk de instellingen van <b>alle</b> &quot;'.$mod_name.'&quot;-pagina\'s bij.';
 
-$MOD_ONEFORALL[$mod_name]['TXT_MODIFY_MULTIPLE'] = 'Werk de instellingen van <b>geselecteerde</b> &quot;'.$module_name.'&quot;-pagina\'s bij. (Meerdere selecties mogelijk)';
+$MOD_ONEFORALL[$mod_name]['TXT_MODIFY_MULTIPLE'] = 'Werk de instellingen van <b>geselecteerde</b> &quot;'.$mod_name.'&quot;-pagina\'s bij. (Meerdere selecties mogelijk)';
 
 $MOD_ONEFORALL[$mod_name]['TXT_ADD_ITEM'] = 'Voeg item toe';
 $MOD_ONEFORALL[$mod_name]['TXT_DISABLE'] = 'Schakel uit';

@@ -39,7 +39,7 @@ else {
 	}
 
 	// Check if module is registered in the database
-	$addon_id = $database->get_one("SELECT addon_id FROM `".TABLE_PREFIX."addons` WHERE type = 'module' AND directory = '".$mod_name."'");
+	$addon_id = $database->get_one('SELECT `addon_id` FROM `'.TABLE_PREFIX.'addons` WHERE `type` = \'module\' AND `directory` = \''.$mod_name.'\' ');
 	if (!is_numeric($addon_id)) {
 		die();
 	}
@@ -50,6 +50,5 @@ else {
 	}
 
 	// Enable/disable the item
-	$database->query("UPDATE `".TABLE_PREFIX."mod_".$mod_name."_items` SET active = ".$_POST['value']." WHERE item_id = ".(int)$_POST['item_id']);
+	$database->query('UPDATE `'.TABLE_PREFIX.'mod_'.$mod_name.'_items` SET `active` = '.$_POST['value'].' WHERE `item_id` = '.(int)$_POST['item_id']);
 }
-?>

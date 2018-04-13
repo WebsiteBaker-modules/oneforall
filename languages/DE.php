@@ -29,14 +29,15 @@
 
 */
 
-
+$mod_name = basename(dirname(__DIR__));
 // MODUL DESCRIPTION
-$module_description = 'OneForAll ist ein WebsiteBaker Modul so vielseitig wie ein Cham&auml;leon. Es kann mehrmals in derselben WebsiteBaker Installation eingesetzt werden, indem vor dem Upload und der Installation in der Datei info.php ein anderer Modulname angegeben wird. Es k&ouml;nnen komplett massgeschneiderte Modulseiten erstellt werden: Einerseits k&ouml;nnen im Backend beliebig Felder definiert und andererseits f&uuml;r die Anzeige im Frontend Templates frei gestaltet werden.<br />Als Standard gibt es nur ein Titel-Feld sowie einen Bilder-Upload. Zus&auml;tzlich k&ouml;nnen verschiedene Feldtypen erg&auml;nzt werden. Eintr&auml;ge k&ouml;nnen auf einer &Uuml;bersichtsseite und falls erw&uuml;nscht auch auf einer Detailseite dargestellt werden. OneForAll kann die Bilder als Lightbox2-Slideshow anzeigen.';
+$module_description = 'OneForAll ist ein WebsiteBaker Modul so vielseitig wie ein Chamäleon. Es kann mehrmals in derselben WebsiteBaker Installation eingesetzt werden, indem vor dem Upload und der Installation in der Datei info.php ein anderer Modulname angegeben wird. Es können komplett massgeschneiderte Modulseiten erstellt werden: Einerseits können im Backend beliebig Felder definiert und andererseits für die Anzeige im Frontend Templates frei gestaltet werden.<br />Als Standard gibt es nur ein Titel-Feld sowie einen Bilder-Upload. Zusätzlich können verschiedene Feldtypen ergänzt werden. Einträge können auf einer übersichtsseite und falls erwünscht auch auf einer Detailseite dargestellt werden. OneForAll kann die Bilder als Lightbox2-Slideshow anzeigen.';
 
 // MODUL ONEFORALL VARIOUS TEXT
 $MOD_ONEFORALL[$mod_name]['TXT_SETTINGS'] = 'Einstellungen';
 $MOD_ONEFORALL[$mod_name]['TXT_FIELDS'] = 'Eingabefelder';
-$MOD_ONEFORALL[$mod_name]['TXT_SYNC_TYPE_TEMPLATE'] = 'Feld-Template automatisch anpassen, wenn Feld-Typ ge&auml;ndert wird.';
+$MOD_ONEFORALL[$mod_name]['TXT_SYNC_TYPE_TEMPLATE'] = 'Feld-Template automatisch anpassen, wenn Feld-Typ geändert wird.';
+$MOD_ONEFORALL[$mod_name]['TXT_FEATURED'] = 'Featured';
 
 $MOD_ONEFORALL[$mod_name]['TXT_CUSTOM_FIELD'] = 'Frei definierbares Feld';
 $MOD_ONEFORALL[$mod_name]['TXT_FIELD_TYPE'] = 'Typ';
@@ -47,15 +48,15 @@ $MOD_ONEFORALL[$mod_name]['TXT_FIELD_PLACEHOLDER'] = 'Platzhalter';
 $MOD_ONEFORALL[$mod_name]['TXT_OR'] = 'oder';
 $MOD_ONEFORALL[$mod_name]['TXT_FIELD_TEMPLATE'] = 'Feld-Template';
 $MOD_ONEFORALL[$mod_name]['TXT_NEW_FIELD_NAME'] = 'feld';
-$MOD_ONEFORALL[$mod_name]['TXT_ADD_NEW_FIELDS'] = 'neue Felder hinzuf&uuml;gen';
+$MOD_ONEFORALL[$mod_name]['TXT_ADD_NEW_FIELDS'] = 'neue Felder hinzufügen';
 $MOD_ONEFORALL[$mod_name]['TXT_TOGGLE_MESSAGE'] = 'Der neue Zustand wurde gespeichert.';
 $MOD_ONEFORALL[$mod_name]['TXT_DRAGDROP_MESSAGE'] = 'Das Element wurde erfolgreich verschoben.';
 
 $MOD_ONEFORALL[$mod_name]['TXT_PAGE_SETTINGS'] = 'Seiten Einstellungen';
 $MOD_ONEFORALL[$mod_name]['TXT_LAYOUT'] = 'Layout';
-$MOD_ONEFORALL[$mod_name]['TXT_OVERVIEW'] = '&Uuml;bersicht';
+$MOD_ONEFORALL[$mod_name]['TXT_OVERVIEW'] = 'Übersicht';
 $MOD_ONEFORALL[$mod_name]['TXT_DETAIL'] = 'Detailansicht';
-
+//Felder
 $MOD_ONEFORALL[$mod_name]['TXT_DISABLED'] = 'Deaktiviert';
 $MOD_ONEFORALL[$mod_name]['TXT_TEXT'] = 'Kurzer Text';
 $MOD_ONEFORALL[$mod_name]['TXT_TEXTAREA'] = 'Langer Text';
@@ -74,8 +75,8 @@ $MOD_ONEFORALL[$mod_name]['TXT_DATEPICKER'] = 'Datum';
 $MOD_ONEFORALL[$mod_name]['TXT_DATEPICKER_START_END'] = 'Datum von &#8230; bis &#8230;';
 $MOD_ONEFORALL[$mod_name]['TXT_DATETIMEPICKER'] = 'Datum, Zeit';
 $MOD_ONEFORALL[$mod_name]['TXT_DATETIMEPICKER_START_END'] = 'Datum, Zeit von &#8230; bis &#8230;';
-$MOD_ONEFORALL[$mod_name]['TXT_JS_SELECT_DATE'] = 'Datum ausw\u00E4hlen';
-$MOD_ONEFORALL[$mod_name]['TXT_JS_SELECT_DATETIME'] = 'Datum und Zeit ausw\u00E4hlen';
+$MOD_ONEFORALL[$mod_name]['TXT_JS_SELECT_DATE'] = 'Datum auswählen';
+$MOD_ONEFORALL[$mod_name]['TXT_JS_SELECT_DATETIME'] = 'Datum und Zeit auswählen';
 $MOD_ONEFORALL[$mod_name]['TXT_DATETIME_SEPARATOR'] = 'um';
 $MOD_ONEFORALL[$mod_name]['TXT_DATEDATE_SEPARATOR'] = 'bis';
 $MOD_ONEFORALL[$mod_name]['TXT_DROPLET'] = 'WebsiteBaker Droplet';
@@ -92,19 +93,19 @@ $MOD_ONEFORALL[$mod_name]['TXT_SUBDIRECTORY_OF_MEDIA'] = 'Media Unterverz.';
 $MOD_ONEFORALL[$mod_name]['TXT_OPTIONS'] = 'Optionen (csv)';
 $MOD_ONEFORALL[$mod_name]['TXT_GROUP'] = 'Gruppe';
 $MOD_ONEFORALL[$mod_name]['TXT_GROUPS'] = 'Gruppen (csv)';
-$MOD_ONEFORALL[$mod_name]['TXT_DELETE_FIELD'] = 'Feld l&ouml;schen';
-$MOD_ONEFORALL[$mod_name]['TXT_CONFIRM_DELETE_FIELD'] = 'M\u00F6chten sie folgende Felder und die damit verbundenen Daten wirklich l\u00F6schen?';
+$MOD_ONEFORALL[$mod_name]['TXT_DELETE_FIELD'] = 'Feld löschen';
+$MOD_ONEFORALL[$mod_name]['TXT_CONFIRM_DELETE_FIELD'] = 'Möchten sie folgende Felder und die damit verbundenen Daten wirklich löschen?';
 
 $MOD_ONEFORALL[$mod_name]['TXT_ITEM'] = 'Eintrag';
-$MOD_ONEFORALL[$mod_name]['TXT_ITEMS'] = 'Eintr&auml;ge';
-$MOD_ONEFORALL[$mod_name]['TXT_ITEMS_PER_PAGE'] = 'Eintr&auml;ge pro Seite';
+$MOD_ONEFORALL[$mod_name]['TXT_ITEMS'] = 'Einträge';
+$MOD_ONEFORALL[$mod_name]['TXT_ITEMS_PER_PAGE'] = 'Einträge pro Seite';
 $MOD_ONEFORALL[$mod_name]['TXT_BACKEND_ITEM_PAGE'] = 'Eintragseite (im Backend)';
 $MOD_ONEFORALL[$mod_name]['TXT_HIDE_IMG_SECTION'] = 'Bildeinstellungen und -Upload verstecken';
-$MOD_ONEFORALL[$mod_name]['TXT_MODIFY_THIS'] = 'Die Seiteneinstellungen nur f&uuml;r <b>diese</b> &quot;'.$module_name.'&quot; Seite &uuml;bernehmen.';
-$MOD_ONEFORALL[$mod_name]['TXT_MODIFY_ALL'] = 'Die Seiteneinstellungen f&uuml;r <b>alle</b> &quot;'.$module_name.'&quot; Seiten &uuml;bernehmen.';
-$MOD_ONEFORALL[$mod_name]['TXT_MODIFY_MULTIPLE'] = 'Die Seiteneinstellungen nur f&uuml;r die <b>ausgew&auml;hlte(n)</b> &quot;'.$module_name.'&quot; Seite(n) &uuml;bernehmen (Mehrfachauswahl):';
+$MOD_ONEFORALL[$mod_name]['TXT_MODIFY_THIS'] = 'Die Seiteneinstellungen nur für <b>diese</b> &quot;'.$mod_name.'&quot; Seite übernehmen.';
+$MOD_ONEFORALL[$mod_name]['TXT_MODIFY_ALL'] = 'Die Seiteneinstellungen für <b>alle</b> &quot;'.$mod_name.'&quot; Seiten übernehmen.';
+$MOD_ONEFORALL[$mod_name]['TXT_MODIFY_MULTIPLE'] = 'Die Seiteneinstellungen nur für die <b>ausgewählte(n)</b> &quot;'.$mod_name.'&quot; Seite(n) übernehmen (Mehrfachauswahl):';
 
-$MOD_ONEFORALL[$mod_name]['TXT_ADD_ITEM'] = 'Eintrag hinzuf&uuml;gen';
+$MOD_ONEFORALL[$mod_name]['TXT_ADD_ITEM'] = 'Eintrag hinzufügen';
 $MOD_ONEFORALL[$mod_name]['TXT_DISABLE'] = 'Deaktivieren';
 $MOD_ONEFORALL[$mod_name]['TXT_ENABLE'] = 'Aktivieren';
 $MOD_ONEFORALL[$mod_name]['TXT_ENABLED'] = 'Aktiv';
@@ -126,28 +127,28 @@ $MOD_ONEFORALL[$mod_name]['TXT_IMAGES'] = 'Bilder';
 $MOD_ONEFORALL[$mod_name]['TXT_SHOW_GENUINE_IMAGE'] = 'Originalbild zeigen';
 $MOD_ONEFORALL[$mod_name]['TXT_FILE_LINK'] = 'Link zur Datei';
 $MOD_ONEFORALL[$mod_name]['TXT_MAX_WIDTH'] = 'max. Breite';
-$MOD_ONEFORALL[$mod_name]['TXT_MAX_HEIGHT'] = 'max. H&ouml;he';
-$MOD_ONEFORALL[$mod_name]['TXT_JPG_QUALITY'] = 'JPG Qualit&auml;t';
+$MOD_ONEFORALL[$mod_name]['TXT_MAX_HEIGHT'] = 'max. Höhe';
+$MOD_ONEFORALL[$mod_name]['TXT_JPG_QUALITY'] = 'JPG Qualität';
 $MOD_ONEFORALL[$mod_name]['TXT_NON'] = 'keines';
 $MOD_ONEFORALL[$mod_name]['TXT_ITEM_TO_PAGE'] = 'Eintrag zur Seite';
 $MOD_ONEFORALL[$mod_name]['TXT_MOVE'] = 'verschieben';
 $MOD_ONEFORALL[$mod_name]['TXT_DUPLICATE'] = 'duplizieren';
-$MOD_ONEFORALL[$mod_name]['TXT_SAVE_AND_BACK_TO_LISTING'] = 'Speichern und zur&uuml;ck zur &Uuml;bersicht';
+$MOD_ONEFORALL[$mod_name]['TXT_SAVE_AND_BACK_TO_LISTING'] = 'Speichern und zurück zur Übersicht';
 
 $MOD_ONEFORALL[$mod_name]['ERR_INVALID_SCHEDULING'] = 'Die geplante Startzeit &quot;%s&quot; muss vor dem Endzeitpunkt &quot;%s&quot; liegen.';
-$MOD_ONEFORALL[$mod_name]['ERR_INVALID_EMAIL'] = 'Die angegebene E-Mail Adresse &quot;%s&quot; ist nicht g&uuml;ltig.';
-$MOD_ONEFORALL[$mod_name]['ERR_INVALID_URL'] = 'Die angegebene URL &quot;%s&quot; ist nicht g&uuml;ltig.';
-$MOD_ONEFORALL[$mod_name]['ERR_INVALID_FILE_NAME'] = 'Der Dateiname ist nicht g&uuml;ltig';
+$MOD_ONEFORALL[$mod_name]['ERR_INVALID_EMAIL'] = 'Die angegebene E-Mail Adresse &quot;%s&quot; ist nicht gültig.';
+$MOD_ONEFORALL[$mod_name]['ERR_INVALID_URL'] = 'Die angegebene URL &quot;%s&quot; ist nicht gültig.';
+$MOD_ONEFORALL[$mod_name]['ERR_INVALID_FILE_NAME'] = 'Der Dateiname ist nicht gültig';
 $MOD_ONEFORALL[$mod_name]['ERR_ONLY_ONE_GROUP_FIELD'] = 'Das Feld &quot;%s&quot; konnte nicht gespeichert werden, da es nur 1 Feld vom Typ &quot;Gruppe&quot; geben darf.';
-$MOD_ONEFORALL[$mod_name]['ERR_BLANK_FIELD_NAME'] = 'Bitte geben Sie f&uuml;r alle Felder einen g&uuml;ltigen und eindeutigen Feldnamen ein!';
-$MOD_ONEFORALL[$mod_name]['ERR_CONFLICT_WITH_RESERVED_NAME'] = 'Der Feldname &quot;%s&quot; kann nicht benutzt werden, da er bereits f&uuml;r einen allgemeinen Platzhalter reserviert ist.';
-$MOD_ONEFORALL[$mod_name]['ERR_INVALID_FIELD_NAME'] = 'Der Feldname &quot;%s&quot; ist ung&uuml;ltig! Erlaubte Zeichen sind: a-z A-Z 0-9 . (Punkt) _ (Unterstrich) - (Minus)';
-$MOD_ONEFORALL[$mod_name]['ERR_FIELD_NAME_EXISTS'] = 'Der Feldname &quot;%s&quot; ist bereits vergeben. Bitte w&auml;hlen sie einen anderen.';
+$MOD_ONEFORALL[$mod_name]['ERR_BLANK_FIELD_NAME'] = 'Bitte geben Sie für alle Felder einen gültigen und eindeutigen Feldnamen ein!';
+$MOD_ONEFORALL[$mod_name]['ERR_CONFLICT_WITH_RESERVED_NAME'] = 'Der Feldname &quot;%s&quot; kann nicht benutzt werden, da er bereits für einen allgemeinen Platzhalter reserviert ist.';
+$MOD_ONEFORALL[$mod_name]['ERR_INVALID_FIELD_NAME'] = 'Der Feldname &quot;%s&quot; ist ungültig! Erlaubte Zeichen sind: a-z A-Z 0-9 . (Punkt) _ (Unterstrich) - (Minus)';
+$MOD_ONEFORALL[$mod_name]['ERR_FIELD_NAME_EXISTS'] = 'Der Feldname &quot;%s&quot; ist bereits vergeben. Bitte wählen sie einen anderen.';
 $MOD_ONEFORALL[$mod_name]['ERR_FIELD_DISABLED'] = 'Dieses Feld ist deaktiviert.';
-$MOD_ONEFORALL[$mod_name]['ERR_FIELD_RE_ENABLE'] = 'Sie k&ouml;nnen es wieder aktivieren oder den Platzhalter im Template entfernen.';
+$MOD_ONEFORALL[$mod_name]['ERR_FIELD_RE_ENABLE'] = 'Sie können es wieder aktivieren oder den Platzhalter im Template entfernen.';
 $MOD_ONEFORALL[$mod_name]['ERR_FIELD_TYPE_NOT_EXIST'] = 'Dieser Feld-Typ existiert nicht!';
-$MOD_ONEFORALL[$mod_name]['ERR_SET_A_LABEL'] = 'Feldbezeichnung erg&auml;nzen';
-$MOD_ONEFORALL[$mod_name]['ERR_INSTALL_MODULE'] = 'Bitte das Modul &quot;%s&quot; installieren und mindestens einen &quot;%s&quot;-Abschnitt anlegen, um dieses Feld benutzen zu k&ouml;nnen.';
+$MOD_ONEFORALL[$mod_name]['ERR_SET_A_LABEL'] = 'Feldbezeichnung ergänzen';
+$MOD_ONEFORALL[$mod_name]['ERR_INSTALL_MODULE'] = 'Bitte das Modul &quot;%s&quot; installieren und mindestens einen &quot;%s&quot;-Abschnitt anlegen, um dieses Feld benutzen zu können.';
 
 
 $GLOBALS['TEXT']['CAP_EDIT_CSS'] = 'CSS bearbeiten';

@@ -88,7 +88,7 @@ if ($mod_name != $_POST['mod_name']) {
 }
 
 // Check if module is registered in the database
-$addon_id = $database->get_one("SELECT addon_id FROM `".TABLE_PREFIX."addons` WHERE type = 'module' AND directory = '".$mod_name."'");
+$addon_id = $database->get_one('SELECT `addon_id` FROM `'.TABLE_PREFIX.'addons` WHERE `type` = \'module\' AND `directory` = \''.$mod_name.'\' ');
 if (!is_numeric($addon_id)) {
 	die();
 }
@@ -146,7 +146,10 @@ $directories = array(
 );
 
 // Try to make the needed directories for image and thumb
-$img_section = $database->get_one("SELECT img_section FROM `".TABLE_PREFIX."mod_".$mod_name."_page_settings` WHERE section_id = '".$section_id."'");
+#$img_section = $database->get_one("SELECT `img_section` FROM `".TABLE_PREFIX."mod_".$mod_name."_page_settings` WHERE `section_id` = '".$section_id."'");
+$sql  = 'SELECT `img_section` FROM `'.TABLE_PREFIX.'mod_'.$mod_name.'_page_settings` '
+      . 'WHERE `section_id`=\' '.$section_id.'\' ';
+$img_section = $database->get_one($sql);
 
 if ($img_section == 0) {
 	foreach ($directories as $i => $directory) {
@@ -203,7 +206,7 @@ $img_path = $img_dir_path.'/'.$filename.'.'.$fileext;
 
 // Check if filename already exists
 if (file_exists($img_path)) {
-	die('{"jsonrpc" : "2.0", "error" : {"code": 202, "message": "'.html_entity_decode($MESSAGE['MEDIA']['FILE_EXISTS']).'.", "filename": "'.$file.'"}, "id" : "id"}');
+	die('{"jsonrpc" : "2.0", "error" : {"code": 202, "message": "'.html_entity_decode($MESSAGE['MEDIA_FILE_EXISTS']).'.", "filename": "'.$file.'"}, "id" : "id"}');
 }
 
 
@@ -273,7 +276,7 @@ if ($chunks && $chunk < $chunks - 1) {
 // CREATE A THUMB
 
 // Get thumb size for this page
-$resize = $database->get_one("SELECT resize FROM `".TABLE_PREFIX."mod_".$mod_name."_page_settings` WHERE section_id = '".$section_id."'");
+$resize = $database->get_one('SELECT `resize` FROM `'.TABLE_PREFIX.'mod_'.$mod_name.'_page_settings` WHERE `section_id` = '.$section_id.' ');
 
 if ($resize > 0) {
 
@@ -310,14 +313,19 @@ if ($imgresize == 1 && file_exists($img_path)) {
 // ADD IMAGE TO THE DATABASE
 
 // Get image top position for this item
-$top_position = $database->get_one("SELECT MAX(position) AS top_position FROM `".TABLE_PREFIX."mod_".$mod_name."_images` WHERE item_id = '$item_id'");
+$top_position = $database->get_one('SELECT MAX(`position`) AS `top_position` FROM `'.TABLE_PREFIX.'mod_'.$mod_name.'_images` WHERE `item_id` = '.$item_id.' ');
 // Increment position (db function returns NULL if this item has no image yet)
 $top_position = intval($top_position) + 1;
 
 // Insert filename into database
 $filename = $filename.'.'.$fileext;
-$database->query("INSERT INTO `".TABLE_PREFIX."mod_".$mod_name."_images` (item_id, filename, active, position) VALUES ('$item_id', '$filename', 1, '$top_position')");
-
+$Sql =  'INSERT INTO `'.TABLE_PREFIX.'mod_'.$mod_name.'_images` SET '
+                   .  '`item_id`= '.$item_id.' , '
+                   .  '`filename`= \''.$filename.'\', '
+                   .  '`active`= 1, '
+                   .  '`position`= '.$top_position.', '
+                   .  '`caption` = \'\' ';
+$database->query($Sql);
 // Get new image id
 $img_id = 'undefined';
 $img_id = $database->getLastInsertId();

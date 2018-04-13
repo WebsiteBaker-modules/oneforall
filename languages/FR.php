@@ -29,7 +29,7 @@
 
 */
 
-
+$mod_name = basename(dirname(__DIR__));
 // MODUL DESCRIPTION
 $module_description = 'OneForAll est un module WebsiteBaker qui est polyvalent comme un cam&eacute;l&eacute;on. Il peut &ecirc;tre install&eacute; plusieurs fois sur la m&ecirc;me installation WebsiteBaker en mettant un nom de module diff&eacute;rent dans le fichier info.php avant du t&eacute;l&eacute;chargement et de l&apos;installation. Le module est toute &eacute;quip&eacute;e pour ajouter des pages enti&egrave;rement taill&eacute; sur mesure. D&apos;une part vous pouvez &eacute;tablir des champs d&eacute;finissables dans le backend et d&apos;autre part vous &ecirc;tes libre de concevoir les th&egrave;mes HTML pour l&apos;affichage dans le frontend.<br />Par d&eacute;faut il fournit simplement un champ de titre et le t&eacute;l&eacute;chargement d&apos;images. Vous pouvez ajouter diff&eacute;rents types de champs d&eacute;finissables. Les articles peuvent &ecirc;tre affich&eacute;s dans une vue d&apos;ensemble et si voulu dans une page de d&eacute;tail. OneForAll utilise le JavaScript Lightbox2 pour superposer des images agrandies sur le contenu de la page.';
 
@@ -37,6 +37,7 @@ $module_description = 'OneForAll est un module WebsiteBaker qui est polyvalent c
 $MOD_ONEFORALL[$mod_name]['TXT_SETTINGS'] = 'Param&egrave;tres';
 $MOD_ONEFORALL[$mod_name]['TXT_FIELDS'] = 'Champs';
 $MOD_ONEFORALL[$mod_name]['TXT_SYNC_TYPE_TEMPLATE'] = 'Adapter le th&egrave;me du champ automatiquement lors de la s&eacute;lection du type de champ.';
+$MOD_ONEFORALL[$mod_name]['TXT_FEATURED'] = 'En vedette';
 
 $MOD_ONEFORALL[$mod_name]['TXT_CUSTOM_FIELD'] = 'Champ d&eacute;finissable';
 $MOD_ONEFORALL[$mod_name]['TXT_FIELD_TYPE'] = 'Type';
@@ -100,9 +101,9 @@ $MOD_ONEFORALL[$mod_name]['TXT_ITEMS'] = 'Articles';
 $MOD_ONEFORALL[$mod_name]['TXT_ITEMS_PER_PAGE'] = 'Articles par page';
 $MOD_ONEFORALL[$mod_name]['TXT_BACKEND_ITEM_PAGE'] = 'Page d&apos;&eacute;léments (Backend)';
 $MOD_ONEFORALL[$mod_name]['TXT_HIDE_IMG_SECTION'] = 'Cacher les param&egrave;tres d&apos;image et le t&eacute;l&eacute;chargement';
-$MOD_ONEFORALL[$mod_name]['TXT_MODIFY_THIS'] = 'Mettre &agrave; jour les param&egrave;tres de la page seulement pour la page &quot;'.$module_name.'&quot; <b>courante</b>.';
-$MOD_ONEFORALL[$mod_name]['TXT_MODIFY_ALL'] = 'Mettre &agrave; jour les param&egrave;tres de la page pour <b>toutes</b> les pages &quot;'.$module_name.'&quot;.';
-$MOD_ONEFORALL[$mod_name]['TXT_MODIFY_MULTIPLE'] = 'Mettre &agrave; jour les param&egrave;tres de la page seulement pour les pages &quot;'.$module_name.'&quot; <b>S&eacute;lectionn&eacute;es</b> (Utilisez la liste suivante avec possibilit&eacute; de choix multiples):';
+$MOD_ONEFORALL[$mod_name]['TXT_MODIFY_THIS'] = 'Mettre &agrave; jour les param&egrave;tres de la page seulement pour la page &quot;'.$mod_name.'&quot; <b>courante</b>.';
+$MOD_ONEFORALL[$mod_name]['TXT_MODIFY_ALL'] = 'Mettre &agrave; jour les param&egrave;tres de la page pour <b>toutes</b> les pages &quot;'.$mod_name.'&quot;.';
+$MOD_ONEFORALL[$mod_name]['TXT_MODIFY_MULTIPLE'] = 'Mettre &agrave; jour les param&egrave;tres de la page seulement pour les pages &quot;'.$mod_name.'&quot; <b>S&eacute;lectionn&eacute;es</b> (Utilisez la liste suivante avec possibilit&eacute; de choix multiples):';
 
 $MOD_ONEFORALL[$mod_name]['TXT_ADD_ITEM'] = 'Ajouter un article';
 $MOD_ONEFORALL[$mod_name]['TXT_DISABLE'] = 'Désactiver';

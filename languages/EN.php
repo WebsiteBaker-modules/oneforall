@@ -30,6 +30,7 @@
 */
 
 
+$mod_name = basename(dirname(__DIR__));
 // MODUL DESCRIPTION
 $module_description = 'OneForAll is a WebsiteBaker module that is versatile like a chameleon. It can be installed more than one time on the same WebsiteBaker installation by setting a different module name in the info.php file before upload and installation. Furthermore the module provides a feature to add highly customized pages. On the one hand you can define custom fields in the backend and on the other hand free definable html templates for the frontend output.<br />By default it provides just one title field and  an image upload. Additionally you can add different custom field types. Items can be displayed in an overview and if needed in a corresponding detail page. OneForAll makes use of the Lightbox2 JavaScript to overlay item images on the current page.';
 
@@ -37,7 +38,7 @@ $module_description = 'OneForAll is a WebsiteBaker module that is versatile like
 $MOD_ONEFORALL[$mod_name]['TXT_SETTINGS'] = 'Settings';
 $MOD_ONEFORALL[$mod_name]['TXT_FIELDS'] = 'Fields';
 $MOD_ONEFORALL[$mod_name]['TXT_SYNC_TYPE_TEMPLATE'] = 'Adapt field template automatically when selecting field type.';
-
+$MOD_ONEFORALL[$mod_name]['TXT_FEATURED'] = 'Featured';
 $MOD_ONEFORALL[$mod_name]['TXT_CUSTOM_FIELD'] = 'Custom field';
 $MOD_ONEFORALL[$mod_name]['TXT_FIELD_TYPE'] = 'Type';
 $MOD_ONEFORALL[$mod_name]['TXT_FIELD_NAME'] = 'Field name';
@@ -101,9 +102,9 @@ $MOD_ONEFORALL[$mod_name]['TXT_ITEMS'] = 'Items';
 $MOD_ONEFORALL[$mod_name]['TXT_ITEMS_PER_PAGE'] = 'Items per Page';
 $MOD_ONEFORALL[$mod_name]['TXT_BACKEND_ITEM_PAGE'] = 'Item page (Backend)';
 $MOD_ONEFORALL[$mod_name]['TXT_HIDE_IMG_SECTION'] = 'Hide image settings and upload';
-$MOD_ONEFORALL[$mod_name]['TXT_MODIFY_THIS'] = 'Update page settings of <b>current</b> &quot;'.$module_name.'&quot; page only.';
-$MOD_ONEFORALL[$mod_name]['TXT_MODIFY_ALL'] = 'Update page settings of <b>all</b> &quot;'.$module_name.'&quot; pages.';
-$MOD_ONEFORALL[$mod_name]['TXT_MODIFY_MULTIPLE'] = 'Update page settings of <b>selected</b> &quot;'.$module_name.'&quot; page(s) (Multiple choice):';
+$MOD_ONEFORALL[$mod_name]['TXT_MODIFY_THIS'] = 'Update page settings of <b>current</b> &quot;'.$mod_name.'&quot; page only.';
+$MOD_ONEFORALL[$mod_name]['TXT_MODIFY_ALL'] = 'Update page settings of <b>all</b> &quot;'.$mod_name.'&quot; pages.';
+$MOD_ONEFORALL[$mod_name]['TXT_MODIFY_MULTIPLE'] = 'Update page settings of <b>selected</b> &quot;'.$mod_name.'&quot; page(s) (Multiple choice):';
 
 $MOD_ONEFORALL[$mod_name]['TXT_ADD_ITEM'] = 'Add item';
 $MOD_ONEFORALL[$mod_name]['TXT_DISABLE'] = 'Disable';
@@ -151,4 +152,3 @@ $MOD_ONEFORALL[$mod_name]['ERR_SET_A_LABEL'] = 'Set a label';
 $MOD_ONEFORALL[$mod_name]['ERR_INSTALL_MODULE'] = 'In order to use this field you have to install the module &quot;%s&quot; and add at least one &quot;%s&quot; section.';
 
 $GLOBALS['TEXT']['CAP_EDIT_CSS'] = 'Edit CSS';
-?>

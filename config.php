@@ -5,22 +5,20 @@
   Copyright (C) 2017, Christoph Marti
 
   LICENCE TERMS:
-  This module is free software. You can redistribute it and/or modify it 
-  under the terms of the GNU General Public License - version 2 or later, 
+  This module is free software. You can redistribute it and/or modify it
+  under the terms of the GNU General Public License - version 2 or later,
   as published by the Free Software Foundation: http://www.gnu.org/licenses/gpl.html.
 
   DISCLAIMER:
-  This module is distributed in the hope that it will be useful, 
-  but WITHOUT ANY WARRANTY; without even the implied warranty of 
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+  This module is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
   GNU General Public License for more details.
 */
 
 
 // Prevent this file from being accessed directly
-if (defined('WB_PATH') == false) {
-	exit('Cannot access this file directly'); 
-}
+if (!defined('SYSTEM_RUN')) {header($_SERVER['SERVER_PROTOCOL'].' 404 Not Found'); echo '404 File not found'; flush(); exit;}
 
 
 
@@ -59,7 +57,7 @@ $field_meta_desc = true;
 
 // Set extensions accepted by the media field as csv
 // Default: image extensions like jpg, png, gif and svg
-$media_extensions = 'jpg,png,gif,svg';
+$media_extensions = 'jpg,png,gif,svg,pdf';
 
 // Set extensions accepted by the upload field as csv
 // Default: text doc extensions like txt, rtf, doc, docx, odt and pdf
@@ -82,7 +80,9 @@ $wysiwyg_full_width = false;
 // Any user provided php code is not validated by the module OneForAll!
 $field_type_code = false;
 
-
+// Allow to mark a item as featured.
+// Needs the snippet oneforall-featureditems to display them anywhere.
+$featured = false;
 
 // ***************
 // ITEM SCHEDULING
@@ -117,23 +117,17 @@ $scheduling_timezone = '';
 
 // Selectable thumbnail default sizes (modify page settings)
 $thumb_resize_smallest   = 40;
-$thumb_resize_largest    = 200;
+$thumb_resize_largest    = 400;
 $thumb_resize_steps      = 20;
 
 // Accepted max lenght of image filenames (modify item)
 $filename_max_length     = 40;
 
 // For item images set image resize default values (modify item)
-$img_resize['imgresize'] = '';  // yes = selected by default
+$img_resize['imgresize'] = 'yes';  // yes = selected by default
 $img_resize['quality']   = 75;
-$img_resize['maxwidth']  = 400;
-$img_resize['maxheight'] = 300;
+$img_resize['maxwidth']  = 1000;
+$img_resize['maxheight'] = 800;
 
 // Plupload max file size in MB
 $max_file_size           = 2;
-
-
-
-
-
-

@@ -5,62 +5,59 @@
   Copyright (C) 2017, Christoph Marti
 
   LICENCE TERMS:
-  This module is free software. You can redistribute it and/or modify it 
-  under the terms of the GNU General Public License - version 2 or later, 
+  This module is free software. You can redistribute it and/or modify it
+  under the terms of the GNU General Public License - version 2 or later,
   as published by the Free Software Foundation: http://www.gnu.org/licenses/gpl.html.
 
   DISCLAIMER:
-  This module is distributed in the hope that it will be useful, 
-  but WITHOUT ANY WARRANTY; without even the implied warranty of 
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+  This module is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
   GNU General Public License for more details.
 */
 
 
-require('../../config.php');
+if (!defined('SYSTEM_RUN')) {require( (dirname(dirname((__DIR__)))).'/config.php');}
 
 // Include WB admin wrapper script
 require(WB_PATH.'/modules/admin.php');
-require_once(WB_PATH.'/framework/class.admin.php');
+if (!class_exists('admin')) {require (WB_PATH.'/framework/class.admin.php');}
 
 // Include path
-$inc_path = dirname(__FILE__);
+$inc_path = str_replace(DIRECTORY_SEPARATOR,'/',__DIR__);
 // Get module name
-require_once($inc_path.'/info.php');
+require($inc_path.'/info.php');
 
 // Look for language file
-if (LANGUAGE_LOADED) {
-    require_once($inc_path.'/languages/EN.php');
-    if (file_exists($inc_path.'/languages/'.LANGUAGE.'.php')) {
-        require_once($inc_path.'/languages/'.LANGUAGE.'.php');
-    }
-}
+if (is_readable(__DIR__.'/languages/EN.php')) {require(__DIR__.'/languages/EN.php');}
+if (is_readable(__DIR__.'/languages/'.DEFAULT_LANGUAGE.'.php')) {require(__DIR__.'/languages/'.DEFAULT_LANGUAGE.'.php');}
+if (is_readable(__DIR__.'/languages/'.LANGUAGE.'.php')) {require(__DIR__.'/languages/'.LANGUAGE.'.php');}
 
 // Get page settings
-$query_page_settings = $database->query("SELECT * FROM `".TABLE_PREFIX."mod_".$mod_name."_page_settings` WHERE page_id = '$page_id'");
+$query_page_settings = $database->query('SELECT * FROM `'.TABLE_PREFIX.'mod_'.$mod_name.'_page_settings` WHERE `page_id` = '.(int)$page_id.' ');
 if ($query_page_settings->numRows() > 0) {
-	$page_settings = $query_page_settings->fetchRow();
-	$page_settings = array_map('stripslashes', $page_settings);
+    $page_settings = $query_page_settings->fetchRow(MYSQLI_ASSOC);
+    $page_settings = array_map('stripslashes', $page_settings);
 }
 
 // Get field
-$query_field = $database->query("SELECT field_id, name FROM `".TABLE_PREFIX."mod_".$mod_name."_fields` ORDER BY position, field_id ASC LIMIT 1");
+$query_field = $database->query('SELECT `field_id`, `name` FROM `'.TABLE_PREFIX.'mod_'.$mod_name.'_fields` ORDER BY `position`, `field_id` ASC LIMIT 1');
 if ($query_field->numRows() > 0) {
-	$field = $query_field->fetchRow();
-	$field = array_map('stripslashes', $field);
+    $field = $query_field->fetchRow(MYSQLI_ASSOC);
+    $field = array_map('stripslashes', $field);
 }
 
 // Get item
-$query_item = $database->query("SELECT * FROM `".TABLE_PREFIX."mod_".$mod_name."_items` ORDER BY item_id DESC LIMIT 1");
+$query_item = $database->query('SELECT * FROM `'.TABLE_PREFIX.'mod_'.$mod_name.'_items` ORDER BY `item_id` DESC LIMIT 1');
 if ($query_item->numRows() > 0) {
-	$item = $query_item->fetchRow();
-	$item = array_map('stripslashes', $item);
+    $item = $query_item->fetchRow(MYSQLI_ASSOC);
+    $item = array_map('stripslashes', $item);
 }
 
 // Get page info
-$query_page = $database->query("SELECT * FROM `".TABLE_PREFIX."pages` WHERE page_id = '$page_id'");
+$query_page = $database->query('SELECT * FROM `'.TABLE_PREFIX.'pages` WHERE `page_id` = '.(int)$page_id.' ');
 if ($query_page->numRows() > 0) {
-	$page = $query_page->fetchRow();
+    $page = $query_page->fetchRow(MYSQLI_ASSOC);
 }
 ?>
 
@@ -68,9 +65,9 @@ if ($query_page->numRows() > 0) {
 
 <h2>KEYS TO THE PLACEHOLDERS USED IN THE <?php echo $module_name; ?> TEMPLATES</h2>
 <br />
-<table class="mod_<?php echo $mod_name; ?>_placeholders_b" width="100%" cellpadding="5" cellspacing="0">
+<table class="mod_<?php echo $mod_name; ?>_placeholders_b" style="width:100%; border-collapse: collapse;line-height: 2;">
   <tr>
-    <td><blockquote><strong>Template</strong></blockquote>      
+    <td><blockquote><strong>Template</strong></blockquote>
       <ul>
         <li>PH = Page Header</li>
         <li>PIL = Page Item Loop</li>
@@ -78,27 +75,27 @@ if ($query_page->numRows() > 0) {
         <li>IH = Item Header</li>
         <li>IF = Item Footer</li>
       </ul>
-	</td>
+    </td>
     <td><blockquote><strong>Output Example Data</strong></blockquote>
-	  <ul>
-		<li><span class="mod_<?php echo $mod_name; ?>_placeholders_localisation_b">Blue: Localisation (example language = <?php echo(defined('LANGUAGE') ? LANGUAGE : "EN"); ?>)</span></li>
-		<li><span class="mod_<?php echo $mod_name; ?>_placeholders_page_settings_b">Brown: Page settings (example page id = <?php echo $page_id; ?>)</span></li>
-		<li><span class="mod_<?php echo $mod_name; ?>_placeholders_fields_b">Green: Field (example field id = <?php echo (isset($field['field_id']) ? $field['field_id'] : $TEXT['NONE_FOUND']); ?>)</span></li>
-		<li><span class="mod_<?php echo $mod_name; ?>_placeholders_items_b">Orange: Item (example item id = <?php echo (isset($item['item_id']) ? $item['item_id'] : $TEXT['NONE_FOUND']); ?>)</span></li>
-		<li><span class="mod_<?php echo $mod_name; ?>_placeholders_page_b">Pink: Page (example page id = <?php echo $page_id; ?>)</span></li>
+      <ul>
+        <li><span class="mod_<?php echo $mod_name; ?>_placeholders_localisation_b">Blue: Localisation (example language = <?php echo(defined('LANGUAGE') ? LANGUAGE : "EN"); ?>)</span></li>
+        <li><span class="mod_<?php echo $mod_name; ?>_placeholders_page_settings_b">Brown: Page settings (example page id = <?php echo $page_id; ?>)</span></li>
+        <li><span class="mod_<?php echo $mod_name; ?>_placeholders_fields_b">Green: Field (example field id = <?php echo (isset($field['field_id']) ? $field['field_id'] : $TEXT['NONE_FOUND']); ?>)</span></li>
+        <li><span class="mod_<?php echo $mod_name; ?>_placeholders_items_b">Orange: Item (example item id = <?php echo (isset($item['item_id']) ? $item['item_id'] : $TEXT['NONE_FOUND']); ?>)</span></li>
+        <li><span class="mod_<?php echo $mod_name; ?>_placeholders_page_b">Pink: Page (example page id = <?php echo $page_id; ?>)</span></li>
       </ul>
-	</td>
+    </td>
   </tr>
 </table>
 <br />
-<table width="100%" cellpadding="5" cellspacing="0" class="mod_<?php echo $mod_name; ?>_placeholders_b">
+<table style="width:100%; border-collapse: collapse;line-height: 2;" class="mod_<?php echo $mod_name; ?>_placeholders_b">
   <tr>
     <td height="30" align="right"><input name="button" type="button" style="margin-right: 20px;" onclick="javascript: window.location = '<?php echo WB_URL; ?>/modules/<?php echo $mod_name; ?>/modify_page_settings.php?page_id=<?php echo $page_id; ?>&amp;section_id=<?php echo $section_id; ?>';" value="&lt;&lt; <?php echo $MOD_ONEFORALL[$mod_name]['TXT_PAGE_SETTINGS']; ?>" />
-	</td>
+    </td>
   </tr>
 </table>
 <br />
-<table class="mod_<?php echo $mod_name; ?>_placeholders_b" width="100%" cellpadding="5" cellspacing="0">
+<table class="mod_<?php echo $mod_name; ?>_placeholders_b" style="width:100%; border-collapse: collapse;line-height: 2;">
   <tr class="mod_<?php echo $mod_name; ?>_placeholders_header_b">
     <td colspan="8"><p><strong><a name="html"></a>Main Page and Item HTML Templates &nbsp;&nbsp;&nbsp;</strong>( &gt; Page Settings &gt; Layout Settings )</p></td>
   </tr>
@@ -199,7 +196,7 @@ if ($query_page->numRows() > 0) {
     <td class="mod_<?php echo $mod_name; ?>_placeholders_column_b">IF</td>
     <td>All item images except for the item main image </td>
     <td class="mod_<?php echo $mod_name; ?>_placeholders_items_b">Depends on various settings: For an example please see the source code of your <?php echo $module_name; ?> page! </td>
-  </tr> 
+  </tr>
   <tr valign="top">
     <td>[ITEM_ID]</td>
     <td class="mod_<?php echo $mod_name; ?>_placeholders_column_b">&nbsp;</td>
@@ -378,7 +375,7 @@ if ($query_page->numRows() > 0) {
     <td>IH</td>
     <td class="mod_<?php echo $mod_name; ?>_placeholders_column_b">IF</td>
     <td>Thumbnail of the main item image - only displayed if selected at section &quot;2. Item Images&quot; of the &quot;Add/modify item&quot; page</td>
-    <td class="mod_<?php echo $mod_name; ?>_placeholders_items_b">Depends on various settings: For an example please see the source code of your <?php echo $module_name; ?> page!	</td>
+    <td class="mod_<?php echo $mod_name; ?>_placeholders_items_b">Depends on various settings: For an example please see the source code of your <?php echo $module_name; ?> page!    </td>
   </tr>
   <tr valign="top">
     <td>[THUMBS]</td>
@@ -432,7 +429,7 @@ if ($query_page->numRows() > 0) {
   </tr>
   <tr valign="bottom">
     <td colspan="8" height="30" align="right">
-	  <input name="button" type="button" style="margin-right: 20px;" onclick="javascript: window.location = '<?php echo WB_URL; ?>/modules/<?php echo $mod_name; ?>/modify_page_settings.php?page_id=<?php echo $page_id; ?>&amp;section_id=<?php echo $section_id; ?>';" value="&lt;&lt; <?php echo $MOD_ONEFORALL[$mod_name]['TXT_PAGE_SETTINGS']; ?>" /></td>
+      <input name="button" type="button" style="margin-right: 20px;" onclick="javascript: window.location = '<?php echo WB_URL; ?>/modules/<?php echo $mod_name; ?>/modify_page_settings.php?page_id=<?php echo $page_id; ?>&amp;section_id=<?php echo $section_id; ?>';" value="&lt;&lt; <?php echo $MOD_ONEFORALL[$mod_name]['TXT_PAGE_SETTINGS']; ?>" /></td>
   </tr>
 </table>
 
@@ -441,5 +438,3 @@ if ($query_page->numRows() > 0) {
 
 // Print admin footer
 $admin->print_footer();
-
-?>
